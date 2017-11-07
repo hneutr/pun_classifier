@@ -1,56 +1,9 @@
-import numpy as np
 from sklearn.linear_model import SGDClassifier
-from sklearn.base import BaseEstimator, TransformerMixin
 from sklearn.pipeline import FeatureUnion, Pipeline
 from sklearn.metrics import accuracy_score
 
-
-
-'''
-The ItemSelector class was created by Matt Terry to help with using
-Feature Unions on Heterogeneous Data Sources
-
-All credit goes to Matt Terry for the ItemSelector class below
-
-For more information:
-http://scikit-learn.org/stable/auto_examples/hetero_feature_union.html
-'''
-class ItemSelector(BaseEstimator, TransformerMixin):
-    def __init__(self, key):
-        self.key = key
-
-    def fit(self, x, y=None):
-        return self
-
-    def transform(self, data_dict):
-        return data_dict[self.key]
-
-
-"""
-This is an example of a custom feature transformer. The constructor is used
-to store the state (e.g like if you need to store certain words/vocab), the
-fit method is used to update the state based on the training data, and the
-transform method is used to transform the data into the new feature(s). In
-this example, we simply use the length of the movie review as a feature. This
-requires no state, so the constructor and fit method do nothing.
-"""
-class TextLengthTransformer(BaseEstimator, TransformerMixin):
-    def __init__(self):
-        pass
-
-    def fit(self, examples):
-        return self
-
-    def transform(self, examples):
-        features = np.zeros((len(examples), 1))
-        i = 0
-        for ex in examples:
-            features[i, 0] = len(ex)
-            i += 1
-
-        return features
-
-
+from features.item_selector import ItemSelector
+from features.lesk_algorithm_transformer import LeskAlgorithmTransformer
 
 class Featurizer:
     def __init__(self):
@@ -59,9 +12,9 @@ class Featurizer:
         # In this case, we are selecting the plaintext of the input data
         self.all_features = FeatureUnion(
             transformer_list= [
-                ('text_stats', Pipeline([
+                ('lesk_algorithm', Pipeline([
                     ('selector', ItemSelector(key='tokens')),
-                    ('token_count', TextLengthTransformer())
+                    ('lesk', LeskAlgorithmTransformer())
                 ]))
             ]
         )
