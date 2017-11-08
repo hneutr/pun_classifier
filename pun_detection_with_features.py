@@ -30,8 +30,12 @@ class Featurizer:
 class PunDetectionWithFeaturesClassifier:
     def __init__(self):
         self.feat = Featurizer()
+
+        # TODO: Which classifier should be used here? Also probably want to do cross-validation on hyperparameters.
         self.model = SGDClassifier(loss='log', penalty='l2', alpha=0.0001, max_iter=15000, shuffle=True, verbose=2)
 
+    # Train the classifier using x_train which is the set of sentences
+    # And y_train which is the set of labels for those sentences
     def train(self, x_train, y_train):
         # Here we collect the train features
         # The inner dictionary contains certain pieces of the input data that we
@@ -46,6 +50,7 @@ class PunDetectionWithFeaturesClassifier:
         accuracy = accuracy_score(y_pred, y_train)
         print("Accuracy on training set =", accuracy)
 
+    # Make predictions on test data. Use the y_test labels to find accuracy of predictions.
     def test(self, x_test, y_test):
         # Here we collect the test features
         feat_test = self.feat.test_feature({
