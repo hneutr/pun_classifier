@@ -15,14 +15,6 @@ class Data:
 
             train_x, valid_x, self.train_y, self.valid_y = train_test_split(x_set, y_set, random_state=SEED)
 
-            for x in train_x:
-                while len(x) < max_len:
-                    x.append("")
-
-            for x in valid_x:
-                while len(x) < max_len:
-                    x.append("")
-
             self.train_x = [ " ".join(x) for x in train_x ]
             self.valid_x = [ " ".join(x) for x in valid_x ]
 
