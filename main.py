@@ -1,5 +1,4 @@
-from pun_data import HeterographicData
-from baseline_detection import BaselinePunDetectionClassifier
+from pun_data import HeterographicData, HomographicData
 from baseline_location import BaselinePunLocationClassifier
 from pun_detection_with_features import PunDetectionWithFeaturesClassifier
 from eval import Eval
@@ -8,17 +7,17 @@ import pickle
 if __name__ == "__main__":
     # Get pun data for training and for testing
 
-    data = HeterographicData()
+    data = HomographicData()
 
     # PUN DETECTION
 
     # Create baseline pun detection classifier, train it, and get predictions on test data
-    baselineDetectionClassifier = BaselinePunDetectionClassifier()
-    baselineDetectionClassifier.train(data.x_train, data.y_train)
-    baselineDetectionPredicted = baselineDetectionClassifier.test(data.x_test)
+    # baselineDetectionClassifier = BaselinePunDetectionClassifier()
+    # baselineDetectionClassifier.train(data.x_train, data.y_train)
+    # baselineDetectionPredicted = baselineDetectionClassifier.test(data.x_test)
 
     # Evaluate baseline classifier
-    Eval.evaluateDetection(baselineDetectionPredicted, data.y_test)
+    # Eval.evaluateDetection(baselineDetectionPredicted, data.y_test)
 
     # Create pun detection classifier, train it, and get predictions on test data
     punDetectionClassifier = PunDetectionWithFeaturesClassifier()

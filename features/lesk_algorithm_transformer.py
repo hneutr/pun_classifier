@@ -4,8 +4,11 @@ from nltk.wsd import lesk
 from nltk import download as nltk_download
 nltk_download('wordnet')
 
+
 class LeskAlgorithmTransformer(BaseEstimator, TransformerMixin):
-    def __init__(self):
+
+    def __init__(self, max_length=100):
+        self.max_length = max_length
         pass
 
     def fit(self, examples):
@@ -17,30 +20,20 @@ class LeskAlgorithmTransformer(BaseEstimator, TransformerMixin):
             # Get the synset for each word in the sentence
             word_syns = list(map(lambda word: lesk(sentence, word), sentence))
 
-            # Create a matrix of how similar each word in the sentence is to every other word in the sentence
+            # Create a flat matrix of how similar each word in the sentence is to every other word in the sentence
             # http://www.nltk.org/howto/wsd.html
-            word_similarities = []
-            for word_syn_a in word_syns:
-                similarities = []
-                for word_syn_b in word_syns:
-                    if word_syn_a is None or word_syn_b is None:
-                        similarities.append(0)
-                    else:
-                        # Use the path_similarity to compute the similarities between two synsets
-                        similarities.append(word_syn_a.path_similarity(word_syn_b))
-                word_similarities.append(similarities)
+            similarities = np.zeros(self.max_length)
+            for index_a, word_syn_a in enumerate(word_syns):
+                for index_b, word_syn_b in enumerate(word_syns):
+                    if index_a is not index_b and len(similarities) < self.max_length:
+                        if word_syn_a is None or word_syn_b is None:
+                            similarities = np.append(similarities, 0)
+                        else:
+                            # Use the path_similarity to compute the similarities between two synsets
+                            similarity = word_syn_a.path_similarity(word_syn_b)
+                            similarities = np.append(similarities, similarity if similarity is not None else 0)
 
-            features.append(word_similarities)
-            # But now we have a 3d matrix not a 2d matrix that needs to be returned by the transformer
-            # What should we do?
+            features.append(similarities)
 
-
-        # Return some other stuff so not broken while figuring out this transformer
-        # Code below should be removed
-        features = np.zeros((len(sentences), 1))
-        i = 0
-        for ex in sentences:
-            features[i, 0] = len(ex)
-            i += 1
 
         return features

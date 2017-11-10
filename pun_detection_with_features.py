@@ -4,6 +4,8 @@ from sklearn.metrics import accuracy_score
 
 from features.item_selector import ItemSelector
 from features.lesk_algorithm_transformer import LeskAlgorithmTransformer
+from sklearn.feature_extraction.text import CountVectorizer
+from sklearn.decomposition import TruncatedSVD
 
 class Featurizer:
     def __init__(self):
@@ -14,7 +16,8 @@ class Featurizer:
             transformer_list= [
                 ('lesk_algorithm', Pipeline([
                     ('selector', ItemSelector(key='tokens')),
-                    ('lesk', LeskAlgorithmTransformer())
+                    ('lesk', LeskAlgorithmTransformer(max_length=100)),
+                    ('best', TruncatedSVD(n_components=50))
                 ]))
             ]
         )
