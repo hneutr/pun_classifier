@@ -4,7 +4,7 @@ from sklearn.metrics import accuracy_score
 
 from features.item_selector import ItemSelector
 from features.lesk_algorithm_transformer import LeskAlgorithmTransformer
-from sklearn.feature_extraction.text import CountVectorizer
+from sklearn.feature_extraction.text import CountVectorizer, TfidfVectorizer
 from sklearn.decomposition import TruncatedSVD
 
 class Featurizer:
@@ -18,7 +18,12 @@ class Featurizer:
                     ('selector', ItemSelector(key='tokens')),
                     ('lesk', LeskAlgorithmTransformer(max_length=100)),
                     ('best', TruncatedSVD(n_components=50))
-                ]))
+                ])),
+                ('tfidf', Pipeline([
+                    ('selector', ItemSelector(key='string')),
+                    ('tfidf', TfidfVectorizer()),
+                    ('best', TruncatedSVD(n_components=50)),
+                ])),
             ]
         )
 
@@ -45,7 +50,8 @@ class PunDetectionWithFeaturesClassifier:
         # would like to be able to select with the ItemSelector
         # The text key refers to the plaintext
         feat_train = self.feat.train_feature({
-            'tokens': x_train
+            'tokens': x_train,
+            'string': list(map(lambda x: " ".join(x), x_train))
         })
 
         self.model.fit(feat_train, y_train)
@@ -57,7 +63,8 @@ class PunDetectionWithFeaturesClassifier:
     def test(self, x_test, y_test):
         # Here we collect the test features
         feat_test = self.feat.test_feature({
-            'tokens': x_test
+            'tokens': x_test,
+            'string': list(map(lambda x: " ".join(x), x_test))
         })
         y_pred = self.model.predict(feat_test)
         accuracy = accuracy_score(y_pred, y_test)
