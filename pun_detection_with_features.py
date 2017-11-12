@@ -4,6 +4,8 @@ from sklearn.metrics import accuracy_score
 
 from features.item_selector import ItemSelector
 from features.lesk_algorithm_transformer import LeskAlgorithmTransformer
+from features.pos_transformer import PosTransformer
+from sklearn.feature_extraction import DictVectorizer
 from sklearn.feature_extraction.text import CountVectorizer, TfidfVectorizer
 from sklearn.decomposition import TruncatedSVD
 
@@ -19,11 +21,16 @@ class Featurizer:
                     ('lesk', LeskAlgorithmTransformer(max_length=100)),
                     ('best', TruncatedSVD(n_components=50))
                 ])),
+                ('pos', Pipeline([
+                    ('selector', ItemSelector(key='tokens')),
+                    ('pos', PosTransformer()),
+                    ('pos_tfidf', TfidfVectorizer())
+                ])),
                 ('tfidf', Pipeline([
                     ('selector', ItemSelector(key='string')),
                     ('tfidf', TfidfVectorizer()),
                     ('best', TruncatedSVD(n_components=50)),
-                ])),
+                ]))
             ]
         )
 
