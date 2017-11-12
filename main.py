@@ -2,12 +2,24 @@ from pun_data import HeterographicData, HomographicData
 from baseline_location import BaselinePunLocationClassifier
 from pun_detection_with_features import PunDetectionWithFeaturesClassifier
 from eval import Eval
-import pickle
+import argparse
 
 if __name__ == "__main__":
     # Get pun data for training and for testing
+    data = None
 
-    data = HomographicData()
+    parser = argparse.ArgumentParser(description='type of pun')
+    parser.add_argument('--graphic', type=str, default='homographic',
+                        help="which type of pun ['homographic', 'heterographic']. Default: homographic")
+
+    args = parser.parse_args()
+
+    if args.graphic == "homographic":
+        data = HomographicData()
+    elif args.graphic =="heterographic":
+        data = HomographicData()
+    else :
+        raise Exception('Invalid pun type specified.')
 
     # PUN DETECTION
 
