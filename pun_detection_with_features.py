@@ -76,4 +76,5 @@ class PunDetectionWithFeaturesClassifier:
         y_pred = self.model.predict(feat_test)
         accuracy = accuracy_score(y_pred, y_test)
         print("Accuracy on test set =", accuracy)
+        return y_pred
 

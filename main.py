@@ -37,10 +37,7 @@ if __name__ == "__main__":
     detectionPredicted = punDetectionClassifier.test(data.x_test, data.y_test)
 
     # Evaluate pun detection classifier
-    Eval.evaluateDetection(detectionPredicted, data.y_test)
-
-
-
+    confusion_matrix = Eval.confusion_matrix(detectionPredicted, data.y_test)
 
 
     # PUN LOCATION
@@ -52,7 +49,7 @@ if __name__ == "__main__":
     baselineLocationPredicted = baselineLocationClassifier.test(data.x_test)
 
     # Evaluate baseline classifier
-    Eval.evaluateLocation(baselineLocationPredicted, data.y_test)
+    # Eval.evaluateDetection(baselineLocationPredicted, data.y_test)
 
     # TODO
     # Pun locater would go here, but likely won't start that until pun detection classifier is working
