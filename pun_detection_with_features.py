@@ -47,7 +47,7 @@ class PunDetectionWithFeaturesClassifier:
         self.feat = Featurizer()
 
         # TODO: Which classifier should be used here? Also probably want to do cross-validation on hyperparameters.
-        self.model = SGDClassifier(loss='log', penalty='l2', alpha=0.0001, max_iter=15000, shuffle=True, verbose=2)
+        self.model = SGDClassifier(loss='log', penalty='l2', alpha=0.0001, max_iter=15000, shuffle=True)
 
     # Train the classifier using x_train which is the set of sentences
     # And y_train which is the set of labels for those sentences
