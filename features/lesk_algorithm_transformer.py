@@ -11,7 +11,7 @@ class LeskAlgorithmTransformer(BaseEstimator, TransformerMixin):
         self.max_length = max_length
         pass
 
-    def fit(self, examples):
+    def fit(self, xs, ys):
         return self
 
     def transform(self, sentences):
