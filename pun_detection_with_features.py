@@ -1,13 +1,15 @@
+from sklearn.decomposition import TruncatedSVD
+from sklearn.feature_extraction import DictVectorizer
+from sklearn.feature_extraction.text import CountVectorizer, TfidfVectorizer
 from sklearn.linear_model import SGDClassifier
-from sklearn.pipeline import FeatureUnion, Pipeline
 from sklearn.metrics import accuracy_score
+from sklearn.pipeline import FeatureUnion, Pipeline
 
 from features.item_selector import ItemSelector
 from features.lesk_algorithm_transformer import LeskAlgorithmTransformer
 from features.pos_transformer import PosTransformer
-from sklearn.feature_extraction import DictVectorizer
-from sklearn.feature_extraction.text import CountVectorizer, TfidfVectorizer
-from sklearn.decomposition import TruncatedSVD
+from features.word_embeddings import sentence_embeddings
+from word_embeddings import WordEmbeddings
 
 class Featurizer:
     def __init__(self):
@@ -30,6 +32,9 @@ class Featurizer:
                     ('selector', ItemSelector(key='string')),
                     ('tfidf', TfidfVectorizer()),
                     ('best', TruncatedSVD(n_components=50)),
+                ])),
+                ('embeddings', Pipeline([
+                    ('selector', ItemSelector(key='embeddings')),
                 ]))
             ]
         )
@@ -48,6 +53,7 @@ class PunDetectionWithFeaturesClassifier:
 
         # TODO: Which classifier should be used here? Also probably want to do cross-validation on hyperparameters.
         self.model = SGDClassifier(loss='log', penalty='l2', alpha=0.0001, max_iter=15000, shuffle=True)
+        self.raw_embeddings = WordEmbeddings()
 
     # Train the classifier using x_train which is the set of sentences
     # And y_train which is the set of labels for those sentences
@@ -58,7 +64,8 @@ class PunDetectionWithFeaturesClassifier:
         # The text key refers to the plaintext
         feat_train = self.feat.train_feature({
             'tokens': x_train,
-            'string': list(map(lambda x: " ".join(x), x_train))
+            'string': [" ".join(x) for x in x_train],
+            'embeddings' : [self.raw_embeddings.embed(x) for x in x_train]
         })
 
         self.model.fit(feat_train, y_train)
@@ -71,7 +78,8 @@ class PunDetectionWithFeaturesClassifier:
         # Here we collect the test features
         feat_test = self.feat.test_feature({
             'tokens': x_test,
-            'string': list(map(lambda x: " ".join(x), x_test))
+            'string': [" ".join(x) for x in x_test],
+            'embeddings' : [self.raw_embeddings.embed(x) for x in x_test]
         })
         y_pred = self.model.predict(feat_test)
         accuracy = accuracy_score(y_pred, y_test)

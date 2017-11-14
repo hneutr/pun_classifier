@@ -44,7 +44,7 @@ if __name__ == "__main__":
 
         # Evaluate pun detection classifier
         confusion_matrix = Eval.confusion_matrix(detectionPredicted, data.y_test)
-        Eval.plot_precision_recall(detectionPredicted, data.y_test)
+        # Eval.plot_precision_recall(detectionPredicted, data.y_test)
 
 
 
