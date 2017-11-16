@@ -8,14 +8,9 @@ SEED = 20171110
 class HeterographicData:
 
     def __init__(self):
-        self.x_train = []
-        self.y_train = []
-        self.x_test = []
-        self.y_test = []
-
         with open("./data/pickles/test-1-heterographic.pkl.gz", 'rb') as f:
-            x_set, y_set = pickle.load(f)
-            self.x_train, self.x_test, self.y_train, self.y_test = train_test_split(x_set, y_set, random_state=SEED)
+            self.x_set, self.y_set = pickle.load(f)
+            self.x_train, self.x_test, self.y_train, self.y_test = train_test_split(self.x_set, self.y_set, random_state=SEED)
 
 
         # Split dataset
@@ -25,11 +20,6 @@ class HeterographicData:
 class HomographicData:
 
     def __init__(self):
-        self.x_train = []
-        self.y_train = []
-        self.x_test = []
-        self.y_test = []
-
         with open("./data/pickles/test-1-homographic.pkl.gz", 'rb') as f:
-            x_set, y_set = pickle.load(f)
-            self.x_train, self.x_test, self.y_train, self.y_test = train_test_split(x_set, y_set, random_state=SEED)
+            self.x_set, self.y_set = pickle.load(f)
+            self.x_train, self.x_test, self.y_train, self.y_test = train_test_split(self.x_set, self.y_set, random_state=SEED)
