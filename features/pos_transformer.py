@@ -21,7 +21,7 @@ class PosTransformer(BaseEstimator, TransformerMixin):
         self.le.fit(tag_list)
 
 
-    def fit(self, examples):
+    def fit(self, xs, ys):
         return self
 
     def transform(self, sentences):

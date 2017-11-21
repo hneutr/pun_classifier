@@ -1,9 +1,11 @@
-from pun_data import HeterographicData, HomographicData
-from baseline_location import BaselinePunLocationClassifier
-from baseline_detection import BaselinePunDetectionClassifier
-from pun_detection_with_features import PunDetectionWithFeaturesClassifier
-from eval import Eval
 import argparse
+
+from baseline_detection import BaselinePunDetectionClassifier
+from baseline_location import BaselinePunLocationClassifier
+from eval import Eval
+from pun_data import Data
+from pun_detection_with_features import PunDetectionWithFeaturesClassifier
+
 
 def printCurrentClassifier(name):
     print("\n\n---- Running  ", name, " Classifier --------\n")
@@ -19,14 +21,11 @@ if __name__ == "__main__":
                         help="run baselines or not. defaults to false.")
     parser.add_argument('--detection', action="store_true", default=False,
                         help="run detection algorithms or not. defaults to false.")
+    parser.add_argument('--even', action="store_false", default=True,
+                        help="run the algorithms on the more evenly split dataset")
     args = parser.parse_args()
 
-    if args.graphic == "homographic":
-        data = HomographicData()
-    elif args.graphic =="heterographic":
-        data = HeterographicData()
-    else :
-        raise Exception('Invalid pun type specified.')
+    data = Data(args.graphic, args.even)
 
     # PUN DETECTION
     if args.detection:
@@ -50,6 +49,7 @@ if __name__ == "__main__":
 
         # Evaluate pun detection classifier
         Eval.evaluateDetection(detectionPredicted, data.y_test)
+
 
 
 
