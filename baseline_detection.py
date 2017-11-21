@@ -11,11 +11,11 @@ class BaselinePunDetectionClassifier:
         self.y_train = y_train
 
         self.model.fit(self.x_train, self.y_train)
+        return self.model.predict(self.x_train)
 
     def test(self, x_test, y_test):
         self.x_test = self.featurizer.transform([ " ".join(x) for x in x_test ])
         self.y_test = y_test
 
-        score = self.model.score(self.x_test, self.y_test)
-        print("Accuracy on training set = %f" % score)
-        return score
+        return self.model.predict(self.x_test)
+

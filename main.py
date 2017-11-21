@@ -5,6 +5,9 @@ from pun_detection_with_features import PunDetectionWithFeaturesClassifier
 from eval import Eval
 import argparse
 
+def printCurrentClassifier(name):
+    print("\n\n---- Running  ", name, " Classifier --------\n")
+
 if __name__ == "__main__":
     # Get pun data for training and for testing
     data = None
@@ -29,28 +32,31 @@ if __name__ == "__main__":
     if args.detection:
         # Create baseline pun detection classifier, train it, and get predictions on test data
         if args.baselines:
+            printCurrentClassifier("Baseline Detection")
             baselineDetectionClassifier = BaselinePunDetectionClassifier()
-            baselineDetectionClassifier.train(data.x_train, data.y_train)
+            baselineDetectionTrainingPredicted = baselineDetectionClassifier.train(data.x_train, data.y_train)
+            Eval.evaluateAccuracy(baselineDetectionTrainingPredicted, data.y_train, 'training')
             baselineDetectionPredicted = baselineDetectionClassifier.test(data.x_test, data.y_test)
 
             # Evaluate baseline classifier
             Eval.evaluateDetection(baselineDetectionPredicted, data.y_test)
 
         # Create pun detection classifier, train it, and get predictions on test data
-        print("Running pun detection classifier with features...")
+        printCurrentClassifier("Pun Detection With Features")
         punDetectionClassifier = PunDetectionWithFeaturesClassifier()
-        punDetectionClassifier.train(data.x_train, data.y_train)
+        detectionTrainingPredicted = punDetectionClassifier.train(data.x_train, data.y_train)
+        Eval.evaluateAccuracy(detectionTrainingPredicted, data.y_train, 'training')
         detectionPredicted = punDetectionClassifier.test(data.x_test, data.y_test)
 
         # Evaluate pun detection classifier
-        confusion_matrix = Eval.confusion_matrix(detectionPredicted, data.y_test)
-        Eval.plot_precision_recall(detectionPredicted, data.y_test)
+        Eval.evaluateDetection(detectionPredicted, data.y_test)
+
 
 
 
     # PUN LOCATION
 
-
+    printCurrentClassifier("Baseline Location")
     # Create baseline pun detection classifier, train it, and get predictions on test data
     baselineLocationClassifier = BaselinePunLocationClassifier()
     baselineLocationClassifier.train(data.x_train, data.y_train)

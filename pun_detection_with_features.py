@@ -1,6 +1,6 @@
 from sklearn.linear_model import SGDClassifier
 from sklearn.pipeline import FeatureUnion, Pipeline
-from sklearn.metrics import accuracy_score
+
 
 from features.item_selector import ItemSelector
 from features.lesk_algorithm_transformer import LeskAlgorithmTransformer
@@ -62,9 +62,8 @@ class PunDetectionWithFeaturesClassifier:
         })
 
         self.model.fit(feat_train, y_train)
-        y_pred = self.model.predict(feat_train)
-        accuracy = accuracy_score(y_pred, y_train)
-        print("Accuracy on training set =", accuracy)
+        return self.model.predict(feat_train)
+
 
     # Make predictions on test data. Use the y_test labels to find accuracy of predictions.
     def test(self, x_test, y_test):
@@ -73,8 +72,6 @@ class PunDetectionWithFeaturesClassifier:
             'tokens': x_test,
             'string': list(map(lambda x: " ".join(x), x_test))
         })
-        y_pred = self.model.predict(feat_test)
-        accuracy = accuracy_score(y_pred, y_test)
-        print("Accuracy on test set =", accuracy)
-        return y_pred
+        return self.model.predict(feat_test)
+
 

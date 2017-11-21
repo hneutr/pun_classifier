@@ -5,13 +5,19 @@ from pandas_ml import ConfusionMatrix
 from sklearn.metrics import precision_recall_curve
 import matplotlib.pyplot as plt
 from sklearn.metrics import average_precision_score
+from sklearn.metrics import precision_recall_fscore_support
+from sklearn.metrics import accuracy_score
 
 # TODO
 class Eval:
 
+    # From this one method, call everything that we want to evaluate the system's performance on pun detection.
+    # This way only this one function need be called from main.
     @staticmethod
     def evaluateDetection(y_pred, y_true):
-        pass
+        Eval.evaluateAccuracy(y_pred, y_true)
+        Eval.evaluatePrecisionAndRecall(y_pred, y_true)
+        Eval.confusion_matrix(y_pred, y_true)
 
     @staticmethod
     def evaluateLocation(y_pred, y_true):
@@ -21,6 +27,18 @@ class Eval:
     def confusion_matrix(y_pred, y_true):
         confusion_matrix = ConfusionMatrix(y_true, y_pred)
         print("Confusion matrix:\n%s" % confusion_matrix)
+
+    @staticmethod
+    def evaluateAccuracy(y_pred, y_train, type='test'):
+        accuracy = accuracy_score(y_pred, y_train)
+        print("Accuracy on %s set: %f" % (type, accuracy))
+
+    @staticmethod
+    def evaluatePrecisionAndRecall(y_pred, y_true):
+        score = precision_recall_fscore_support(y_true, y_pred, average='weighted')
+        print("Precision: %s" % score[0])
+        print("Recall: %s" % score[1])
+        # Eval.plot_precision_recall(y_pred, y_true)
 
     @staticmethod
     def plot_precision_recall(y_pred, y_true):
