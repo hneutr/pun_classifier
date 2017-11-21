@@ -51,7 +51,6 @@ if __name__ == "__main__":
         if args.baselines:
             runClassifier(BaselinePunClassifier(), detectionData, Eval.evaluateDetection)
 
-
         runClassifier(PunDetectionWithFeaturesClassifier(), detectionData, Eval.evaluateDetection)
         runClassifier(PunRNNClassifier(), detectionData, Eval.evaluateDetection)
 
@@ -66,7 +65,6 @@ if __name__ == "__main__":
             runClassifier(BaselinePunClassifier(), locationData, Eval.evaluateLocation)
 
         runClassifier(PunRNNClassifier(), locationData, Eval.evaluateLocation)
-
 
     # TODO
     # Pun locater would go here, but likely won't start that until pun detection classifier is working
