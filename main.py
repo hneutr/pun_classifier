@@ -1,14 +1,26 @@
 import argparse
 
-from baseline_detection import BaselinePunDetectionClassifier
-from baseline_location import BaselinePunLocationClassifier
+from classifiers.baseline import BaselinePunClassifier
+from classifiers.pun_rnn import PunRNNClassifier
+from classifiers.pun_detection_with_features import PunDetectionWithFeaturesClassifier
+
 from eval import Eval
-from pun_data import Data
-from pun_detection_with_features import PunDetectionWithFeaturesClassifier
+from pun_data import DetectionData, LocationData
 
 
-def printCurrentClassifier(name):
-    print("\n\n---- Running  ", name, " Classifier --------\n")
+def runClassifier(classifier, data, evalFn):
+    print("\n\n---- Running  ", classifier.name, " Classifier --------\n")
+
+    # Train the classifier and evaluate it's training accuracy
+    trainingPredicted = classifier.train(data.x_train, data.y_train)
+    Eval.evaluateAccuracy(trainingPredicted, data.y_train, 'training')
+
+    # Test the classifier to get predictions
+    y_pred = classifier.test(data.x_test)
+
+    # Evaluate classifier on predicted output
+    evalFn(classifier.name, y_pred, data.y_test)
+
 
 if __name__ == "__main__":
     # Get pun data for training and for testing
@@ -21,49 +33,43 @@ if __name__ == "__main__":
                         help="run baselines or not. defaults to false.")
     parser.add_argument('--detection', action="store_true", default=False,
                         help="run detection algorithms or not. defaults to false.")
+    parser.add_argument('--location', action="store_true", default=False,
+                        help="run location algorithms or not. defaults to false.")
     parser.add_argument('--even', action="store_false", default=True,
                         help="run the algorithms on the more evenly split dataset")
     args = parser.parse_args()
 
-    data = Data(args.graphic, args.even)
+    print("Running %s puns" % args.graphic)
+
 
     # PUN DETECTION
     if args.detection:
-        # Create baseline pun detection classifier, train it, and get predictions on test data
+
+        detectionData = DetectionData(args.graphic, args.even)
+
+        # Create baseline pun detection classifier
         if args.baselines:
-            printCurrentClassifier("Baseline Detection")
-            baselineDetectionClassifier = BaselinePunDetectionClassifier()
-            baselineDetectionTrainingPredicted = baselineDetectionClassifier.train(data.x_train, data.y_train)
-            Eval.evaluateAccuracy(baselineDetectionTrainingPredicted, data.y_train, 'training')
-            baselineDetectionPredicted = baselineDetectionClassifier.test(data.x_test, data.y_test)
-
-            # Evaluate baseline classifier
-            Eval.evaluateDetection(baselineDetectionPredicted, data.y_test)
-
-        # Create pun detection classifier, train it, and get predictions on test data
-        printCurrentClassifier("Pun Detection With Features")
-        punDetectionClassifier = PunDetectionWithFeaturesClassifier()
-        detectionTrainingPredicted = punDetectionClassifier.train(data.x_train, data.y_train)
-        Eval.evaluateAccuracy(detectionTrainingPredicted, data.y_train, 'training')
-        detectionPredicted = punDetectionClassifier.test(data.x_test, data.y_test)
-
-        # Evaluate pun detection classifier
-        Eval.evaluateDetection(detectionPredicted, data.y_test)
+            runClassifier(BaselinePunClassifier(), detectionData, Eval.evaluateDetection)
 
 
-
+        runClassifier(PunDetectionWithFeaturesClassifier(), detectionData, Eval.evaluateDetection)
+        runClassifier(PunRNNClassifier(), detectionData, Eval.evaluateDetection)
 
 
     # PUN LOCATION
+    if args.location:
 
-    printCurrentClassifier("Baseline Location")
-    # Create baseline pun detection classifier, train it, and get predictions on test data
-    baselineLocationClassifier = BaselinePunLocationClassifier()
-    baselineLocationClassifier.train(data.x_train, data.y_train)
-    baselineLocationPredicted = baselineLocationClassifier.test(data.x_test)
+        locationData = LocationData(args.graphic)
 
-    # Evaluate baseline classifier
-    # Eval.evaluateDetection(baselineLocationPredicted, data.y_test)
+        # Create baseline pun location classifier
+        if args.baselines:
+            runClassifier(BaselinePunClassifier(), locationData, Eval.evaluateLocation)
+
+        runClassifier(PunRNNClassifier(), locationData, Eval.evaluateLocation)
+
 
     # TODO
     # Pun locater would go here, but likely won't start that until pun detection classifier is working
+
+    # Output final report
+    Eval.print_reports()

@@ -13,6 +13,7 @@ from word_embeddings import WordEmbeddings
 # Pun detection classifier using feature engineering
 class PunDetectionWithFeaturesClassifier:
     def __init__(self):
+        self.name = "Pun Detection With Features"
         self.raw_embeddings = WordEmbeddings()
 
         self.pipeline = Pipeline([
@@ -62,5 +63,5 @@ class PunDetectionWithFeaturesClassifier:
         return self.pipeline.predict(x_train)
 
     # Make predictions on test data. Use the y_test labels to find accuracy of predictions.
-    def test(self, x_test, y_test):
+    def test(self, x_test):
         return self.pipeline.predict(x_test)

@@ -8,20 +8,24 @@ from sklearn.metrics import average_precision_score
 from sklearn.metrics import precision_recall_fscore_support
 from sklearn.metrics import accuracy_score
 
-# TODO
 class Eval:
+
+    DetectionReports = []
+    LocationReports = []
 
     # From this one method, call everything that we want to evaluate the system's performance on pun detection.
     # This way only this one function need be called from main.
     @staticmethod
-    def evaluateDetection(y_pred, y_true):
-        Eval.evaluateAccuracy(y_pred, y_true)
+    def evaluateDetection(classifierName, y_pred, y_true):
+        accuracy = Eval.evaluateAccuracy(y_pred, y_true)
         Eval.evaluatePrecisionAndRecall(y_pred, y_true)
         Eval.confusion_matrix(y_pred, y_true)
+        Eval.DetectionReports.append({'name': classifierName, 'accuracy': accuracy})
 
     @staticmethod
-    def evaluateLocation(y_pred, y_true):
-        pass
+    def evaluateLocation(classifierName, y_pred, y_true):
+        accuracy = Eval.evaluateAccuracy(y_pred, y_true)
+        Eval.LocationReports.append({'name': classifierName, 'accuracy': accuracy})
 
     @staticmethod
     def confusion_matrix(y_pred, y_true):
@@ -32,6 +36,7 @@ class Eval:
     def evaluateAccuracy(y_pred, y_train, type='test'):
         accuracy = accuracy_score(y_pred, y_train)
         print("Accuracy on %s set: %f" % (type, accuracy))
+        return accuracy
 
     @staticmethod
     def evaluatePrecisionAndRecall(y_pred, y_true):
@@ -39,6 +44,22 @@ class Eval:
         print("Precision: %s" % score[0])
         print("Recall: %s" % score[1])
         # Eval.plot_precision_recall(y_pred, y_true)
+
+    @staticmethod
+    def print_reports():
+        if(len(Eval.DetectionReports)):
+            print("\nDetection Classifier Rankings")
+            Eval.print_report(Eval.DetectionReports)
+        if(len(Eval.LocationReports)):
+            print("\nLocation Classifier Rankings")
+            Eval.print_report(Eval.LocationReports)
+
+    @staticmethod
+    def print_report(report):
+        s = sorted(report, key=lambda x:x['accuracy'], reverse=True)
+        for index, item in enumerate(s):
+            print("%d: %s, Accuracy: %f" % (index+1, item['name'], item['accuracy']))
+
 
     @staticmethod
     def plot_precision_recall(y_pred, y_true):
