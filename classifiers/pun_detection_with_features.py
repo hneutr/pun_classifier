@@ -13,7 +13,7 @@ from word_embeddings import WordEmbeddings
 from features.n_grams import Unigram, Bigrams, Trigrams
 from features.negative_positive import Negatives, Positives
 from features.case_sensetives import AllUpper
-from features.homophones import Homophone
+from features.homophones import Homophone, Homophone_Number, Homophone_0_1
 
 
 
@@ -55,12 +55,12 @@ class PunDetectionWithFeaturesClassifier:
                             ('selector', ItemSelector(key='embeddings')),
                         ]))
                         ,
-                        #('unigram', Pipeline([
-                        #    ('selector', ItemSelector(key='string')),
-                        #    ('unigram for pun', Unigram()),
-                        #    ('vect', DictVectorizer())
-                        #]))
-                        #,
+                        ('unigram', Pipeline([
+                            ('selector', ItemSelector(key='string')),
+                            ('unigram for pun', Unigram()),
+                            ('vect', DictVectorizer())
+                        ]))
+                        ,
                         #('bigram', Pipeline([
                         #    ('selector', ItemSelector(key='string')),
                         #    ('bigrams for pun', Bigrams()),
@@ -89,12 +89,23 @@ class PunDetectionWithFeaturesClassifier:
                         #    ('trigrams for pun', AllUpper()),
                         #('vect', DictVectorizer())
                         #])),
-                        ('Homophone', Pipeline([
+                        #('Homophone', Pipeline([
+                        #    ('selector', ItemSelector(key='string')),
+                        #    ('homophones for pun', Homophone()),
+                        #('vect', DictVectorizer())
+                        #]))
+                        #,
+                        #('Homophone_number', Pipeline([
+                        #    ('selector', ItemSelector(key='string')),
+                        #    ('homophones for pun', Homophone_Number()),
+                        #('vect', DictVectorizer())
+                        #]))
+                        #,
+                        ('Homophone 0 1', Pipeline([
                             ('selector', ItemSelector(key='string')),
-                            ('homophones for pun', Homophone()),
+                            ('homophones for pun', Homophone_0_1()),
                         ('vect', DictVectorizer())
-                        ]))
-                        
+                        ]))                        
                         
                         
                         

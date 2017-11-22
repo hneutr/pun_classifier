@@ -6,7 +6,7 @@
 from sklearn.base import BaseEstimator, TransformerMixin
 from collections import defaultdict
 
-homophone_words = list(set(line.strip().lower() for line in open('features/homophones.txt', 'r').readlines()))
+homophone_words_list = list(set(line.strip().lower() for line in open('features/homophones.txt', 'r').readlines()))
 
 
 class Homophone (BaseEstimator, TransformerMixin):
@@ -18,7 +18,7 @@ class Homophone (BaseEstimator, TransformerMixin):
         return self
     def transform(self, x):
         
-        homophone_words = list(set(line.strip().lower() for line in open('features/homophones.txt', 'r').readlines()))
+        homophone_words = homophone_words_list
         features =[]
         for pun in x:
             pun = pun.strip().split()
@@ -27,6 +27,52 @@ class Homophone (BaseEstimator, TransformerMixin):
                 for word in homophone_words:
                     if words.lower() == word:
                         temp[word] += 1
+            features.append(temp)
+
+        return features
+
+
+class Homophone_Number (BaseEstimator, TransformerMixin):
+    
+    def __init__(self):
+        pass
+
+    def fit(self, x, y):
+        return self
+    def transform(self, x):
+        
+        homophone_words = homophone_words_list
+        features =[]
+        for pun in x:
+            pun = pun.strip().split()
+            temp = {'homophone':0}
+            for words in pun:
+                for word in homophone_words:
+                    if words.lower() == word:
+                        temp['homophone'] += 1
+            features.append(temp)
+            
+        return features
+
+
+class Homophone_0_1 (BaseEstimator, TransformerMixin):
+    
+    def __init__(self):
+        pass
+
+    def fit(self, x, y):
+        return self
+    def transform(self, x):
+        
+        homophone_words = homophone_words_list
+        features =[]
+        for pun in x:
+            pun = pun.strip().split()
+            temp = {'homophone':0}
+            for words in pun:
+                for word in homophone_words:
+                    if words.lower() == word:
+                        temp['homophone'] = 1
             features.append(temp)
             
         return features

@@ -1,7 +1,7 @@
 import argparse
 
 from classifiers.baseline import BaselinePunClassifier
-from classifiers.pun_rnn import PunRNNClassifier
+#from classifiers.pun_rnn import PunRNNClassifier
 from classifiers.pun_detection_with_features import PunDetectionWithFeaturesClassifier
 
 from eval import Eval
@@ -52,7 +52,7 @@ if __name__ == "__main__":
             runClassifier(BaselinePunClassifier(), detectionData, Eval.evaluateDetection)
 
         runClassifier(PunDetectionWithFeaturesClassifier(), detectionData, Eval.evaluateDetection)
-        runClassifier(PunRNNClassifier(), detectionData, Eval.evaluateDetection)
+        #runClassifier(PunRNNClassifier(), detectionData, Eval.evaluateDetection)
 
 
     # PUN LOCATION
