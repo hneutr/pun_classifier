@@ -69,6 +69,7 @@ class Homophone_0_1 (BaseEstimator, TransformerMixin):
         for pun in x:
             pun = pun.strip().split()
             temp = {'homophone':0}
+            #temp = {}
             for words in pun:
                 for word in homophone_words:
                     if words.lower() == word:
