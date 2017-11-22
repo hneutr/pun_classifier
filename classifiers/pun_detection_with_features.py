@@ -2,12 +2,19 @@ from sklearn.decomposition import TruncatedSVD
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.linear_model import SGDClassifier
 from sklearn.pipeline import FeatureUnion, Pipeline
+from sklearn.feature_extraction import DictVectorizer
 
 from features.item_selector import ItemSelector
 from features.lesk_algorithm_transformer import LeskAlgorithmTransformer
 from features.raw_transformer import RawTransformer
 from features.pos_transformer import PosTransformer
 from word_embeddings import WordEmbeddings
+
+from features.n_grams import Unigram, Bigrams, Trigrams
+from features.negative_positive import Negatives, Positives
+from features.case_sensetives import AllUpper
+from features.homophones import Homophone
+
 
 
 # Pun detection classifier using feature engineering
@@ -47,6 +54,53 @@ class PunDetectionWithFeaturesClassifier:
                         ('embeddings', Pipeline([
                             ('selector', ItemSelector(key='embeddings')),
                         ]))
+                        ,
+                        #('unigram', Pipeline([
+                        #    ('selector', ItemSelector(key='string')),
+                        #    ('unigram for pun', Unigram()),
+                        #    ('vect', DictVectorizer())
+                        #]))
+                        #,
+                        #('bigram', Pipeline([
+                        #    ('selector', ItemSelector(key='string')),
+                        #    ('bigrams for pun', Bigrams()),
+                        #    ('vect', DictVectorizer())
+                        #])), 
+                        #    ('trigram', Pipeline([
+                        #    ('selector', ItemSelector(key='string')),
+                        #   ('trigrams for review', Trigrams()),
+                        #    ('vect', DictVectorizer())
+                        #]))
+                        #,
+                        #('negatives', Pipeline([
+                        #    ('selector', ItemSelector(key='string')),
+                        #    ('trigrams for review', Negatives()),
+                        #    ('vect', DictVectorizer())
+                        #]))
+                        #,
+                        #('positives', Pipeline([
+                        #    ('selector', ItemSelector(key='string')),
+                        #    ('trigrams for review', Positives()),
+                        #    ('vect', DictVectorizer())
+                        #]))
+                        #,
+                        #('all_first_caps', Pipeline([
+                        #    ('selector', ItemSelector(key='string')),
+                        #    ('trigrams for pun', AllUpper()),
+                        #('vect', DictVectorizer())
+                        #])),
+                        ('Homophone', Pipeline([
+                            ('selector', ItemSelector(key='string')),
+                            ('homophones for pun', Homophone()),
+                        ('vect', DictVectorizer())
+                        ]))
+                        
+                        
+                        
+                        
+                        
+                        
+                        
                     ]
                 )
             ),
