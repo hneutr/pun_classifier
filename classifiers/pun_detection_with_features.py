@@ -14,6 +14,7 @@ from features.n_grams import Unigram, Bigrams, Trigrams
 from features.negative_positive import Negatives, Positives
 from features.case_sensetives import AllUpper
 from features.homophones import Homophone, Homophone_Number, Homophone_0_1
+from features.idioms import Idioms
 
 
 
@@ -55,12 +56,12 @@ class PunDetectionWithFeaturesClassifier:
                             ('selector', ItemSelector(key='embeddings')),
                         ]))
                         ,
-                        ('unigram', Pipeline([
-                            ('selector', ItemSelector(key='string')),
-                            ('unigram for pun', Unigram()),
-                            ('vect', DictVectorizer())
-                        ]))
-                        ,
+                        #('unigram', Pipeline([
+                        #    ('selector', ItemSelector(key='string')),
+                        #    ('unigram for pun', Unigram()),
+                        #    ('vect', DictVectorizer())
+                        #]))
+                        #,
                         #('bigram', Pipeline([
                         #    ('selector', ItemSelector(key='string')),
                         #    ('bigrams for pun', Bigrams()),
@@ -101,12 +102,17 @@ class PunDetectionWithFeaturesClassifier:
                         #('vect', DictVectorizer())
                         #]))
                         #,
-                        ('Homophone 0 1', Pipeline([
-                            ('selector', ItemSelector(key='string')),
-                            ('homophones for pun', Homophone_0_1()),
-                        ('vect', DictVectorizer())
-                        ]))                        
-                        
+                        #('Homophone 0 1', Pipeline([
+                        #    ('selector', ItemSelector(key='string')),
+                        #    ('homophones for pun', Homophone_0_1()),
+                        #('vect', DictVectorizer())
+                        #]))
+                        #,
+                        #('idiom 0 1', Pipeline([
+                        #    ('selector', ItemSelector(key='string')),
+                        #    ('idiom for pun', Idioms()),
+                        #('vect', DictVectorizer())
+                        #]))                        
                         
                         
                         
