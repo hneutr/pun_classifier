@@ -15,6 +15,7 @@ from features.negative_positive import Negatives, Positives
 from features.case_sensetives import AllUpper
 from features.homophones import Homophone, Homophone_Number, Homophone_0_1
 from features.idioms import Idioms
+from features.antonym import Antonyms
 
 
 
@@ -90,30 +91,34 @@ class PunDetectionWithFeaturesClassifier:
                         #    ('trigrams for pun', AllUpper()),
                         #('vect', DictVectorizer())
                         #])),
-                        #('Homophone', Pipeline([
-                        #    ('selector', ItemSelector(key='string')),
-                        #    ('homophones for pun', Homophone()),
-                        #('vect', DictVectorizer())
-                        #]))
-                        #,
-                        #('Homophone_number', Pipeline([
-                        #    ('selector', ItemSelector(key='string')),
-                        #    ('homophones for pun', Homophone_Number()),
-                        #('vect', DictVectorizer())
-                        #]))
-                        #,
-                        #('Homophone 0 1', Pipeline([
-                        #    ('selector', ItemSelector(key='string')),
-                        #    ('homophones for pun', Homophone_0_1()),
-                        #('vect', DictVectorizer())
-                        #]))
-                        #,
-                        #('idiom 0 1', Pipeline([
-                        #    ('selector', ItemSelector(key='string')),
-                        #    ('idiom for pun', Idioms()),
-                        #('vect', DictVectorizer())
-                        #]))                        
-                        
+                        ('Homophone', Pipeline([
+                            ('selector', ItemSelector(key='string')),
+                            ('homophones for pun', Homophone()),
+                        ('vect', DictVectorizer())
+                        ]))
+                        ,
+                        ('Homophone_number', Pipeline([
+                            ('selector', ItemSelector(key='string')),
+                            ('homophones for pun', Homophone_Number()),
+                        ('vect', DictVectorizer())
+                        ]))
+                        ,
+                        ('Homophone 0 1', Pipeline([
+                            ('selector', ItemSelector(key='string')),
+                            ('homophones for pun', Homophone_0_1()),
+                        ('vect', DictVectorizer())
+                        ]))
+                        ,
+                        ('idiom 0 1', Pipeline([
+                            ('selector', ItemSelector(key='string')),
+                            ('idiom for pun', Idioms()),
+                        ('vect', DictVectorizer())
+                        ])),                        
+                        ('antonyms 0 1', Pipeline([
+                            ('selector', ItemSelector(key='string')),
+                            ('antonyms for pun', Antonyms()),
+                        ('vect', DictVectorizer())
+                        ])),                      
                         
                         
                         
