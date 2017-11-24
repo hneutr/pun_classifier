@@ -16,6 +16,7 @@ from features.case_sensetives import AllUpper
 from features.homophones import Homophone, Homophone_Number, Homophone_0_1
 from features.idioms import Idioms
 from features.antonym import Antonyms
+from features.homonym import Homonym
 
 
 
@@ -119,7 +120,11 @@ class PunDetectionWithFeaturesClassifier:
                             ('antonyms for pun', Antonyms()),
                         ('vect', DictVectorizer())
                         ])),                      
-                        
+                        ('homonym 0 1', Pipeline([
+                            ('selector', ItemSelector(key='string')),
+                            ('homonym for pun', Homonym()),
+                        ('vect', DictVectorizer())
+                        ]))
                         
                         
                         
