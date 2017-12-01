@@ -8,91 +8,134 @@
     <link rel="stylesheet" href="skeleton/skeleton.css">
     <link rel="stylesheet" href="public/styles.css">
 
+    <script type="text/javascript" src="jquery/jquery.min.js"></script>
+    <script type="text/javascript" src="jquery-ui/jquery-ui.min.js"></script>
+    <script type="text/javascript" src="public/script.js"></script>
+
 </head>
 <body>
 
 <!-- Primary Page Layout
 –––––––––––––––––––––––––––––––––––––––––––––––––– -->
-
-<div class="section hero">
-    <div class="container">
-        <div class="row">
-            <div class="one-half column">
-                <h1>Punitive Measures</h1>
-                <!--<h4>Because finding a good pun is its own reword</h4>-->
-            </div>
-        </div>
-        <div class="row">
-            <div class="column">
-                <div class="magnify-container">
-                    <img class="magnify" src="public/magnify.jpg" alt="Magnifying Glass">
+<div class="page" id="pageone">
+    <div class="section hero">
+        <div class="container">
+            <div class="row">
+                <div class="one-half column">
+                    <h1 class="title">Punitive Measures</h1>
+                    <!--<h4>Because finding a good pun is its own reword</h4>-->
                 </div>
-                <div class="intro-container">
-                    <h4>
-                        Puns are everywhere! The trick is finding them.
-                        We take a closer look at sentences to see if there are any hiding.
-                    </h4>
+            </div>
+            <div class="row">
+                <div class="column">
+
+                    <div class="intro-container">
+                        <h4>
+                            Puns are everywhere! The trick is finding them.
+                            We take a closer look at sentences to see if there are any hiding.
+                        </h4>
+                    </div>
+
                 </div>
 
             </div>
+            <div class="row">
+                <div class="column">
+                    <h4 class="hero-heading">We look at 3 important measures</h4>
+                </div>
+            </div>
 
-        </div>
-        <div class="row">
-            <div class="column">
-                <h4 class="hero-heading">We look at 3 important measures</h4>
+            <div class="row">
+                <div class="column">
+
+                    <label>Is it a pun?</label>
+                    <input class="pun-input" type="text"/>
+                    <button class="go">Go</button>
+                </div>
             </div>
         </div>
+    </div>
+</div>
 
-    <div class="row">
-        <div class="one-half column">
 
-            <label>Is it a pun?</label>
-            <input type="text"/>
-            <button>Go</button>
-            <div class="loader">Loading...</div>
+<div class="page nodisplay" id="pagetwo">
+    <div class="pun-info-container">
+        <div class="section">
+            <div class="container">
+                <div class="row row-header">
+                    <div class="one-half column">
+                        <h2>
+                            Showing results for:
+                        </h2>
+                        <h2 class="pun-search"></h2>
+                    </div>
+                    <div class="one-half column">
+                        <button class="reset">Test a new pun</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="section">
+            <div class="container">
+                <div class="row">
+                    <div class="one-half column">
+                        <h4>
+                            <img class="magnify hidden" src="public/magnify.jpg"/>
+                            Pun Detection
+                        </h4>
+                    </div>
+                    <div class="one-half column">
+                        <div class="loader pun-detection-spinner">Loading...</div>
+                        <div class="pun-detection-text hidden">
+                            <p>
+                                 <img class="success" src="public/success.png"/>
+                                There is a 55% probability that this is in fact a pun!</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="section">
+            <div class="container">
+                <div class="row">
+                    <div class="one-half column">
+                        <h4>
+                            <img class="magnify hidden" src="public/magnify.jpg"/>
+                            Type of Pun
+                        </h4>
+                    </div>
+                    <div class="one-half column">
+                        <div class="loader pun-type-spinner">Loading...</div>
+                        <p class="pun-type-text hidden">
+                            This is most likely to be a heterographic pun.
+                            There was a 78% chance this was heterographic,
+                            and there was a 22% chance this was homographic.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="section">
+            <div class="container">
+                <div class="row">
+                    <div class="one-half column">
+                        <h4>
+                            <img class="magnify hidden" src="public/magnify.jpg"/>
+                            Pun Location
+                        </h4>
+                    </div>
+                    <div class="one-half column">
+                        <div class="loader pun-location-spinner">Loading...</div>
+                        <p class="pun-location-text hidden">
+                            Pun visualization goes here
+                        </p>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </div>
-</div>
 
-
-
-<div class="section">
-    <div class="container">
-         <div class="row">
-            <div class="column">
-                   <h4>
-                       Pun Detection
-                   </h4>
-               </div>
-         </div>
-        </div>
-    </div>
-</div>
-<div class="section">
-    <div class="container">
-         <div class="row">
-            <div class="column">
-                   <h4>
-                       Type of Pun
-                   </h4>
-               </div>
-         </div>
-        </div>
-    </div>
-</div>
-<div class="section">
-    <div class="container">
-         <div class="row">
-            <div class="column">
-                   <h4>
-                       Pun Location
-                   </h4>
-               </div>
-         </div>
-        </div>
-    </div>
-</div>
 
 <!-- End Document
   –––––––––––––––––––––––––––––––––––––––––––––––––– -->

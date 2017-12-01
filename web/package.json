@@ -10,6 +10,8 @@
   "license": "ISC",
   "dependencies": {
     "express": "^4.16.2",
+    "jquery": "^3.2.1",
+    "jquery-ui": "^1.12.1",
     "skeleton-css": "^2.0.4"
   }
 }
