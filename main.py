@@ -1,7 +1,7 @@
 import argparse
 
 from classifiers.baseline import BaselinePunClassifier
-#from classifiers.pun_rnn import PunRNNClassifier
+from classifiers.pun_rnn import PunRNNClassifier
 from classifiers.pun_detection_with_features import PunDetectionWithFeaturesClassifier
 
 from eval import Eval
@@ -13,7 +13,8 @@ def runClassifier(classifier, data, evalFn):
 
     # Train the classifier and evaluate it's training accuracy
     trainingPredicted = classifier.train(data.x_train, data.y_train)
-    Eval.evaluateAccuracy(trainingPredicted, data.y_train, 'training')
+    # Eval.evaluateAccuracy(trainingPredicted, data.y_train, 'training')
+    evalFn(classifier.name, trainingPredicted, data.y_train)
 
     # Test the classifier to get predictions
     y_pred = classifier.test(data.x_test)

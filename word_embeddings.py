@@ -30,13 +30,16 @@ class WordEmbeddings:
         return reduce(lambda x, y: x + y, embedded)
 
     # Code is from https://github.com/fchollet/keras/blob/master/examples/pretrained_word_embeddings.py
-    def get_embedding_matrix(self, word_index, num_words, max_num_words=20000):
-        embedding_matrix = np.zeros((num_words, self.embedding_length))
+    def get_matrix(self, word_index, num_words):
+        matrix = np.zeros((num_words, self.embedding_length))
         for word, i in word_index.items():
-            if i >= max_num_words:
+            if i >= num_words:
                 continue
-            embedding_vector = self.embeddings.get(word)
-            if embedding_vector is not None:
-                # words not found in embedding index will be all-zeros.
-                embedding_matrix[i] = embedding_vector
-        return embedding_matrix
+
+            vec = self.embeddings.get(word, None)
+
+            # unknown words will be zeroes
+            if vec is not None:
+                matrix[i] = vec
+
+        return matrix

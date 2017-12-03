@@ -1,52 +1,73 @@
 from keras.models import Sequential
 from keras.layers import Dense, Embedding
-from keras.layers import LSTM
+from keras.layers import LSTM, Input, TimeDistributed
 from keras.preprocessing.sequence import pad_sequences
 from keras.preprocessing.text import Tokenizer
 from word_embeddings import WordEmbeddings
+import numpy as np
 
 MAX_NB_WORDS = 20000
-batch_size = 32
-MAX_SEQUENCE_LENGTH = 1000
-EMBEDDING_DIM = 300
 
 class PunRNNClassifier:
     def __init__(self):
         self.name = "Pun RNN"
-        self.word_embeddings = WordEmbeddings()
-        self.model = Sequential()
-
+        self.embedding = WordEmbeddings()
 
     def train(self, x_train, y_train):
-        data, word_index = self.format_data(x_train)
+        # make y_train into a 1-hot vector
+        # self.y_train = np.asarray([np.eye(1, len(x), y)[0] for x, y in zip(x_train, y_train)])
+        self.y_train = y_train
 
-        # prepare embedding matrix
-        num_words = min(MAX_NB_WORDS, len(word_index) + 1)
-        embedding_matrix = self.word_embeddings.get_embedding_matrix(word_index, num_words, MAX_NB_WORDS)
+        self.fit_xs(x_train)
+        self.x_train = self.format_xs(x_train)
 
-        self.model.add(Embedding(num_words,
-                                    EMBEDDING_DIM,
-                                    weights=[embedding_matrix],
-                                    input_length=MAX_SEQUENCE_LENGTH))
+        num_words = min(MAX_NB_WORDS, len(self.word_index) + 1)
+        embedding_matrix = self.embedding.get_matrix(self.word_index, num_words)
 
-        self.model.add(LSTM(128, dropout=0.2, recurrent_dropout=0.2))
-        self.model.add(Dense(1, activation='sigmoid'))
+        self.model = Sequential()
+        self.model.add(
+            Embedding(
+                num_words,
+                self.embedding.embedding_length,
+                weights = [ embedding_matrix ],
+            )
+        )
+        self.model.add(LSTM(128, recurrent_dropout=.2, dropout=.2, input_dim=300, return_sequences=True))
+        self.model.add(TimeDistributed(Dense(1, activation='sigmoid')))
+        self.model.compile(loss='binary_crossentropy', optimizer='adam', metrics=['accuracy'])
 
-        self.model.compile(loss='binary_crossentropy',
-                           optimizer='adam',
-                           metrics=['accuracy'])
+        for i in range(1, 4):
+            print("epoch ", i)
+            for x, y in zip(self.x_train, self.y_train):
+                x = x.reshape(1, len(x))
+                y = y.reshape(1, len(y), 1)
 
-        self.model.fit(data, y_train, batch_size=batch_size,epochs=3)
-        return self.model.predict_classes(data)
+                self.model.fit(x, y, batch_size=1, epochs=1, verbose=0)
+
+        return self.get_predicted_classes(self.x_train)
+
+    def get_predicted_classes(self, xs):
+        predictions = []
+        for x in xs:
+            x = x.reshape(1, len(x))
+            prediction = self.model.predict_classes(x, batch_size=1, verbose=0)[0]
+
+            # magic, I don't know (why this needs to be done, that is)
+            prediction = [p[0] for p in prediction]
+            predictions.append(prediction)
+
+        return predictions
+
 
     def test(self, x_test):
-        data, word_index = self.format_data(x_test)
-        return list(map(lambda x: x[0], self.model.predict_classes(data)))
+        self.x_test = self.format_xs(x_test)
 
-    def format_data(self, x_data):
+        return self.get_predicted_classes(self.x_test)
+
+    def format_xs(self, xs):
+        return np.asarray([np.asarray([self.word_index.get(t.lower(), 0) for t in x]) for x in xs])
+
+    def fit_xs(self, xs):
         tokenizer = Tokenizer(num_words=MAX_NB_WORDS)
-        sentences = list(map(lambda x: ' '.join(x), x_data))
-        tokenizer.fit_on_texts(sentences)
-        sequences = tokenizer.texts_to_sequences(sentences)
-        data = pad_sequences(sequences, maxlen=MAX_SEQUENCE_LENGTH)
-        return data, tokenizer.word_index
+        tokenizer.fit_on_texts([' '.join(x) for x in xs])
+        self.word_index = tokenizer.word_index

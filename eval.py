@@ -7,6 +7,7 @@ import matplotlib.pyplot as plt
 from sklearn.metrics import average_precision_score
 from sklearn.metrics import precision_recall_fscore_support
 from sklearn.metrics import accuracy_score
+import numpy as np
 
 class Eval:
 
@@ -24,7 +25,15 @@ class Eval:
 
     @staticmethod
     def evaluateLocation(classifierName, y_pred, y_true):
-        accuracy = Eval.evaluateAccuracy(y_pred, y_true)
+        correct = 0
+        total = len(y_pred)
+        for y_pred_i, y_true_i in zip(y_pred, y_true):
+            if np.array_equal(y_pred_i, y_true_i):
+                correct += 1
+
+        accuracy = correct / total if correct else 0.0
+
+        # accuracy = Eval.evaluateAccuracy(y_pred, y_true)
         Eval.LocationReports.append({'name': classifierName, 'accuracy': accuracy})
 
     @staticmethod
