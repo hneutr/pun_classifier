@@ -146,3 +146,6 @@ class PunDetectionWithFeaturesClassifier:
     # Make predictions on test data. Use the y_test labels to find accuracy of predictions.
     def test(self, x_test):
         return self.pipeline.predict(x_test)
+
+    def test_with_probabilities(self, x_test):
+        return self.pipeline.predict_proba(x_test)
