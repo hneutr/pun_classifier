@@ -3,6 +3,7 @@ import argparse
 from classifiers.baseline import BaselinePunClassifier
 from classifiers.pun_rnn import PunRNNClassifier
 from classifiers.pun_detection_with_features import PunDetectionWithFeaturesClassifier
+from classifiers.sliding_window import PunSlidingWindowClassifier
 
 from eval import Eval
 from pun_data import DetectionData, LocationData
@@ -53,7 +54,7 @@ if __name__ == "__main__":
             runClassifier(BaselinePunClassifier(), detectionData, Eval.evaluateDetection)
 
         runClassifier(PunDetectionWithFeaturesClassifier(), detectionData, Eval.evaluateDetection)
-        #runClassifier(PunRNNClassifier(), detectionData, Eval.evaluateDetection)
+        runClassifier(PunRNNClassifier(), detectionData, Eval.evaluateDetection)
 
 
     # PUN LOCATION
@@ -66,9 +67,8 @@ if __name__ == "__main__":
             runClassifier(BaselinePunClassifier(), locationData, Eval.evaluateLocation)
 
         runClassifier(PunRNNClassifier(), locationData, Eval.evaluateLocation)
+        runClassifier(PunSlidingWindowClassifier(), locationData, Eval.evaluateLocation)
 
-    # TODO
-    # Pun locater would go here, but likely won't start that until pun detection classifier is working
 
     # Output final report
     Eval.print_reports()
