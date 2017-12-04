@@ -136,6 +136,10 @@
 .success {
     margin-right: 20px;
 }
+.failure {
+    margin-right: 20px;
+    height: 64px;
+}
 
 /*
 Spinner
