@@ -42,18 +42,25 @@ $(document).ready(function () {
                 url: baseUrl + "detection",
                 data: pun
             }).done(function (data) {
-                $(".pun-detection-text").removeClass("hidden")
-                var isPun = data.pun * 100;
-                if (isPun > 50) {
-                    $(".pun-detection-text").append("<div class=pun-detection-p'><p><img class=\"success\" src=\"public/success.png\"/>\n" +
-                        "                                There is a " + (data.pun * 100) + " % probability that this is in fact a pun!" +
-                        "Probability of not being a pun is " + (data['non-pun'] * 100) + " %</p></div>")
-                }
-                else {
-                    $(".pun-detection-text").append("<div class=pun-detection-p'><p><img class=\"failure\" src=\"public/failure.png\"/>\n" +
-                        "                                This is most likely not a pun. The probability of not being a pun is " + (data['non-pun'] * 100) + " %. " +
-                        "The probability that this is a pun is " + (data.pun * 100) + " %</p></div>")
-                }
+                $(".pun-detection-text").removeClass("hidden");
+
+                var types = ["baseline", "features"];
+                types.forEach(function (t) {
+                    var isPun = data[t].pun * 100;
+                    var elementName = "." + t + "-detection";
+                    if (isPun > 50) {
+                        $(elementName).append("" +
+                            "<p><img class=\"success\" src=\"public/success.png\"/>\n" +
+                            "There is a " + (data[t].pun * 100) + "% probability that this is in fact a pun!" +
+                            " Probability of not being a pun is " + (data[t]['non-pun'] * 100) + "%.</p>")
+                    }
+                    else {
+                        $(elementName).append("" +
+                            "<p><img class=\"failure\" src=\"public/failure.png\"/>\n" +
+                            "This is most likely not a pun. The probability of not being a pun is " + (data[t]['non-pun'] * 100) + "%. " +
+                            " The probability that this is a pun is " + (data[t].pun * 100) + "%.</p>")
+                    }
+                });
 
 
                 $(".pun-detection-spinner").addClass("hidden");
@@ -83,7 +90,7 @@ $(document).ready(function () {
 
 
         $(".pun-detection-text").addClass("hidden");
-        $(".pun-detection-p").remove();
+        $(".pun-detection-inner-text").remove();
         $(".pun-detection-spinner").removeClass("hidden");
 
         $(".pun-type-text").addClass("hidden");
