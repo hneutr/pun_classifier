@@ -9,14 +9,21 @@ import numpy as np
 MAX_NB_WORDS = 20000
 
 class PunRNNClassifier:
-    def __init__(self):
+    def __init__(self, output="word"):
+        """
+        output can be one of:
+            - word
+            - sequence
+            - binary
+        """
+
         self.name = "Pun RNN"
         self.embedding = WordEmbeddings()
+        self.output = output
 
     def train(self, x_train, y_train):
         # make y_train into a 1-hot vector
-        # self.y_train = np.asarray([np.eye(1, len(x), y)[0] for x, y in zip(x_train, y_train)])
-        self.y_train = y_train
+        self.y_train = np.asarray([np.eye(1, len(x), y)[0] for x, y in zip(x_train, y_train)])
 
         self.fit_xs(x_train)
         self.x_train = self.format_xs(x_train)
@@ -44,9 +51,46 @@ class PunRNNClassifier:
 
                 self.model.fit(x, y, batch_size=1, epochs=1, verbose=0)
 
-        return self.get_predicted_classes(self.x_train)
+        return self.get_output(self.x_train)
 
-    def get_predicted_classes(self, xs):
+
+    def get_output(self, xs):
+        if self.output == "word":
+            return self.get_word_predictions(xs)
+        elif self.output == "sequence":
+            return self.get_sequence_predictions(xs)
+        elif self.output == "binary":
+            return self.get_binary_predictions(xs)
+
+    def get_binary_predictions(self, xs):
+        predictions = []
+        for x in xs:
+            x = x.reshape(1, len(x))
+            prediction = self.model.predict(x, batch_size=1, verbose=0)[0]
+
+            # magic, I don't know (why this needs to be done, that is)
+            prediction = [p[0] for p in prediction]
+
+            is_pun = 1 if len([ 1 for x in prediction if x > .5 ]) else 0
+            predictions.append(word_is_pun)
+
+        return predictions
+
+    def get_word_predictions(self, xs):
+        predictions = []
+        for x in xs:
+            x = x.reshape(1, len(x))
+            prediction = self.model.predict(x, batch_size=1, verbose=0)[0]
+
+            # magic, I don't know (why this needs to be done, that is)
+            prediction = [p[0] for p in prediction]
+
+            word_index = np.argmax(prediction)
+            predictions.append(word_index)
+
+        return predictions
+
+    def get_sequence_predictions(self, xs):
         predictions = []
         for x in xs:
             x = x.reshape(1, len(x))
@@ -62,7 +106,7 @@ class PunRNNClassifier:
     def test(self, x_test):
         self.x_test = self.format_xs(x_test)
 
-        return self.get_predicted_classes(self.x_test)
+        return self.get_output(self.x_test)
 
     def format_xs(self, xs):
         return np.asarray([np.asarray([self.word_index.get(t.lower(), 0) for t in x]) for x in xs])

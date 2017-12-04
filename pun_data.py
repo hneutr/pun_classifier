@@ -33,6 +33,17 @@ class LocationData:
                                                                                     random_state=SEED)
 
             # make y_set into a 1-hot vector
-            self.y_train = np.asarray([np.eye(1, len(x), y)[0] for x, y in zip(self.x_train, self.y_train)])
-            self.y_test = np.asarray([np.eye(1, len(x), y)[0] for x, y in zip(self.x_test, self.y_test)])
+            # self.y_train = np.asarray([np.eye(1, len(x), y)[0] for x, y in zip(self.x_train, self.y_train)])
+            # self.y_test = np.asarray([np.eye(1, len(x), y)[0] for x, y in zip(self.x_test, self.y_test)])
 
+def one_hot_encode(self, xs, ys):
+    """
+    args:
+        - xs: [#examples][example len]
+            - example len varies by example
+        - ys: [#examples][index]
+
+    returns:
+        - one_hots: [#xamples][example len]
+    """
+    return np.asarray([np.eye(1, len(x), y)[0] for x, y in zip(xs, ys)])

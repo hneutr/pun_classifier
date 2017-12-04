@@ -4,6 +4,7 @@ from nltk import download
 from nltk.corpus import stopwords
 from nltk import pos_tag
 from nltk.stem.snowball import SnowballStemmer
+import numpy as np
 download('words')
 download('averaged_perceptron_tagger')
 
@@ -11,11 +12,15 @@ download('averaged_perceptron_tagger')
 
 class PunSlidingWindowClassifier(ClassifierBasedTagger):
 
-    def __init__(self):
+    def __init__(self, output="word"):
         self.name = "Sliding Window"
+        self.output = output
 
 
     def train(self, x_train, y_train):
+        # make y one-hot
+        y_train = np.asarray([np.eye(1, len(x), y)[0] for x, y in zip(x_train, y_train)])
+
         train = [list(zip(a[0], a[1])) for a in zip(x_train, y_train)]
         ClassifierBasedTagger.__init__(
             self, train=train,
@@ -76,11 +81,27 @@ class PunSlidingWindowClassifier(ClassifierBasedTagger):
         return features
 
     def test(self, x_test):
-        tagged_sents = self.tag_sents(x_test)
+        return self.get_output(x_test)
 
-      #  self._classifier.show_most_informative_features()
+    def get_output(self, xs):
+        tagged_sents = [[t[1] for t in sent] for sent in self.tag_sents(xs)]
 
-        return [[t[1] for t in sent] for sent in tagged_sents]
+        if self.output == "word":
+            return self.get_word_predictions(tagged_sents)
+        elif self.output == "sequence":
+            return tagged_sents
+        elif self.output == "binary":
+            return self.get_binary_predictions(tagged_sents)
 
+    def get_binary_predictions(self, tagged_sents):
+        predictions = []
 
+        for sent in tagged_sents:
+            is_pun = 1 if len([1 for t in sent if t > .5]) else 0
 
+            predictions.append(is_pun)
+
+        return predictions
+
+    def get_word_predictions(self, tagged_sents):
+        return [np.argmax(sent) for sent in tagged_sents]

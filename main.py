@@ -37,12 +37,15 @@ if __name__ == "__main__":
                         help="run detection algorithms or not. defaults to false.")
     parser.add_argument('--location', action="store_true", default=False,
                         help="run location algorithms or not. defaults to false.")
+    parser.add_argument('--window', action="store_true", default=False,
+                        help="run the sliding window algorithm for location")
+    parser.add_argument('--rnn', action="store_true", default=False,
+                        help="run the rnn algorithm for location")
     parser.add_argument('--even', action="store_false", default=True,
                         help="run the algorithms on the more evenly split dataset")
     args = parser.parse_args()
 
     print("Running %s puns" % args.graphic)
-
 
     # PUN DETECTION
     if args.detection:
@@ -54,7 +57,9 @@ if __name__ == "__main__":
             runClassifier(BaselinePunClassifier(), detectionData, Eval.evaluateDetection)
 
         runClassifier(PunDetectionWithFeaturesClassifier(), detectionData, Eval.evaluateDetection)
-        runClassifier(PunRNNClassifier(), detectionData, Eval.evaluateDetection)
+
+        # if args.rnn:
+        #     runClassifier(PunRNNClassifier(output="binary"), detectionData, Eval.evaluateDetection)
 
 
     # PUN LOCATION
@@ -66,8 +71,11 @@ if __name__ == "__main__":
         if args.baselines:
             runClassifier(BaselinePunClassifier(), locationData, Eval.evaluateLocation)
 
-        runClassifier(PunRNNClassifier(), locationData, Eval.evaluateLocation)
-        runClassifier(PunSlidingWindowClassifier(), locationData, Eval.evaluateLocation)
+        if args.rnn:
+            runClassifier(PunRNNClassifier(output="word"), locationData, Eval.evaluateLocation)
+
+        if args.window:
+            runClassifier(PunSlidingWindowClassifier(output="word"), locationData, Eval.evaluateLocation)
 
 
     # Output final report

@@ -7,6 +7,8 @@ import matplotlib.pyplot as plt
 from sklearn.metrics import average_precision_score
 from sklearn.metrics import precision_recall_fscore_support
 from sklearn.metrics import accuracy_score
+from sklearn.metrics import f1_score
+from functools import reduce
 import numpy as np
 
 class Eval:
@@ -25,16 +27,29 @@ class Eval:
 
     @staticmethod
     def evaluateLocation(classifierName, y_pred, y_true):
-        correct = 0
+        correct = len([1 for pred, true in zip(y_pred, y_true) if pred == true])
         total = len(y_pred)
-        for y_pred_i, y_true_i in zip(y_pred, y_true):
-            if np.array_equal(y_pred_i, y_true_i):
-                correct += 1
+        # correct = 0
+        # total = len(y_pred)
+        # for y_pred_i, y_true_i in zip(y_pred, y_true):
+        #     if np.array_equal(y_pred_i, y_true_i):
+        #         correct += 1
 
         accuracy = correct / total if correct else 0.0
 
         # accuracy = Eval.evaluateAccuracy(y_pred, y_true)
         Eval.LocationReports.append({'name': classifierName, 'accuracy': accuracy})
+
+        # y_pred_all = reduce(lambda x, y: x + y, y_pred)
+        # y_true_all = [ int(y) for y in reduce(lambda x, y: x + y, [y.tolist() for y in y_true]) ]
+        # score = precision_recall_fscore_support(y_true_all, y_pred_all, average='weighted')
+        # f_1 = f1_score(y_true_all, y_pred_all)
+
+        score = precision_recall_fscore_support(y_true, y_pred, average='weighted')
+        f_1 = f1_score(y_true, y_pred, average='macro')
+        print("Precision: %s" % score[0])
+        print("Recall: %s" % score[1])
+        print("F1: %s" % f_1)
 
     @staticmethod
     def confusion_matrix(y_pred, y_true):
