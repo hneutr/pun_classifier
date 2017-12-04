@@ -90,7 +90,8 @@ $(document).ready(function () {
 
 
         $(".pun-detection-text").addClass("hidden");
-        $(".pun-detection-inner-text").remove();
+        $(".baseline-detection").empty();
+        $(".features-detection").empty();
         $(".pun-detection-spinner").removeClass("hidden");
 
         $(".pun-type-text").addClass("hidden");
