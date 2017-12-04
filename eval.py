@@ -27,28 +27,17 @@ class Eval:
 
     @staticmethod
     def evaluateLocation(classifierName, y_pred, y_true):
-        correct = len([1 for pred, true in zip(y_pred, y_true) if pred == true])
-        total = len(y_pred)
-        # correct = 0
-        # total = len(y_pred)
-        # for y_pred_i, y_true_i in zip(y_pred, y_true):
-        #     if np.array_equal(y_pred_i, y_true_i):
-        #         correct += 1
-
-        accuracy = correct / total if correct else 0.0
-
-        # accuracy = Eval.evaluateAccuracy(y_pred, y_true)
+        accuracy = Eval.evaluateAccuracy(y_pred, y_true)
         Eval.LocationReports.append({'name': classifierName, 'accuracy': accuracy})
 
-        # y_pred_all = reduce(lambda x, y: x + y, y_pred)
-        # y_true_all = [ int(y) for y in reduce(lambda x, y: x + y, [y.tolist() for y in y_true]) ]
-        # score = precision_recall_fscore_support(y_true_all, y_pred_all, average='weighted')
-        # f_1 = f1_score(y_true_all, y_pred_all)
-
         score = precision_recall_fscore_support(y_true, y_pred, average='weighted')
-        f_1 = f1_score(y_true, y_pred, average='macro')
-        print("Precision: %s" % score[0])
-        print("Recall: %s" % score[1])
+
+        precision = score[0]
+        recall = score[1]
+        f_1 = score[2]
+
+        print("Precision: %s" % precision)
+        print("Recall: %s" % recall)
         print("F1: %s" % f_1)
 
     @staticmethod

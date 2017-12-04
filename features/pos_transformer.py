@@ -5,9 +5,6 @@ import numpy as np
 from nltk import pos_tag
 from nltk import download as nltk_download
 
-nltk_download('averaged_perceptron_tagger')
-
-
 class PosTransformer(BaseEstimator, TransformerMixin):
 
     def __init__(self):

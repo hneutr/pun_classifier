@@ -2,8 +2,6 @@ from sklearn.base import BaseEstimator, TransformerMixin
 import numpy as np
 from nltk.wsd import lesk
 from nltk import download as nltk_download
-nltk_download('wordnet')
-
 
 class LeskAlgorithmTransformer(BaseEstimator, TransformerMixin):
 

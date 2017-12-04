@@ -14,8 +14,7 @@ def runClassifier(classifier, data, evalFn):
 
     # Train the classifier and evaluate it's training accuracy
     trainingPredicted = classifier.train(data.x_train, data.y_train)
-    # Eval.evaluateAccuracy(trainingPredicted, data.y_train, 'training')
-    evalFn(classifier.name, trainingPredicted, data.y_train)
+    Eval.evaluateAccuracy(trainingPredicted, data.y_train, 'training')
 
     # Test the classifier to get predictions
     y_pred = classifier.test(data.x_test)
