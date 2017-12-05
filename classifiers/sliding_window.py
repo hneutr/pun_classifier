@@ -54,8 +54,8 @@ class PunSlidingWindowClassifier(ClassifierBasedTagger):
     def _feature_detector(self, tokens, index, history):
         index += self.window
 
-        right_padding = [(f'[START{i}]', f'<S{i}>') for i in range(self.window, 0, -1)]
-        left_padding = [(f'[END{i}]', f'<E{i}>') for i in range(self.window, 0, -1)]
+        right_padding = [('[START%d]' % i, '<S{%d}>' % i) for i in range(self.window, 0, -1)]
+        left_padding = [('[END{%d}]' % i, '<E{%d}>' % i) for i in range(self.window, 0, -1)]
 
         # Need to pad tokens with start/end tags for when window is at start or end of sentence
         tokens = right_padding + list(tokens) + left_padding
@@ -76,10 +76,10 @@ class PunSlidingWindowClassifier(ClassifierBasedTagger):
             }
 
         for i in range(1, self.window+1):
-            features[f'prev{i}word'] = tokens[index-i][0]
-            features[f'prev{i}pos'] = tokens[index-i][1]
-            features[f'next{i}word'] = tokens[index+i][0]
-            features[f'next{i}pos'] = tokens[index+i][1]
+            features['prev{%d}word' % i] = tokens[index-i][0]
+            features['prev{%d}pos' % i] = tokens[index-i][1]
+            features['next{%d}word' % i] = tokens[index+i][0]
+            features['next{%d}pos' % i] = tokens[index+i][1]
 
         return features
 
