@@ -2,8 +2,8 @@ from sklearn.naive_bayes import MultinomialNB
 from sklearn.feature_extraction.text import CountVectorizer
 
 class BaselinePunClassifier:
-    def __init__(self):
-        self.name = "Baseline"
+    def __init__(self, type):
+        self.name = "Baseline %s" % type
         self.model = MultinomialNB()
         self.featurizer = CountVectorizer()
     

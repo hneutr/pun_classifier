@@ -64,7 +64,7 @@ if __name__ == "__main__":
 
         # Create baseline pun detection classifier
         if args.baselines:
-            runClassifier(BaselinePunClassifier(), detectionData, Eval.evaluateDetection, args.use_cached)
+            runClassifier(BaselinePunClassifier(type="Detection"), detectionData, Eval.evaluateDetection, args.use_cached)
 
         runClassifier(PunDetectionWithFeaturesClassifier(), detectionData, Eval.evaluateDetection, args.use_cached)
 
@@ -79,7 +79,7 @@ if __name__ == "__main__":
 
         # Create baseline pun location classifier
         if args.baselines:
-            runClassifier(BaselinePunClassifier(), locationData, Eval.evaluateLocation, args.use_cached)
+            runClassifier(BaselinePunClassifier(type="Location"), locationData, Eval.evaluateLocation, args.use_cached)
 
         if args.rnn:
             runClassifier(PunRNNClassifier(output="word"), locationData, Eval.evaluateLocation, args.use_cached)

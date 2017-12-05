@@ -15,8 +15,10 @@ class Cache:
         return pickle.load(open(self._get_filename(classifier), "rb"))
 
     def set(self, classifier):
-        f = open(self._get_filename(classifier), "wb")
-        pickle.dump(classifier, f)
+        # Some classifiers may not cache for the time being
+        if not hasattr(classifier, 'no_cache'):
+            f = open(self._get_filename(classifier), "wb")
+            pickle.dump(classifier, f)
 
     def _get_filename(self, classifier):
         return './cache/%s.pkl' % classifier.name
