@@ -69,41 +69,55 @@
 
 \begin{document}
 \begin{frame}[t]
-  \begin{columns}[t]												% the [t] option aligns the column's content at the top
-    \begin{column}{\sepwid}\end{column}			% empty spacer column
-    \begin{column}{\onecolwid}
-      \begin{alertblock}{Objectives}
-        {\Large
-		We worked on two tasks: pun detection (identifying whether a sentence is a pun or not) and pun location (identifying which word in a pun sentence 'makes' the pun)}
-        
-      \end{alertblock}
-      
-      \begin{block}{Introduction}
-        {\large Terminology:
-        \vskip1ex
-        \begin{itemize}
-          \item {\textbf{Pun} : A pun is a form of wordplay in which a word\textquotesingle s multiple meanings or similar sounding words are used in a comedical manner. There are many different types of puns.}
-           \item {\textbf{Homographic Pun} : A homographic pun involves two words which are spelled the same but have different meanings.\\
-           Example - \textit{I used to be a banker but I lost \textbf{interest}.}}
-          \item {\textbf{Heterographic Pun} : A heterographic pun involves a word which sounds similar to another word which is spelled slightly differently.\\
-          Example - \textit{Two construction workers had a \textbf{stairing} contest.}}
-          \end{itemize}
-          \\
-        In our project, we have made use of extensive machine learning techniques to detect and locate a pun in a sentence. Along with that, we are also able to find out that if there is a pun, whether it is homographic or heterographic.\\}
-      \end{block}
-      \vskip2ex
-      
-      
-      \begin{block}{Motivation}
-       {\large \begin{itemize}
-           \item Puns can be found almost everywhere, from things like advertising and marketing to literature and conversation.
-           \item If a machine could understand puns, or even generate puns, it could be used for the benefit of companies, to create more natural conversation, and even to assist in translation.
-           \item The benefits of pun learning are outstanding, and even further, it would be a step towards better understanding and surpassing the ambiguity of much natural language.
-           \end{itemize}}
-        
-        \end{block}
+	\begin{columns}[t] % the [t] option aligns the column's content at the top
+		\begin{column}{\sepwid}\end{column}			% empty spacer column
+		\begin{column}{\onecolwid}
+		% \begin{alertblock}{Objectives}
+		% 	{\Large
+		% 		We worked on two tasks: pun detection (identifying whether a sentence is a pun or not) and pun location (identifying which word in a pun sentence 'makes' the pun)
+		% 	}
+		% \end{alertblock}
 
-    \end{column}
+		\begin{block}{Introduction and Motivation}
+			{\large
+				A \textbf{Pun} is form of wordplay in which a word\textquotesingle s multiple meanings or similar sounding words are used in a comedical manner. A pun can appear in any context where language is used, and the intended effect of a pun often varies depending on the context.\\
+					\vskip2ex
+				There are many types of puns, but in our project we focused on these two types:\\
+					\\
+				
+				\begin{itemize}
+					\item {\textbf{Homographic}: A pun involving two words whose spellings are the same but have different meanings.\\
+							\textit{I used to be a banker but I lost \textbf{interest}.}}
+					\item {\textbf{Heterographic}: A pun involves two or more words which sound alike but are spelled differently.\\
+							\textit{Two construction workers had a \textbf{stairing} contest.}}
+				\end{itemize}
+				\\
+
+				If a sentence is not understood to be a pun, or if the pun is not understood or is misunderstood, meaning has been lost, making the accurate identification and interpretation of puns essential in any domain they appear in.\\
+				\begin{itemize}
+					% \item 
+					\item If a machine could understand puns, or even generate puns, it could be used for the benefit of companies, to create more natural conversation, and even to assist in translation.
+					\item The benefits of pun learning are outstanding, and even further, it would be a step towards better understanding and surpassing the ambiguity of much natural language.
+				\end{itemize}
+			}
+		\end{block}
+		\vskip2ex
+
+
+		\begin{block}{Tasks}
+			{\large
+				We worked on two tasks: 
+				\begin{itemize}
+					% \item 
+					\item {Pun \textbf{Detection}: determining whether a sentence is a pun or not}
+					\item {Pun \textbf{Location}: identifying the word in a pun sentence which 'makes' the pun}
+				\end{itemize}
+				We used machine learning techniques to detect and locate a pun in a sentence. Along with that, we are also able to find out that if there is a pun, whether it is homographic or heterographic.\\
+			}
+
+		\end{block}
+
+		\end{column}
 
 \begin{column}{\sepwid}\end{column} % Empty spacer column
 
