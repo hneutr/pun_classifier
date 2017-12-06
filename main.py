@@ -1,21 +1,30 @@
 import argparse
 
+from cache.cache import Cache
 from classifiers.baseline import BaselinePunClassifier
-from classifiers.pun_rnn import PunRNNClassifier
 from classifiers.pun_detection_with_features import PunDetectionWithFeaturesClassifier
+from classifiers.pun_rnn import PunRNNClassifier
 from classifiers.sliding_window import PunSlidingWindowClassifier
-
 from eval import Eval
 from pun_data import DetectionData, LocationData
 
+cache = Cache()
 
-def runClassifier(classifier, data, evalFn):
+def runClassifier(classifier, data, evalFn, useCache):
     print("\n\n---- Running  ", classifier.name, " Classifier --------\n")
 
-    # Train the classifier and evaluate it's training accuracy
-    trainingPredicted = classifier.train(data.x_train, data.y_train)
-    Eval.evaluateAccuracy(trainingPredicted, data.y_train, 'training')
+    # Use cached version of model if possible, otherwise train it
+    if useCache and cache.has(classifier):
+        classifier = cache.get(classifier)
+        print("Using cached version of classifier")
+    else:
+        print("Training classifier...")
+        # Train the classifier and evaluate it's training accuracy
+        trainingPredicted = classifier.train(data.x_train, data.y_train)
+        Eval.evaluateAccuracy(trainingPredicted, data.y_train, 'training')
+        cache.set(classifier)
 
+    print("Testing classifier...")
     # Test the classifier to get predictions
     y_pred = classifier.test(data.x_test)
 
@@ -42,6 +51,8 @@ if __name__ == "__main__":
                         help="run the rnn algorithm for location")
     parser.add_argument('--even', action="store_false", default=True,
                         help="run the algorithms on the more evenly split dataset")
+    parser.add_argument('--use_cached', action="store_true", default=False,
+                        help="use cached models if available")
     args = parser.parse_args()
 
     print("Running %s puns" % args.graphic)
@@ -53,9 +64,9 @@ if __name__ == "__main__":
 
         # Create baseline pun detection classifier
         if args.baselines:
-            runClassifier(BaselinePunClassifier(), detectionData, Eval.evaluateDetection)
+            runClassifier(BaselinePunClassifier(type="Detection"), detectionData, Eval.evaluateDetection, args.use_cached)
 
-        runClassifier(PunDetectionWithFeaturesClassifier(), detectionData, Eval.evaluateDetection)
+        runClassifier(PunDetectionWithFeaturesClassifier(), detectionData, Eval.evaluateDetection, args.use_cached)
 
         # if args.rnn:
         #     runClassifier(PunRNNClassifier(output="binary"), detectionData, Eval.evaluateDetection)
@@ -68,13 +79,13 @@ if __name__ == "__main__":
 
         # Create baseline pun location classifier
         if args.baselines:
-            runClassifier(BaselinePunClassifier(), locationData, Eval.evaluateLocation)
+            runClassifier(BaselinePunClassifier(type="Location"), locationData, Eval.evaluateLocation, args.use_cached)
 
         if args.rnn:
-            runClassifier(PunRNNClassifier(output="word"), locationData, Eval.evaluateLocation)
+            runClassifier(PunRNNClassifier(output="word"), locationData, Eval.evaluateLocation, args.use_cached)
 
         if args.window:
-            runClassifier(PunSlidingWindowClassifier(output="word"), locationData, Eval.evaluateLocation)
+            runClassifier(PunSlidingWindowClassifier(output="word"), locationData, Eval.evaluateLocation, args.use_cached)
 
 
     # Output final report

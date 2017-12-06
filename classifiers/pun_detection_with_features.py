@@ -25,6 +25,7 @@ class PunDetectionWithFeaturesClassifier:
     def __init__(self):
         self.name = "Pun Detection With Features"
         self.raw_embeddings = WordEmbeddings()
+        self.no_cache = True # Temporarily don't cache this because it won't pickle - I think due to lambda functions here?
 
         self.pipeline = Pipeline([
             (
