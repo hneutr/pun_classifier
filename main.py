@@ -4,6 +4,7 @@ from cache.cache import Cache
 from classifiers.baseline import BaselinePunClassifier
 from classifiers.pun_detection_with_features import PunDetectionWithFeaturesClassifier
 from classifiers.pun_rnn import PunRNNClassifier
+from classifiers.pun_rnn_detection import PunRNNDetectionClassifier
 from classifiers.sliding_window import PunSlidingWindowClassifier
 from eval import Eval
 from pun_data import DetectionData, LocationData
@@ -48,7 +49,9 @@ if __name__ == "__main__":
     parser.add_argument('--window', action="store_true", default=False,
                         help="run the sliding window algorithm for location")
     parser.add_argument('--rnn', action="store_true", default=False,
-                        help="run the rnn algorithm for location")
+                        help="run the rnn algorithm")
+    parser.add_argument('--sgd', action="store_true", default=False,
+                        help="run the sgd algorithm for detection")
     parser.add_argument('--even', action="store_false", default=True,
                         help="run the algorithms on the more evenly split dataset")
     parser.add_argument('--use_cached', action="store_true", default=False,
@@ -66,10 +69,11 @@ if __name__ == "__main__":
         if args.baselines:
             runClassifier(BaselinePunClassifier(type="Detection"), detectionData, Eval.evaluateDetection, args.use_cached)
 
-        runClassifier(PunDetectionWithFeaturesClassifier(), detectionData, Eval.evaluateDetection, args.use_cached)
+        if args.rnn:
+            runClassifier(PunRNNDetectionClassifier(), detectionData, Eval.evaluateDetection, args.use_cached)
 
-        # if args.rnn:
-        #     runClassifier(PunRNNClassifier(output="binary"), detectionData, Eval.evaluateDetection)
+        if args.sgd:
+            runClassifier(PunDetectionWithFeaturesClassifier(), detectionData, Eval.evaluateDetection, args.use_cached)
 
 
     # PUN LOCATION
