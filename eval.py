@@ -30,11 +30,11 @@ class Eval:
         accuracy = Eval.evaluateAccuracy(y_pred, y_true)
         Eval.LocationReports.append({'name': classifierName, 'accuracy': accuracy})
 
-        score = precision_recall_fscore_support(y_true, y_pred, average='weighted')
+        correct = len([1 for true, pred in zip(y_true, y_pred) if true == pred])
+        guesses = len(y_true)
 
-        precision = score[0]
-        recall = score[1]
-        f_1 = score[2]
+        precision = recall = correct / guesses
+        f_1 = (2 * precision * recall) / (precision + recall)
 
         print("Precision: %s" % precision)
         print("Recall: %s" % recall)
