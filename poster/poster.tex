@@ -60,7 +60,7 @@
 %-----------------------------------------------------------
 
 \title{Punitive Measures: Because Finding a Good Pun is its own Reword}
-\author{GROUP C - Cathlyn Stone, Kenneth Hunter Wapman, Brandon Boylan-Peck, Amir Kashipazha, Shantanu Karnwal}
+\author{GROUP C - Amir Kashipazha, Brandon Boylan-Peck, Cathlyn Stone, Kenneth Hunter Wapman, Shantanu Karnwal}
 \institute{CSCI 5622 (Machine Learning), University of Colorado Boulder}
 
 %-----------------------------------------------------------
@@ -72,107 +72,173 @@
   \begin{columns}[t]												% the [t] option aligns the column's content at the top
     \begin{column}{\sepwid}\end{column}			% empty spacer column
     \begin{column}{\onecolwid}
-      \begin{block}{Requirements of the Template}
-        In order for your poster to compile properly, up-to-date versions of the following packages are required:
+      \begin{alertblock}{Objectives}
+        {\Large
+		We worked on two tasks: pun detection (identifying whether a sentence is a pun or not) and pun location (identifying which word in a pun sentence 'makes' the pun)}
+        
+      \end{alertblock}
+      
+      \begin{block}{Introduction}
+        {\large Terminology:
         \vskip1ex
         \begin{itemize}
-          \item latexbeamer
-          \item pgf (Tikz)
-          \item beamerposter
-        \end{itemize}
-        \vskip1ex
-        All of those packages are contained in both the MikTeX and the TexLive distribution of LaTeX.
+          \item {\textbf{Pun} : A pun is a form of wordplay in which a word\textquotesingle s multiple meanings or similar sounding words are used in a comedical manner. There are many different types of puns.}
+           \item {\textbf{Homographic Pun} : A homographic pun involves two words which are spelled the same but have different meanings.\\
+           Example - \textit{I used to be a banker but I lost \textbf{interest}.}}
+          \item {\textbf{Heterographic Pun} : A heterographic pun involves a word which sounds similar to another word which is spelled slightly differently.\\
+          Example - \textit{Two construction workers had a \textbf{stairing} contest.}}
+          \end{itemize}
+          \\
+        In our project, we have made use of extensive machine learning techniques to detect and locate a pun in a sentence. Along with that, we are also able to find out that if there is a pun, whether it is homographic or heterographic.\\}
       \end{block}
       \vskip2ex
-      \begin{block}{A Standard Block}
-        The standard block environment looks like this. It has justified text and a green title with an underline. You can create one like so:
-        \begin{semiverbatim}
-          {\color{red}\\begin}\{{\color{blue}block}\}\{Title\}\newline
-          \hskip1ex.......\newline
-          {\color{red}\\end}\{{\color{blue}block}\}
-        \end{semiverbatim}
-      \end{block}
-      \vskip2ex
-      \begin{alertblock}{An ``Alert'' Block}
-        The ``alert'' block environment looks like this. It also has justified text, but it has a border and a light background to make it stand out. You can create one like so:
-        \begin{semiverbatim}
-          {\color{red}\\begin}\{{\color{blue}alertblock}\}\{Title\}\newline
-          \hskip1ex.......\newline
-          {\color{red}\\end}\{{\color{blue}alertblock}\}
-        \end{semiverbatim}
-      \end{alertblock}
+      
+      
+      \begin{block}{Motivation}
+       {\large \begin{itemize}
+           \item Puns can be found almost everywhere, from things like advertising and marketing to literature and conversation.
+           \item If a machine could understand puns, or even generate puns, it could be used for the benefit of companies, to create more natural conversation, and even to assist in translation.
+           \item The benefits of pun learning are outstanding, and even further, it would be a step towards better understanding and surpassing the ambiguity of much natural language.
+           \end{itemize}}
+        
+        \end{block}
+
     \end{column}
 
-    \begin{column}{\sepwid}\end{column}			% empty spacer column
-    \begin{column}{\threecolwid}					  % create a three-column-wide column and then we will split it up later
-      \begin{block}{Altering Column Spans}
-        You can make columns that span multiple other columns relatively easily. Lengths are defined in the template that make columns look normal-ish if you want to use a four-column layout like this poster. If you want to use a different number of columns, you will have to modify those lengths accordingly at the top of the poster.tex file.
-        
-        In particular, near the top of the TeX file you will see lines that look like:
-        \begin{semiverbatim}
-          \hskip1ex\\setlength\{\\sepwid\}\{0.024\\paperwidth\}
-          
-          \hskip1ex\\setlength\{\\onecolwid\}\{0.22\\paperwidth\}
-          
-          \hskip1ex\\setlength\{\\twocolwid\}\{0.464\\paperwidth\}
-          
-          \hskip1ex\\setlength\{\\threecolwid\}\{0.708\\paperwidth\}
-        \end{semiverbatim}
-        
-        Set ``sepwid'' to be some small length somewhere near 0.025 (this is the space between columns). Then if $n$ is the number of columns you want, you should set
-        \begin{align*}
-          \text{onecolwid} & = \frac{1}{n}(1-(n+1)\times\text{sepwid}), \\
-          \text{twocolwid} & = 2\times\text{onecolwid} + \text{sepwid}, \\
-          \text{threecolwid} & = 3\times\text{onecolwid} + 2\times\text{sepwid}.
-        \end{align*}
+\begin{column}{\sepwid}\end{column} % Empty spacer column
+
+\begin{column}{\twocolwid} % Begin a column which is two columns wide (column 2)
+
+\begin{columns}[t,totalwidth=\twocolwid] % Split up the two columns wide column
+
+\begin{column}{\onecolwid}\vspace{-.6in} % The first column within column 2 (column 2.1)
+
+    \begin{block}{Task 1 - Pun Detection}
+        {\large Pun detection is a binary classification problem: given a sentence, determine whether or not that sentence contains a pun. Given the binary nature of the solution space and the highly non-linear input space, machine learning seems to be a natural choice to detect puns.\\
+        We have used three approaches for pun detection - 
+        \begin{itemize}
+          \item {\textbf{Naive Bayes classifier (Baseline)}}
+          \item {\textbf{Recurrent Neural Network}}
+           \item {\textbf{Feature Engineering based classifier}: We used the Stochastic Gradient Descent algorithm while combining different features like lesk algorithm, homophones, homonyms, antonyms, idioms, part of speech tagging.}
+        \end{itemize}
+        }
       \end{block}
-      \begin{columns}[t,totalwidth=\threecolwid]	% split up that three-column-wide column
-        \begin{column}{\onecolwid}
-          \setbeamercolor{block title}{fg=red,bg=white}%frame color
-          \setbeamercolor{block body}{fg=black,bg=white}%body color
-          \begin{block}{Block Colours}
-            For the standard blocks there are two colours; one for the title and one for the block body:\\
-            \begin{semiverbatim}
-              {\color{red}\\setbeamercolor}\{block title\}\newline \{fg=red,bg=white\}
-            \end{semiverbatim}
-            \begin{semiverbatim}
-              {\color{red}\\setbeamercolor}\{block  body\}\newline \{fg=black,bg=white\}
-            \end{semiverbatim}
-            The \emph{fg} colour sets the text colour and \emph{bg} sets the background colour.
-            For the normal blocks it makes no sense to use a background colour other than white. You \emph{can} change it, but it will look weird!
-          \end{block}
-        \end{column}
-        \begin{column}{\onecolwid}
-          \setbeamercolor{block alerted title}{fg=black,bg=norange}	% frame color
-          \setbeamercolor{block alerted body}{fg=black,bg=white}		% body color
-          \begin{alertblock}{Alert Block Colours}
-            You can similarly modify the colours for alert blocks (but try not to overdo it):\\
-            \begin{semiverbatim}
-              {\color{red}\\setbeamercolor}\{block title\}\newline \{fg=black,bg=norange\}
-            \end{semiverbatim}
-            \begin{semiverbatim}
-              {\color{red}\\setbeamercolor}\{block  body\}\newline \{fg=black,bg=white\}
-            \end{semiverbatim}
-          \end{alertblock}        
-        \end{column}
-        \begin{column}{\onecolwid}
-          \begin{block}{References}
-            Some references and a graphic to show you how it's done:
+
+
+
+%----------------------------------------------------------------------------------------
+
+\end{column} % End of column 2.1
+
+\begin{column}{\onecolwid}\vspace{-.6in} % The second column within column 2 (column 2.2)
+
+\begin{SCfigure}
+\includegraphics[width=0.85\textwidth]{HomographicDetection.png}\\
+\caption{Figure 1.1 - Pun Detection algorithm running on the Homographic Dataset.}
+\end{SCfigure}
+\\
+\vspace{20mm}
+\begin{SCfigure}
+\includegraphics[width=0.85\textwidth]{HeterographicDetection.png}\\
+\caption{Figure 1.2 - Pun Detection algorithm running on the Heterographic Dataset.}
+\end{SCfigure}
+
+
+%----------------------------------------------------------------------------------------
+
+\end{column} % End of column 2.2
+
+\end{columns} % End of the split of column 2 - any content after this will now take up 2 columns width
+
+\begin{block}
+    {.}
+\end{block}
+
+\begin{columns}[t,totalwidth=\twocolwid] % Split up the two columns wide column again
+
+\begin{column}{\onecolwid} % The first column within column 2 (column 2.1)
+
+%----------------------------------------------------------------------------------------
+%	MATHEMATICAL SECTION
+%----------------------------------------------------------------------------------------
+
+\begin{block}{Task 2 - Pun Location}
+        {\large The Pun locaton problem can be remodelled as: for each word in the sentence, determine the likelihood that that word is a pun given the rest of the sentence. Then, output the word which is most likely to be a pun based on the output of the previous search. \\
+        We have used three approaches for pun detection - 
+        \begin{itemize}
+          \item {\textbf{Naive Bayes classifier (Baseline)}}
+           \item {\textbf{Recurrent Neural Network} %: A homographic pun involves two words which are spelled the same but have different meanings.}
+           }
+          \item {\textbf{Sliding Window Based Classifier} : The sliding window classifier starts from the first word of the sentence and two words on either side to make a window of size five. Then it runs a max entropy classifier on this window, before sliding the window one word forward through the sentence. The block with highest entropy gives out the pun word.}
+          \end{itemize}
+          \\
+        }
+      \end{block}
+      
+%----------------------------------------------------------------------------------------
+
+\end{column} % End of column 2.1
+
+\begin{column}{\onecolwid} % The second column within column 2 (column 2.2)
+
+%----------------------------------------------------------------------------------------
+%	RESULTS
+%----------------------------------------------------------------------------------------
+
+\begin{SCfigure}
+\includegraphics[width=0.85\textwidth]{HomographicLocation.png}\\
+\caption{Figure 2.1 - Pun Location algorithm running on the Homographic Dataset.}
+\end{SCfigure}
+\\
+\vspace{20mm}
+\begin{SCfigure}
+\includegraphics[width=0.85\textwidth]{HeterographicLocation.png}\\
+\caption{Figure 2.2 - Pun Location algorithm running on the Heterographic Dataset.}
+\end{SCfigure}
+
+%----------------------------------------------------------------------------------------
+
+\end{column} % End of column 2.2
+
+\end{columns} % End of the split of column 2
+
+\end{column} % End of the second column
+
+\begin{column}{\sepwid}\end{column} % Empty spacer column
+
+
+    \begin{column}{\sepwid}\end{column}			% empty spacer column
+    \begin{column}{\onecolwid}
             
-		        \small{\begin{thebibliography}{99}
-		        \bibitem{KLPL06} D.~W. Kribs, R. Laflamme, D. Poulin, M. Lesosky, Quantum Inf. \& Comp. \textbf{6} (2006), 383-399.
-		        \bibitem{zanardi97} P. Zanardi, M. Rasetti, Phys. Rev. Lett. \textbf{79},  3306 (1997).
-		        \end{thebibliography}}
-			      \vspace{0.75in}
-			      \begin{center}
-			        \includegraphics[width=5in]{canada.jpg}
-			      \end{center}
-		      \end{block}
-        \end{column}
-      \end{columns}
-      \vskip2.5ex
+\begin{block}{UI for Pun Detection \& Location}
+\begin{SCfigure}
+\centering
+\includegraphics[width=0.75\textwidth]{UI_1.jpg}\\
+\caption{Figure 3.1 - Welcome Page.}
+\end{SCfigure}
+\\
+\vspace{10mm}
+\begin{SCfigure}
+\centering
+\includegraphics[width=0.75\textwidth]{UI_2.png}\\
+\centering
+\caption{Figure 3.2 - Analysis of the input sentence}
+\end{SCfigure}
+\end{block}
+\vspace{20mm}
+            \begin{block}{Challenges we faced}
+                    
+            \end{block}
+            \vspace{20mm}
+            \begin{block}{How well did we do?}
+                    
+            \end{block}
+            
+		    
     \end{column}
-  \begin{column}{\sepwid}\end{column}			% empty spacer column
+
+      		
  \end{columns}
 \end{frame}
 \end{document}
+
