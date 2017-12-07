@@ -114,15 +114,20 @@
 				% left column (description)
 				%----------------------------------------------------------------------------------------
 				\begin{column}{\onecolwid}\vspace{-.6in}
-					\vspace{40mm}
-					\begin{block}{Task 1 - Pun Detection}
+					\vspace{60mm}
+					\begin{block}{Pun Detection}
 						{\large 
-							Pun detection is a binary classification problem: given a sentence, determine whether or not that sentence contains a pun. Given the binary nature of the solution space and the highly non-linear input space, machine learning seems to be a natural choice to detect puns.\\
-							We have used three approaches for pun detection - 
+							We implemented three algorithms for pun detection:
 							\begin{itemize}
-							\item {\textbf{Naive Bayes classifier (Baseline)}}
-							\item {\textbf{Recurrent Neural Network}}
-							\item {\textbf{Feature Engineering based classifier}: We used the Stochastic Gradient Descent algorithm while combining different features like lesk algorithm, homophones, homonyms, antonyms, idioms, part of speech tagging.}
+								\item {\textbf{Multinomial Naive Bayes (Baseline)}\\
+									Our baseline---an easy to implement algorithm which we measured approaches against
+								}
+								\item {\textbf{Bidirectional LSTM}\\
+									An LSTM will form connections between the start and end of a sentence and can handle variable-length sentences.
+								}
+								\item {\textbf{Linear SVM}\\ 
+									Allows us to include an arbitrary set of features.
+								}
 							\end{itemize}
 						}
 					\end{block}
@@ -175,7 +180,7 @@
 				%----------------------------------------------------------------------------------------
 				\begin{column}{\onecolwid}
 					\vspace{20mm}
-					\begin{block}{Task 2 - Pun Location}
+					\begin{block}{Pun Location}
 						{\large 
 							The Pun locaton problem can be remodelled as: for each word in the sentence, determine the likelihood that that word is a pun given the rest of the sentence. Then, output the word which is most likely to be a pun based on the output of the previous search. \\
 							We have used three approaches for pun detection - 
