@@ -115,11 +115,10 @@
 				%----------------------------------------------------------------------------------------
 				\begin{column}{\onecolwid}\vspace{-.6in}
 					\vspace{60mm}
-					\begin{block}{Pun Detection}
+					\begin{block}{Pun Detection Algorithms}
 						{\large 
-							We implemented three algorithms for pun detection:
 							\begin{itemize}
-								\item {\textbf{Multinomial Naive Bayes (Baseline)}\\
+								\item {\textbf{Multinomial Naive Bayes}\\
 									Our baseline---an easy to implement algorithm which we measured approaches against
 								}
 								\item {\textbf{Bidirectional LSTM}\\
@@ -139,13 +138,13 @@
 				
 					\begin{SCfigure}
 						\includegraphics[width=0.85\textwidth]{HomographicDetection.png}\\
-						\caption{Figure 1.1 - Pun Detection algorithm running on the Homographic Dataset.}
+						\caption{Figure 1.1 - Pun Detection (Homographic Dataset)}
 					\end{SCfigure}
 					\\
 					\vspace{20mm}
 					\begin{SCfigure}
 						\includegraphics[width=0.85\textwidth]{HeterographicDetection.png}\\
-						\caption{Figure 1.2 - Pun Detection algorithm running on the Heterographic Dataset.}
+						\caption{Figure 1.2 - Pun Detection (Heterographic Dataset)}
 					\end{SCfigure}
 				\end{column}
 				%----------------------------------------------------------------------------------------
@@ -162,33 +161,36 @@
 				%----------------------------------------------------------------------------------------
 				% left column
 				%----------------------------------------------------------------------------------------
-				\begin{column}{\onecolwid} % The second column within column 2 (column 2.2)
+				\begin{column}{\onecolwid}
 
 					\begin{SCfigure}
 					\includegraphics[width=0.85\textwidth]{HomographicLocation.png}\\
-					\caption{Figure 2.1 - Pun Location algorithm running on the Homographic Dataset.}
+					\caption{Figure 2.1 - Pun Location (Homographic Dataset)}
 					\end{SCfigure}
 					\\
 					\vspace{20mm}
 					\begin{SCfigure}
 					\includegraphics[width=0.85\textwidth]{HeterographicLocation.png}\\
-					\caption{Figure 2.2 - Pun Location algorithm running on the Heterographic Dataset.}
+					\caption{Figure 2.2 - Pun Location (Heterographic Dataset)}
 					\end{SCfigure}
-				\end{column} % End of column 2.2
+				\end{column}
 				%----------------------------------------------------------------------------------------
 				% right column
 				%----------------------------------------------------------------------------------------
 				\begin{column}{\onecolwid}
-					\vspace{20mm}
-					\begin{block}{Pun Location}
+					\vspace{40mm}
+					\begin{block}{Pun Location Algorithms}
 						{\large 
-							The Pun locaton problem can be remodelled as: for each word in the sentence, determine the likelihood that that word is a pun given the rest of the sentence. Then, output the word which is most likely to be a pun based on the output of the previous search. \\
-							We have used three approaches for pun detection - 
 							\begin{itemize}
-							\item {\textbf{Naive Bayes classifier (Baseline)}}
-							\item {\textbf{Recurrent Neural Network} %: A homographic pun involves two words which are spelled the same but have different meanings.}
-							}
-							\item {\textbf{Sliding Window Based Classifier} : The sliding window classifier starts from the first word of the sentence and two words on either side to make a window of size five. Then it runs a max entropy classifier on this window, before sliding the window one word forward through the sentence. The block with highest entropy gives out the pun word.}
+								\item {\textbf{Multinomial Naive Bayes}\\
+									Our baseline---an easy to implement algorithm which we measured approaches against
+								}
+								\item {\textbf{Sequence-Labeling Bidirectional LSTM}\\
+									A Sequence-Labeling LSTM using glove embeddings for word representation.
+								}
+								\item {\textbf{Sliding Window MEMM}\\
+									A Maximum-Entropy Markov Model for Sequence Labeling. Allows us to include an arbitrary set features. Incorporates a "window" of context into the decision made at each timestep. Uses a window-size of 5. 
+								}
 							\end{itemize}
 							\\
 						}
