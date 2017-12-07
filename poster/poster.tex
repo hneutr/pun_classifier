@@ -204,32 +204,68 @@
 		% rightmost column
 		%----------------------------------------------------------------------------------------
 		\begin{column}{\onecolwid}
-            
-			\begin{block}{Interactive Pun Detector \& Pun Locator}
+            \begin{block}{Performance Comparison}
 				\large{
-					We built a web application where a user can see the probability that a sentence is a homographic or heterographic pun as estimated by each algorithm we implemented.
+					We compare our systems to those presented at SemEval2017, the conference which proposed these tasks.
 				}
+				\vspace{10mm}
+				%----------------------------------------------------------------------------------------
+				% Pun Detection Table
+				%----------------------------------------------------------------------------------------
+				\begin{center}
+					\begin{tabular}{ c|c|c } 
+						\multicolumn{3}{c}{\textbf{Pun Detection Accuracy}}\\
+						 & Homographic & Heterographic \\ 
+						\hline
+						SemEval & .8533 & .7837 \\ 
+						\hline
+						Reword & \textbf{.8565} & \textbf{.8052} \\ 
+					\end{tabular}
+				\end{center}
+				\vspace{10mm}
+				%----------------------------------------------------------------------------------------
+				% Pun Location Table
+				%----------------------------------------------------------------------------------------
+				\begin{center}
+					\begin{tabular}{ c|c|c } 
+						\multicolumn{3}{c}{\textbf{Pun Location F-1}}\\
+						 & Homographic & Heterographic \\ 
+						\hline
+						SemEval & \textbf{.6631} & \textbf{.7954} \\ 
+						\hline
+						Reword & .5597 & .5535 \\ 
+					\end{tabular}
+				\end{center}
+            \end{block}
+            \vspace{20mm}
+            \begin{block}{Challenges}
+				\large{
+					\begin{itemize}
+						\item {\textbf{Data}\\
+						}
+					\end{itemize}
+
+				}
+            \end{block}
+            \vspace{20mm}
+			\begin{block}{Application}
+				\large{
+					We Made a UI to display our system's guess at whether a sentence is a pun. Give it a try!
+				}
+				\vspace{20mm}
 
 				\begin{SCfigure}
-				\centering
-				\includegraphics[width=0.75\textwidth]{UI_1.jpg}\\
-				\caption{Figure 3.1 - Welcome Page.}
+					\centering
+					\includegraphics[width=0.75\textwidth]{UI_1.jpg}\\
 				\end{SCfigure}
 				\\
 				\vspace{20mm}
 				\begin{SCfigure}
-				\centering
-				\includegraphics[width=0.75\textwidth]{UI_2.png}\\
-				\centering
-				\caption{Figure 3.2 - Analysis of the input sentence}
+					\centering
+					\includegraphics[width=0.75\textwidth]{UI_2.png}\\
 				\end{SCfigure}
 			\end{block}
 			\vspace{20mm}
-            \begin{block}{Challenges}
-            \end{block}
-            \vspace{20mm}
-            \begin{block}{How well did we do?}
-            \end{block}
 		\end{column}
 		\begin{column}{\sepwid}\end{column}
 	\end{columns}
