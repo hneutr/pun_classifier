@@ -71,7 +71,7 @@
 \begin{frame}[t]
 	\begin{columns}[t] % the [t] option aligns the column's content at the top
 		%----------------------------------------------------------------------------------------
-		\begin{column}{\sepwid}\end{column}			% empty spacer column
+		\begin{column}{\sepwid}\end{column}
 		%----------------------------------------------------------------------------------------
 		\begin{column}{\onecolwid}
 
@@ -101,7 +101,7 @@
 			\end{block}
 		\end{column}
 		%----------------------------------------------------------------------------------------
-		\begin{column}{\sepwid}\end{column} % Empty spacer column
+		\begin{column}{\sepwid}\end{column}
 		%----------------------------------------------------------------------------------------
 		% center column (tasks)
 		%----------------------------------------------------------------------------------------
@@ -131,6 +131,7 @@
 						}
 					\end{block}
 				\end{column}
+				\begin{column}{\sepwid}\end{column}
 				%----------------------------------------------------------------------------------------
 				% right column (images)
 				%----------------------------------------------------------------------------------------
@@ -158,11 +159,13 @@
 			% bottom row
 			%----------------------------------------------------------------------------------------
 			\begin{columns}[t,totalwidth=\twocolwid]
+				\begin{column}{15mm}\end{column}
 				%----------------------------------------------------------------------------------------
 				% left column
 				%----------------------------------------------------------------------------------------
 				\begin{column}{\onecolwid}
 
+					\vspace{25mm}
 					\begin{SCfigure}
 					\includegraphics[width=0.85\textwidth]{HomographicLocation.png}\\
 					\caption{Figure 2.1 - Pun Location (Homographic Dataset)}
@@ -178,7 +181,7 @@
 				% right column
 				%----------------------------------------------------------------------------------------
 				\begin{column}{\onecolwid}
-					\vspace{40mm}
+					\vspace{55mm}
 					\begin{block}{Pun Location Algorithms}
 						{\large 
 							\begin{itemize}
@@ -196,10 +199,10 @@
 						}
 					\end{block}
 				\end{column}
-				\begin{column}{\sepwid}\end{column} % Empty spacer column
+				\begin{column}{\sepwid}\end{column}
 			\end{columns}
 		\end{column}
-		\begin{column}{\sepwid}\end{column} % Empty spacer column
+		\begin{column}{\sepwid}\end{column}
 		%----------------------------------------------------------------------------------------
 		% rightmost column
 		%----------------------------------------------------------------------------------------
@@ -241,10 +244,13 @@
             \begin{block}{Challenges}
 				\large{
 					\begin{itemize}
-						\item {\textbf{Data}\\
+						\item {\textbf{Data}:
+							The dataset is small, making it hard to tell if our results will generalize.
+						}
+						\item {\textbf{Error Analysis}:
+							Puns vary wildly even with a given type, making error analysis difficult.
 						}
 					\end{itemize}
-
 				}
             \end{block}
             \vspace{20mm}
