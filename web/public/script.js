@@ -24,7 +24,7 @@ $(document).ready(function () {
 
 
     $('button.go').click(function (e) {
-        var pun = $(".pun-input").val().trim();
+        var pun = $(".pun-input").val();
 
         if (pun.trim() == "") {
             alert("Enter text");
