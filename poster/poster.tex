@@ -8,6 +8,7 @@
 \documentclass[final]{beamer}
 \usepackage[scale=1.24]{beamerposter}
 \usepackage{graphicx}			% allows us to import images
+\usepackage[none]{hyphenat}
 
 %-----------------------------------------------------------
 % Define the column width and poster size
@@ -71,7 +72,7 @@
 \begin{frame}[t]
 	\begin{columns}[t] % the [t] option aligns the column's content at the top
 		%----------------------------------------------------------------------------------------
-		\begin{column}{\sepwid}\end{column}			% empty spacer column
+		\begin{column}{\sepwid}\end{column}
 		%----------------------------------------------------------------------------------------
 		\begin{column}{\onecolwid}
 
@@ -101,7 +102,7 @@
 			\end{block}
 		\end{column}
 		%----------------------------------------------------------------------------------------
-		\begin{column}{\sepwid}\end{column} % Empty spacer column
+		\begin{column}{\sepwid}\end{column}
 		%----------------------------------------------------------------------------------------
 		% center column (tasks)
 		%----------------------------------------------------------------------------------------
@@ -114,19 +115,24 @@
 				% left column (description)
 				%----------------------------------------------------------------------------------------
 				\begin{column}{\onecolwid}\vspace{-.6in}
-					\vspace{40mm}
-					\begin{block}{Task 1 - Pun Detection}
+					\vspace{60mm}
+					\begin{block}{Pun Detection Algorithms}
 						{\large 
-							Pun detection is a binary classification problem: given a sentence, determine whether or not that sentence contains a pun. Given the binary nature of the solution space and the highly non-linear input space, machine learning seems to be a natural choice to detect puns.\\
-							We have used three approaches for pun detection - 
 							\begin{itemize}
-							\item {\textbf{Naive Bayes classifier (Baseline)}}
-							\item {\textbf{Recurrent Neural Network}}
-							\item {\textbf{Feature Engineering based classifier}: We used the Stochastic Gradient Descent algorithm while combining different features like lesk algorithm, homophones, homonyms, antonyms, idioms, part of speech tagging.}
+								\item {\textbf{Multinomial Naive Bayes}\\
+									Our baseline---an easy to implement algorithm which we measured approaches against
+								}
+								\item {\textbf{Bidirectional LSTM}\\
+									An LSTM will form connections between the start and end of a sentence and can handle variable-length sentences.
+								}
+								\item {\textbf{Linear SVM}\\ 
+									Allows us to include an arbitrary set of features.
+								}
 							\end{itemize}
 						}
 					\end{block}
 				\end{column}
+				\begin{column}{\sepwid}\end{column}
 				%----------------------------------------------------------------------------------------
 				% right column (images)
 				%----------------------------------------------------------------------------------------
@@ -134,13 +140,13 @@
 				
 					\begin{SCfigure}
 						\includegraphics[width=0.85\textwidth]{HomographicDetection.png}\\
-						\caption{Figure 1.1 - Pun Detection algorithm running on the Homographic Dataset.}
+						\caption{\hspace{50mm}Homographic Pun Detection}
 					\end{SCfigure}
 					\\
 					\vspace{20mm}
 					\begin{SCfigure}
 						\includegraphics[width=0.85\textwidth]{HeterographicDetection.png}\\
-						\caption{Figure 1.2 - Pun Detection algorithm running on the Heterographic Dataset.}
+						\caption{\hspace{50mm}Heterographic Pun Detection}
 					\end{SCfigure}
 				\end{column}
 				%----------------------------------------------------------------------------------------
@@ -154,75 +160,122 @@
 			% bottom row
 			%----------------------------------------------------------------------------------------
 			\begin{columns}[t,totalwidth=\twocolwid]
+				\begin{column}{15mm}\end{column}
 				%----------------------------------------------------------------------------------------
 				% left column
 				%----------------------------------------------------------------------------------------
-				\begin{column}{\onecolwid} % The second column within column 2 (column 2.2)
+				\begin{column}{\onecolwid}
 
+					\vspace{25mm}
 					\begin{SCfigure}
 					\includegraphics[width=0.85\textwidth]{HomographicLocation.png}\\
-					\caption{Figure 2.1 - Pun Location algorithm running on the Homographic Dataset.}
+					\caption{\hspace{50mm}Homographic Pun Location}
 					\end{SCfigure}
 					\\
 					\vspace{20mm}
 					\begin{SCfigure}
 					\includegraphics[width=0.85\textwidth]{HeterographicLocation.png}\\
-					\caption{Figure 2.2 - Pun Location algorithm running on the Heterographic Dataset.}
+					\caption{\hspace{50mm}Heterographic Pun Location}
 					\end{SCfigure}
-				\end{column} % End of column 2.2
+				\end{column}
 				%----------------------------------------------------------------------------------------
 				% right column
 				%----------------------------------------------------------------------------------------
 				\begin{column}{\onecolwid}
-					\vspace{20mm}
-					\begin{block}{Task 2 - Pun Location}
+					\vspace{55mm}
+					\begin{block}{Pun Location Algorithms}
 						{\large 
-							The Pun locaton problem can be remodelled as: for each word in the sentence, determine the likelihood that that word is a pun given the rest of the sentence. Then, output the word which is most likely to be a pun based on the output of the previous search. \\
-							We have used three approaches for pun detection - 
 							\begin{itemize}
-							\item {\textbf{Naive Bayes classifier (Baseline)}}
-							\item {\textbf{Recurrent Neural Network} %: A homographic pun involves two words which are spelled the same but have different meanings.}
-							}
-							\item {\textbf{Sliding Window Based Classifier} : The sliding window classifier starts from the first word of the sentence and two words on either side to make a window of size five. Then it runs a max entropy classifier on this window, before sliding the window one word forward through the sentence. The block with highest entropy gives out the pun word.}
+								\item {\textbf{Multinomial Naive Bayes}\\
+									Our baseline---an easy to implement algorithm which we measured approaches against
+								}
+								\item {\textbf{Sequence-Labeling Bidirectional LSTM}\\
+									A Sequence-Labeling LSTM using glove embeddings for word representation.
+								}
+								\item {\textbf{Sliding Window MEMM}\\
+									A Maximum-Entropy Markov Model for Sequence Labeling. Allows us to include an arbitrary set features. Incorporates a "window" of context into the decision made at each timestep. Uses a window-size of 5. 
+								}
 							\end{itemize}
 							\\
 						}
 					\end{block}
 				\end{column}
-				\begin{column}{\sepwid}\end{column} % Empty spacer column
+				\begin{column}{\sepwid}\end{column}
 			\end{columns}
 		\end{column}
-		\begin{column}{\sepwid}\end{column} % Empty spacer column
+		\begin{column}{\sepwid}\end{column}
 		%----------------------------------------------------------------------------------------
 		% rightmost column
 		%----------------------------------------------------------------------------------------
 		\begin{column}{\onecolwid}
-            
-			\begin{block}{Interactive Pun Detector \& Pun Locator}
+            \begin{block}{Performance Comparison}
 				\large{
-					We built a web application where a user can see the probability that a sentence is a homographic or heterographic pun as estimated by each algorithm we implemented.
+					We compare our systems to those presented at SemEval2017, the conference which proposed these tasks.
 				}
+				\vspace{10mm}
+				%----------------------------------------------------------------------------------------
+				% Pun Detection Table
+				%----------------------------------------------------------------------------------------
+				\begin{center}
+					\begin{tabular}{ c|c|c } 
+						\multicolumn{3}{c}{\textbf{Pun Detection Accuracy}}\\
+						 & Homographic & Heterographic \\ 
+						\hline
+						SemEval & .8533 & .7837 \\ 
+						\hline
+						Reword & \textbf{.8565} & \textbf{.8052} \\ 
+					\end{tabular}
+				\end{center}
+				\vspace{10mm}
+				%----------------------------------------------------------------------------------------
+				% Pun Location Table
+				%----------------------------------------------------------------------------------------
+				\begin{center}
+					\begin{tabular}{ c|c|c } 
+						\multicolumn{3}{c}{\textbf{Pun Location F-1}}\\
+						 & Homographic & Heterographic \\ 
+						\hline
+						SemEval & \textbf{.6631} & \textbf{.7954} \\ 
+						\hline
+						Reword & .5597 & .5535 \\ 
+					\end{tabular}
+				\end{center}
+            \end{block}
+            \vspace{20mm}
+            \begin{block}{Challenges}
+				\large{
+					\begin{itemize}
+						\item {\textbf{Data}:
+							The dataset is small, making it hard to tell if our results will generalize.
+						}
+						\item {\textbf{Error Analysis}:
+							Puns vary wildly even with a given type, making error analysis difficult.
+						}
+						\item {\textbf{Variable Sentence Length}:
+							A pun doesn't have a fixed length, which makes feeding them to traditional machine learning classifiers challenging.
+						}
+					\end{itemize}
+				}
+            \end{block}
+            \vspace{20mm}
+			\begin{block}{Application}
+				\large{
+					We Made a UI to display our system's guess at whether a sentence is a pun. Give it a try!
+				}
+				\vspace{20mm}
 
 				\begin{SCfigure}
-				\centering
-				\includegraphics[width=0.75\textwidth]{UI_1.jpg}\\
-				\caption{Figure 3.1 - Welcome Page.}
+					\centering
+					\includegraphics[width=0.75\textwidth]{UI_1.jpg}\\
 				\end{SCfigure}
 				\\
 				\vspace{20mm}
 				\begin{SCfigure}
-				\centering
-				\includegraphics[width=0.75\textwidth]{UI_2.png}\\
-				\centering
-				\caption{Figure 3.2 - Analysis of the input sentence}
+					\centering
+					\includegraphics[width=0.75\textwidth]{UI_2.png}\\
 				\end{SCfigure}
 			\end{block}
 			\vspace{20mm}
-            \begin{block}{Challenges}
-            \end{block}
-            \vspace{20mm}
-            \begin{block}{How well did we do?}
-            \end{block}
 		\end{column}
 		\begin{column}{\sepwid}\end{column}
 	\end{columns}
