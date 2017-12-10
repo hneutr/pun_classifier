@@ -22,7 +22,7 @@ class DetectionDataType:
 
 class ServerMain:
     def __init__(self):
-        self.baselineClassifier = BaselinePunClassifier(type="Detection")
+        self.baselineClassifier = BaselinePunClassifier()
         self.featuresClassifier = PunDetectionWithFeaturesClassifier()
         self.rnnClassifier = PunRNNClassifier()
 
