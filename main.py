@@ -1,6 +1,7 @@
 import argparse
 
 from cache.cache import Cache
+from classifiers.adaboost_sliding_window import AdaboostSlidingWindowClassifier
 from classifiers.baseline import BaselinePunClassifier
 from classifiers.pun_detection_with_features import PunDetectionWithFeaturesClassifier
 from classifiers.pun_rnn import PunRNNClassifier
@@ -98,6 +99,7 @@ if __name__ == "__main__":
         baselinePunLocationClassifier = BaselinePunClassifier(type="Location")
         punRnnLocationClassifier = PunRNNClassifier(output="word")
         punSlidingWindowClassifier = PunSlidingWindowClassifier(output="word")
+        adaboostSlidingWindowClassifier = AdaboostSlidingWindowClassifier()
 
         # Create baseline pun location classifier
         if args.baselines:
@@ -109,11 +111,15 @@ if __name__ == "__main__":
         if args.window:
             runClassifier(punSlidingWindowClassifier, locationData, Eval.evaluateLocation, args.use_cached)
 
+        if args.adaboost:
+            runClassifier(adaboostSlidingWindowClassifier, locationData, Eval.evaluateLocation, args.use_cached)
+
         if args.ensemble:
             classifiers = [
                 ScikitWrapperClassifier(baselinePunLocationClassifier),
                 ScikitWrapperClassifier(punRnnLocationClassifier),
-                ScikitWrapperClassifier(punSlidingWindowClassifier)
+                ScikitWrapperClassifier(punSlidingWindowClassifier),
+                ScikitWrapperClassifier(adaboostSlidingWindowClassifier)
             ]
             runClassifier(PunVotingClassifier(type="Location", classifiers=classifiers), locationData, Eval.evaluateLocation, args.use_cached)
 
