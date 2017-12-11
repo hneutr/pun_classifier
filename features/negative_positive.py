@@ -51,7 +51,7 @@ class Positives(BaseEstimator, TransformerMixin):
         return self
     def transform(self, x):
         # from: http://www.enchantedlearning.com/wordlist/positivewords.shtml
-        some_negative_words = ['absolutely', 'adorable', 'accepted', 'acclaimed', 'accomplish', 'accomplishment', 'achievement', 'action', 'active', 'admire', 'adventure', 'affirmative', 
+        some_positive_words = ['absolutely', 'adorable', 'accepted', 'acclaimed', 'accomplish', 'accomplishment', 'achievement', 'action', 'active', 'admire', 'adventure', 'affirmative', 
         'affluent', 'agree', 'agreeable', 'amazing', 'angelic', 'appealing', 'approve', 'aptitude', 'attractive', 'awesome', 'beaming', 'beautiful', 'believe', 'beneficial', 'bliss', 'bountiful', 
         'bounty', 'brave', 'bravo', 'brilliant', 'bubbly', 'calm', 'celebrated', 'certain', 'champ', 'champion', 'charming', 'cheery', 'choice', 'classic', 'classical', 'clean', 'commend', 'composed', 
         'congratulation', 'constant', 'cool', 'courageous', 'creative', 'cute', 'dazzling', 'delight', 'delightful', 'distinguished', 'divine', 'earnest', 'easy', 'ecstatic', 'effective', 'effervescent', 
@@ -73,7 +73,7 @@ class Positives(BaseEstimator, TransformerMixin):
             pun = pun.strip().split()
             temp = defaultdict(int)
             for word in pun:
-                for neg_word in some_negative_words:
+                for pos_word in some_positive_words:
                     if word.lower() == neg_word:
                         temp[neg_word] += 1
             features.append(temp)
