@@ -4,6 +4,7 @@ from sklearn.linear_model import SGDClassifier
 from sklearn.pipeline import FeatureUnion, Pipeline
 from sklearn.feature_extraction import DictVectorizer
 
+
 from features.item_selector import ItemSelector
 from features.lesk_algorithm_transformer import LeskAlgorithmTransformer
 from features.raw_transformer import RawTransformer
@@ -22,18 +23,26 @@ from features.homonym import Homonym
 
 # Pun detection classifier using feature engineering
 class PunDetectionWithFeaturesClassifier:
+    def tokensFunction(self, x):
+        return x
+
+    def stringFunction(self, x):
+        return " ".join(x)
+
+    def embeddingsFunction(self, x):
+        return self.raw_embeddings.embed(x)
+
     def __init__(self):
         self.name = "Pun Detection With Features"
         self.raw_embeddings = WordEmbeddings()
-        self.no_cache = True # Temporarily don't cache this because it won't pickle - I think due to lambda functions here?
 
         self.pipeline = Pipeline([
             (
                 "raw",
                 RawTransformer({
-                    'tokens': lambda x: x,
-                    'string': lambda x: " ".join(x),
-                    'embeddings': lambda x: self.raw_embeddings.embed(x),
+                    'tokens': self.tokensFunction,
+                    'string': self.stringFunction,
+                    'embeddings': self.embeddingsFunction
                 })
             ),
             (
@@ -150,3 +159,4 @@ class PunDetectionWithFeaturesClassifier:
 
     def test_with_probabilities(self, x_test):
         return self.pipeline.predict_proba(x_test)
+

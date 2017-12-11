@@ -5,7 +5,9 @@ from classifiers.baseline import BaselinePunClassifier
 from classifiers.pun_detection_with_features import PunDetectionWithFeaturesClassifier
 from classifiers.pun_rnn import PunRNNClassifier
 from classifiers.pun_rnn_detection import PunRNNDetectionClassifier
+from classifiers.scikit_wrapper import ScikitWrapperClassifier
 from classifiers.sliding_window import PunSlidingWindowClassifier
+from classifiers.voting_classifier import PunVotingClassifier
 from eval import Eval
 from pun_data import DetectionData, LocationData
 
@@ -56,6 +58,8 @@ if __name__ == "__main__":
                         help="run the algorithms on the more evenly split dataset")
     parser.add_argument('--use_cached', action="store_true", default=False,
                         help="use cached models if available")
+    parser.add_argument('--ensemble', action="store_true", default=False,
+                        help="use cached models if available")
     args = parser.parse_args()
 
     print("Running %s puns" % args.graphic)
@@ -64,32 +68,54 @@ if __name__ == "__main__":
     if args.detection:
 
         detectionData = DetectionData(args.graphic, args.even)
+        baselinePunClassifier = BaselinePunClassifier(type="Detection")
+        punRnnDetectionClassifier = PunRNNDetectionClassifier()
+        punDetectionWithFeaturesClassifier = PunDetectionWithFeaturesClassifier()
 
         # Create baseline pun detection classifier
         if args.baselines:
-            runClassifier(BaselinePunClassifier(type="Detection"), detectionData, Eval.evaluateDetection, args.use_cached)
+            runClassifier(baselinePunClassifier, detectionData, Eval.evaluateDetection, args.use_cached)
 
         if args.rnn:
-            runClassifier(PunRNNDetectionClassifier(), detectionData, Eval.evaluateDetection, args.use_cached)
+            runClassifier(punRnnDetectionClassifier, detectionData, Eval.evaluateDetection, args.use_cached)
 
         if args.sgd:
-            runClassifier(PunDetectionWithFeaturesClassifier(), detectionData, Eval.evaluateDetection, args.use_cached)
+            runClassifier(punDetectionWithFeaturesClassifier, detectionData, Eval.evaluateDetection, args.use_cached)
+
+        if args.ensemble:
+            classifiers = [
+                ScikitWrapperClassifier(baselinePunClassifier),
+                ScikitWrapperClassifier(punRnnDetectionClassifier),
+                ScikitWrapperClassifier(punDetectionWithFeaturesClassifier)
+            ]
+            runClassifier(PunVotingClassifier(type="Detection", classifiers=classifiers), detectionData, Eval.evaluateDetection, args.use_cached)
 
 
     # PUN LOCATION
     if args.location:
 
         locationData = LocationData(args.graphic)
+        baselinePunLocationClassifier = BaselinePunClassifier(type="Location")
+        punRnnLocationClassifier = PunRNNClassifier(output="word")
+        punSlidingWindowClassifier = PunSlidingWindowClassifier(output="word")
 
         # Create baseline pun location classifier
         if args.baselines:
-            runClassifier(BaselinePunClassifier(type="Location"), locationData, Eval.evaluateLocation, args.use_cached)
+            runClassifier(baselinePunLocationClassifier, locationData, Eval.evaluateLocation, args.use_cached)
 
         if args.rnn:
-            runClassifier(PunRNNClassifier(output="word"), locationData, Eval.evaluateLocation, args.use_cached)
+            runClassifier(punRnnLocationClassifier, locationData, Eval.evaluateLocation, args.use_cached)
 
         if args.window:
-            runClassifier(PunSlidingWindowClassifier(output="word"), locationData, Eval.evaluateLocation, args.use_cached)
+            runClassifier(punSlidingWindowClassifier, locationData, Eval.evaluateLocation, args.use_cached)
+
+        if args.ensemble:
+            classifiers = [
+                ScikitWrapperClassifier(baselinePunLocationClassifier),
+                ScikitWrapperClassifier(punRnnLocationClassifier),
+                ScikitWrapperClassifier(punSlidingWindowClassifier)
+            ]
+            runClassifier(PunVotingClassifier(type="Location", classifiers=classifiers), locationData, Eval.evaluateLocation, args.use_cached)
 
 
     # Output final report

@@ -2,6 +2,7 @@ from keras.models import Sequential
 from keras.layers import Dense, Embedding, Bidirectional, Dropout
 from keras.layers import LSTM, Input, TimeDistributed
 from keras.preprocessing.sequence import pad_sequences
+from sklearn.base import BaseEstimator, ClassifierMixin
 from keras.preprocessing.text import Tokenizer
 from word_embeddings import WordEmbeddings
 import numpy as np
@@ -17,9 +18,9 @@ class PunRNNDetectionClassifier:
             - binary
         """
 
-        self.name = "Pun RNN"
+        self.name = "Pun RNN Detection"
         self.embedding = WordEmbeddings()
-        self.no_cache = True
+        self.use_keras_caching = True # how to cache other properties not on model?
 
     def train(self, x_train, y_train):
         self.y_train = y_train

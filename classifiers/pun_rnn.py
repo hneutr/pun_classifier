@@ -17,10 +17,10 @@ class PunRNNClassifier:
             - binary
         """
 
-        self.name = "Pun RNN"
+        self.name = "Pun RNN Location"
         self.embedding = WordEmbeddings()
         self.output = output
-        self.no_cache = True
+        self.use_keras_caching = True
 
     def train(self, x_train, y_train):
         # make y_train into a 1-hot vector
