@@ -60,7 +60,10 @@ if __name__ == "__main__":
     parser.add_argument('--use_cached', action="store_true", default=False,
                         help="use cached models if available")
     parser.add_argument('--ensemble', action="store_true", default=False,
-                        help="use cached models if available")
+                        help="use voting classifier")
+    parser.add_argument('--adaboost', action="store_true", default=False,
+                        help="use adaboost for sliding window classifier")
+
     args = parser.parse_args()
 
     print("Running %s puns" % args.graphic)
