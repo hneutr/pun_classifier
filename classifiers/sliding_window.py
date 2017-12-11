@@ -62,7 +62,8 @@ class PunSlidingWindowClassifier(ClassifierBasedTagger):
         word = tokens[index][0]
 
         features = {
-            'position': index / (len(tokens)-4),
+            'position': index / len(tokens),
+            'words_remaining': (len(tokens) - 2 * self.window) - (index - self.window),
             'lemma': self.stemmer.stem(word),
             'shape': shape(word),
             'wordlen': len(word),
