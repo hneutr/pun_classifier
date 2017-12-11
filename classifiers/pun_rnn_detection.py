@@ -78,3 +78,4 @@ class PunRNNDetectionClassifier:
         tokenizer = Tokenizer(num_words=MAX_NB_WORDS)
         tokenizer.fit_on_texts([' '.join(x) for x in xs])
         self.word_index = tokenizer.word_index
+

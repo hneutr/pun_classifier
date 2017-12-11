@@ -53,7 +53,7 @@ if __name__ == "__main__":
                         help="run the sliding window algorithm for location")
     parser.add_argument('--rnn', action="store_true", default=False,
                         help="run the rnn algorithm")
-    parser.add_argument('--sgd', action="store_true", default=False,
+    parser.add_argument('--features', action="store_true", default=False,
                         help="run the sgd algorithm for detection")
     parser.add_argument('--even', action="store_false", default=True,
                         help="run the algorithms on the more evenly split dataset")
@@ -83,7 +83,7 @@ if __name__ == "__main__":
         if args.rnn:
             runClassifier(punRnnDetectionClassifier, detectionData, Eval.evaluateDetection, args.use_cached)
 
-        if args.sgd:
+        if args.features:
             runClassifier(punDetectionWithFeaturesClassifier, detectionData, Eval.evaluateDetection, args.use_cached)
 
         if args.ensemble:
@@ -121,8 +121,8 @@ if __name__ == "__main__":
             classifiers = [
                 ScikitWrapperClassifier(baselinePunLocationClassifier),
                 ScikitWrapperClassifier(punRnnLocationClassifier),
-                ScikitWrapperClassifier(punSlidingWindowClassifier),
-                ScikitWrapperClassifier(adaboostSlidingWindowClassifier)
+                ScikitWrapperClassifier(punSlidingWindowClassifier)
+                #ScikitWrapperClassifier(adaboostSlidingWindowClassifier)  - adaboost not yet working
             ]
             runClassifier(PunVotingClassifier(type="Location", classifiers=classifiers), locationData, Eval.evaluateLocation, args.use_cached)
 
