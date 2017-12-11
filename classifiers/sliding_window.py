@@ -4,7 +4,19 @@ from nltk import download
 from nltk.corpus import stopwords
 from nltk import pos_tag
 from nltk.stem.snowball import SnowballStemmer
+from features.homophones import *
+from features.idioms import *
+from features.antonym import *
+from features.homonym import *
+from features.negative_positive import *
 import numpy as np
+
+Antonyms = make_raw_antonym_list()
+Idioms = idioms_list
+Homophones = homophone_words_list
+Homonyms = homonym_list
+Positives = some_positive_words
+Negatives = some_negative_words
 
 class PunSlidingWindowClassifier(ClassifierBasedTagger):
     def __init__(self, output="word", window=5):
@@ -72,6 +84,12 @@ class PunSlidingWindowClassifier(ClassifierBasedTagger):
             'pos': tokens[index][1],
             'en-wordlist': (word in self._english_wordlist()),
             'stopwords': word.lower() in self._stopwords(),
+            'antonyms': word.lower() in Antonyms,
+            'idioms': word.lower() in Idioms,
+            'homophones': word.lower() in Homophones,
+            'homonyms': word.lower() in Homonyms,
+            'positives':word.lower() in Positives,
+            'negatives':word.lower() in Negatives
             # 'word+nextpos': '{0}+{1}'.format(word.lower(), tokens[index+1][1]),
             }
 
