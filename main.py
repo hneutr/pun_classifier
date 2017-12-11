@@ -6,6 +6,7 @@ from classifiers.baseline import BaselinePunClassifier
 from classifiers.pun_detection_with_features import PunDetectionWithFeaturesClassifier
 from classifiers.pun_rnn import PunRNNClassifier
 from classifiers.pun_rnn_detection import PunRNNDetectionClassifier
+from classifiers.pun_location_with_features import PunLocationWithFeaturesClassifier
 from classifiers.scikit_wrapper import ScikitWrapperClassifier
 from classifiers.sliding_window import PunSlidingWindowClassifier
 from classifiers.voting_classifier import PunVotingClassifier
@@ -55,6 +56,8 @@ if __name__ == "__main__":
                         help="run the rnn algorithm")
     parser.add_argument('--features', action="store_true", default=False,
                         help="run the sgd algorithm for detection")
+    parser.add_argument('--decision_tree', action = "store_true", default = False,
+                        help="run the decision_tree classifier for location")
     parser.add_argument('--even', action="store_false", default=True,
                         help="run the algorithms on the more evenly split dataset")
     parser.add_argument('--use_cached', action="store_true", default=False,
@@ -101,6 +104,7 @@ if __name__ == "__main__":
         locationData = LocationData(args.graphic)
         baselinePunLocationClassifier = BaselinePunClassifier(type="Location")
         punRnnLocationClassifier = PunRNNClassifier(output="word")
+        punDecisionTreeClassifier = PunLocationWithFeaturesClassifier(output = "word")
         punSlidingWindowClassifier = PunSlidingWindowClassifier(output="word")
         adaboostSlidingWindowClassifier = AdaboostSlidingWindowClassifier()
 
@@ -110,6 +114,9 @@ if __name__ == "__main__":
 
         if args.rnn:
             runClassifier(punRnnLocationClassifier, locationData, Eval.evaluateLocation, args.use_cached)
+
+        if args.decision_tree:
+            runClassifier(punDecisionTreeClassifier, locationData, Eval.evaluateLocation, args.use_cached)
 
         if args.window:
             runClassifier(punSlidingWindowClassifier, locationData, Eval.evaluateLocation, args.use_cached)
@@ -121,8 +128,10 @@ if __name__ == "__main__":
             classifiers = [
                 ScikitWrapperClassifier(baselinePunLocationClassifier),
                 ScikitWrapperClassifier(punRnnLocationClassifier),
-                ScikitWrapperClassifier(punSlidingWindowClassifier)
-                #ScikitWrapperClassifier(adaboostSlidingWindowClassifier)  - adaboost not yet working
+                ScikitWrapperClassifier(punDecisionTreeClassifier),
+                ScikitWrapperClassifier(punSlidingWindowClassifier),
+                # ScikitWrapperClassifier(adaboostSlidingWindowClassifier)  - adaboost not yet working
+
             ]
             runClassifier(PunVotingClassifier(type="Location", classifiers=classifiers), locationData, Eval.evaluateLocation, args.use_cached)
 
