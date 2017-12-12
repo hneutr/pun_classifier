@@ -172,6 +172,9 @@ class PunDetectionWithFeaturesClassifier(BaseEstimator, ClassifierMixin):
     def predict(self, x):
         return self.test(x)
 
+    def predict_proba(self, x):
+        return self.test_with_probabilities(x)
+
     def score(self, x, y, sample_weight=None):
         from sklearn.metrics import accuracy_score
         return accuracy_score(y, self.predict(x), sample_weight=sample_weight)

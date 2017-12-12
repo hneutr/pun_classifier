@@ -20,7 +20,7 @@ class PunSlidingWindowClassifier(ClassifierBasedTagger, BaseEstimator, Classifie
         x_train = self.format_xs(x_train)
 
         train = [list(zip(a[0], a[1])) for a in zip(x_train, y_train)]
-        ClassifierBasedTagger.__init__(
+        self.classifier = ClassifierBasedTagger.__init__(
             self, train=train,
             classifier_builder=self._classifier_builder)
 
@@ -88,6 +88,26 @@ class PunSlidingWindowClassifier(ClassifierBasedTagger, BaseEstimator, Classifie
         xs = self.format_xs(xs)
         return self.get_output(xs)
 
+    def test_with_probabilities(self, xs):
+        xs = self.format_xs(xs)
+        return [self.prob_tag(sent) for sent in xs]
+
+    def prob_tag(self, tokens):
+        # docs inherited from TaggerI
+        tags = []
+        for i in range(len(tokens)):
+            tags.append(self.choose_tag_prob(tokens, i, tags))
+        return tags
+
+    def choose_tag_prob(self, tokens, index, history):
+        # Use our feature detector to get the featureset.
+        featureset = self._feature_detector(tokens, index, history)
+
+        pdist = self._classifier.prob_classify(featureset)
+        return pdist.prob(1)
+
+
+
     def get_output(self, xs):
         tagged_sents = [[t[1] for t in sent] for sent in self.tag_sents(xs)]
 
@@ -108,6 +128,7 @@ class PunSlidingWindowClassifier(ClassifierBasedTagger, BaseEstimator, Classifie
 
         return predictions
 
+
     def get_word_predictions(self, tagged_sents):
         return [np.argmax(sent) for sent in tagged_sents]
 
@@ -119,6 +140,9 @@ class PunSlidingWindowClassifier(ClassifierBasedTagger, BaseEstimator, Classifie
 
     def predict(self, x):
         return self.test(x)
+
+    def predict_proba(self, x):
+        return self.test_with_probabilities(x)
 
     def score(self, x, y, sample_weight=None):
         from sklearn.metrics import accuracy_score

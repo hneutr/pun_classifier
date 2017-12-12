@@ -6,7 +6,6 @@ from classifiers.pun_detection_with_features import PunDetectionWithFeaturesClas
 from classifiers.pun_location_with_features import PunLocationWithFeaturesClassifier
 from classifiers.pun_rnn import PunRNNClassifier
 from classifiers.pun_rnn_detection import PunRNNDetectionClassifier
-from classifiers.scikit_wrapper import ScikitWrapperClassifier
 from classifiers.sliding_window import PunSlidingWindowClassifier
 from classifiers.voting_classifier import PunVotingClassifier
 from pun_data import DetectionData, LocationData
@@ -23,24 +22,24 @@ class ServerMain:
 
         # Get classifiers to use for TYPE DETECTION
         baselinePunTypeClassifier = BaselinePunClassifier(type="Detection")
-        punRnnDetectionTypeClassifier = PunRNNDetectionClassifier()
+        #punRnnDetectionTypeClassifier = PunRNNDetectionClassifier()
         punDetectionWithFeaturesTypeClassifier = PunDetectionWithFeaturesClassifier()
         typeClassifiers = [
             baselinePunClassifier,
             punRnnDetectionClassifier,
             punDetectionWithFeaturesClassifier
         ]
-        punVotingTypeClassifier = PunVotingClassifier(type="Detection", classifiers=typeClassifiers)
-        self.detectionTypeClassifiers = [baselinePunTypeClassifier, punRnnDetectionTypeClassifier,
-                                     punDetectionWithFeaturesTypeClassifier, punVotingTypeClassifier]
+        #punVotingTypeClassifier = PunVotingClassifier(type="Detection", classifiers=typeClassifiers)
+        self.detectionTypeClassifiers = [baselinePunTypeClassifier,
+                                     punDetectionWithFeaturesTypeClassifier]
 
         # Get classifiers to use for LOCATION PROBABILITIES
-        baselinePunLocationClassifier = BaselinePunClassifier(type="Location")
+        #baselinePunLocationClassifier = BaselinePunClassifier(type="Location")
         punRnnLocationClassifier = PunRNNClassifier(output="word")
-        punDecisionTreeClassifier = PunLocationWithFeaturesClassifier(output="word")
+        #punDecisionTreeClassifier = PunLocationWithFeaturesClassifier(output="word") doesn't support probabilities
         punSlidingWindowClassifier = PunSlidingWindowClassifier(output="word")
-        punVotingLocationClassifier = PunVotingClassifier(type="Location", classifiers=[baselinePunLocationClassifier, punRnnLocationClassifier, punDecisionTreeClassifier, punSlidingWindowClassifier, ])
-        self.locationClassifiers = [baselinePunLocationClassifier, punRnnLocationClassifier, punDecisionTreeClassifier, punSlidingWindowClassifier, punVotingLocationClassifier]
+       # punVotingLocationClassifier = PunVotingClassifier(type="Location", classifiers=[punRnnLocationClassifier, punSlidingWindowClassifier])
+        self.locationClassifiers = [punRnnLocationClassifier, punSlidingWindowClassifier]
 
     # Initialize server so that it will be able to make predictions
     # This will involve training the needed classifiers
@@ -49,19 +48,19 @@ class ServerMain:
         graphic = 'combined'
         detectionData = DetectionData(graphic, False)
         for classifier in self.detectionClassifiers:
-            classifier.train(detectionData.x_train[:100], detectionData.y_train[:100])
+            classifier.train(detectionData.x_train[:10], detectionData.y_train[:10])
 
         #initialize classifiers for TYPE DETECTION
         graphic = 'both'
         detectionData = DetectionData(graphic, False)
         for classifier in self.detectionTypeClassifiers:
-            classifier.train(detectionData.x_train[:100], detectionData.y_train[:100])
+            classifier.train(detectionData.x_train[:10], detectionData.y_train[:10])
 
         #initialize classifiers for LOCATION PROBABILITIES
         graphic = 'combined'
         locationData = LocationData(graphic)
         for classifier in self.locationClassifiers:
-            classifier.train(locationData.x_train[:100], locationData.y_train[:100])
+            classifier.train(locationData.x_train[:10], locationData.y_train[:10])
 
     # Detect the probabilities of each class (pun or non pun) for the sentence passed in
     def do_detection (self, request):
@@ -69,8 +68,6 @@ class ServerMain:
         for classifier in self.detectionClassifiers:
             results.append(classifier.test_with_probabilities([request])[0])
         return results
-
-        # Detect the probabilities of each class (pun or non pun) for the sentence passed in
 
     def do_type_detection(self, request):
         results = []
@@ -123,19 +120,20 @@ class S(BaseHTTPRequestHandler):
             }
             self.finish_repsonse(response)
 
-        elif self.type == '/type':
+        elif self.path == '/type':
             probabilities = server_main.do_type_detection(request)
             response = {
                 "baseline": {"non-pun": probabilities[0][0], "homographic": probabilities[0][1], "heterographic": probabilities[0][2]},
-                "rnn": {"non-pun": probabilities[1][0], "homographic": probabilities[1][1], "heterographic": probabilities[1][2]},
-                "features": {"non-pun": probabilities[2][0],"homographic": probabilities[2][1], "heterographic": probabilities[2][2]},
-                "voting": {"non-pun": probabilities[3][0], "homographic": probabilities[3][1], "heterographic": probabilities[3][2]},
+                "features": {"non-pun": probabilities[1][0],"homographic": probabilities[1][1], "heterographic": probabilities[1][2]}
             }
             self.finish_repsonse(response)
 
-        elif self.type == '/location':
-            #TODO
-            response = None
+        elif self.path == '/location':
+            probabilities = server_main.do_location(request)
+            response = {
+                "rnn": list(map(lambda x: str(x), probabilities[0])),
+                "sliding": list(map(lambda x: str(x), probabilities[1]))
+            }
             self.finish_repsonse(response)
 
 
@@ -154,7 +152,7 @@ def run():
 
     # Server settings
     # Choose port 8080, for port 80, which is normally used for a http server, you need root access
-    server_address = ('', 8081)
+    server_address = ('', 8082)
     httpd = HTTPServer(server_address, S)
     print('running server...')
     httpd.serve_forever()

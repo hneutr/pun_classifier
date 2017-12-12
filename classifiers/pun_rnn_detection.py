@@ -66,6 +66,15 @@ class PunRNNDetectionClassifier(BaseEstimator, ClassifierMixin):
 
         return predictions
 
+    def get_binary_predictions_with_probabilities(self, xs):
+        predictions = []
+        for x in xs:
+            x = x.reshape(1, len(x))
+            prediction = self.model.predict_proba(x, batch_size=1, verbose=0)[0][0]
+            predictions.append([1-prediction, float(prediction)])
+
+        return predictions
+
 
     def test(self, x_test):
         self.x_test = self.format_xs(x_test)
@@ -80,6 +89,10 @@ class PunRNNDetectionClassifier(BaseEstimator, ClassifierMixin):
         tokenizer.fit_on_texts([' '.join(x) for x in xs])
         self.word_index = tokenizer.word_index
 
+    def test_with_probabilities(self, x_test):
+        self.x_test = self.format_xs(x_test)
+        return self.get_binary_predictions_with_probabilities(self.x_test)
+
     def fit(self, x_train, y_train=None):
         self.train(x_train, y_train)
 
@@ -87,6 +100,9 @@ class PunRNNDetectionClassifier(BaseEstimator, ClassifierMixin):
 
     def predict(self, x):
         return self.test(x)
+
+    def predict_proba(self, x):
+        return self.test_with_probabilities(x)
 
     def score(self, x, y, sample_weight=None):
         from sklearn.metrics import accuracy_score

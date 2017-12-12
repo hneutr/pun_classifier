@@ -2,6 +2,7 @@ $(document).ready(function () {
 
     var timeouts = [];
     var baseUrl = "http://ec2-54-159-184-109.compute-1.amazonaws.com:8081/";
+    var baseUrl = "http://localhost:8082/";
 
     function transitionPage() {
         var width = $(window).width();
@@ -44,7 +45,7 @@ $(document).ready(function () {
             }).done(function (data) {
                 $(".pun-detection-text").removeClass("hidden");
 
-                var types = ["baseline", "features"];
+                var types = ["baseline", "rnn", "features", "voting"];
                 types.forEach(function (t) {
                     var isPun = data[t].pun * 100;
                     var elementName = "." + t + "-detection";
@@ -62,20 +63,63 @@ $(document).ready(function () {
                     }
                 });
 
-
                 $(".pun-detection-spinner").addClass("hidden");
             });
 
-
-            //Fake loading - will connect with actual call later
-            timeouts.push(setTimeout(function () {
+            $.ajax({
+                type: "POST",
+                url: baseUrl + "type",
+                data: pun
+            }).done(function (data) {
                 $(".pun-type-text").removeClass("hidden");
+
+                var types = ["baseline", "features"];
+                types.forEach(function (t) {
+                    var nonPun = data[t]['non-pun'] * 100;
+                    var homographic = data[t].homographic * 100;
+                    var heterographic = data[t].heterographic * 100;
+                    var elementName = "." + t + "-type";
+
+                     $(elementName).append(
+                         "<p>There is a " + nonPun + "% probability that this is not a pun at all.<br>" +
+                         "There is a " + homographic + "% probability that this is a homographic pun.<br>" +
+                         "There is a " + heterographic + "% probability that this is a heterographic pun.<br></p>")
+                });
+
                 $(".pun-type-spinner").addClass("hidden");
-            }, 6000));
-            timeouts.push(setTimeout(function () {
+            });
+
+            $.ajax({
+                type: "POST",
+                url: baseUrl + "location",
+                data: pun
+            }).done(function (data) {
                 $(".pun-location-text").removeClass("hidden");
+
+                var types = ["rnn", "sliding"];
+                types.forEach(function (t) {
+
+                    var elementName = "." + t + "-location";
+
+                    var i = 0;
+                    var total = 0;
+                    var punArray = pun.replace(/[^\w\s]|_/g, "").replace(/\s+/g, " ").split(" ");
+
+                    data[t].forEach(function (prediction) {
+                       total  += parseFloat(prediction)
+                    });
+
+                    data[t].forEach(function (prediction) {
+                        var color = "hsla(190012, 80%, 20%, percentage)".replace('percentage', parseFloat(prediction)/total);
+                        $(elementName).append("<p>" + punArray[i] + "&nbsp;</p>");
+                        $(elementName).children().eq(i).css({'font-weight': "bold", 'color': color});
+                        i++;
+                    });
+
+                });
+
                 $(".pun-location-spinner").addClass("hidden");
-            }, 4000));
+            });
         }
 
 
@@ -91,13 +135,19 @@ $(document).ready(function () {
 
         $(".pun-detection-text").addClass("hidden");
         $(".baseline-detection").empty();
+        $(".rnn-detection").empty();
         $(".features-detection").empty();
+        $(".voting-detection").empty();
         $(".pun-detection-spinner").removeClass("hidden");
 
         $(".pun-type-text").addClass("hidden");
+        $(".baseline-type").empty();
+        $(".features-type").empty();
         $(".pun-type-spinner").removeClass("hidden");
 
         $(".pun-location-text").addClass("hidden");
+        $(".rnn-location").empty();
+        $(".sliding-location").empty();
         $(".pun-location-spinner").removeClass("hidden");
     });
 

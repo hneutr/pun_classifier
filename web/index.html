@@ -89,8 +89,15 @@
                         <div class="pun-detection-text hidden">
                             <h5>Baseline Prediction:</h5>
                             <div class="baseline-detection"></div>
+
+                            <h5>RNN Prediction:</h5>
+                            <div class="rnn-detection"></div>
+
                             <h5>Features Prediction:</h5>
                             <div class="features-detection"></div>
+
+                            <h5>Voting Prediction:</h5>
+                            <div class="voting-detection"></div>
                         </div>
                     </div>
                 </div>
@@ -107,11 +114,14 @@
                     </div>
                     <div class="one-half column">
                         <div class="loader pun-type-spinner">Loading...</div>
-                        <p class="pun-type-text hidden">
-                            This is most likely to be a heterographic pun.
-                            There was a 78% chance this was heterographic,
-                            and there was a 22% chance this was homographic.
-                        </p>
+                        <div class="pun-detection-text hidden">
+                            <h5>Baseline Prediction:</h5>
+                            <div class="baseline-type"></div>
+
+                            <h5>Features Prediction:</h5>
+                            <div class="features-type"></div>
+
+                        </div>
                     </div>
                 </div>
             </div>
@@ -128,7 +138,11 @@
                     <div class="one-half column">
                         <div class="loader pun-location-spinner">Loading...</div>
                         <p class="pun-location-text hidden">
-                            Pun visualization goes here
+                            <h5>RNN Prediction:</h5>
+                            <div class="rnn-location"></div>
+
+                            <h5>Sliding Window Prediction:</h5>
+                            <div class="sliding-location"></div>
                         </p>
                     </div>
                 </div>

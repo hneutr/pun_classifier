@@ -82,6 +82,19 @@ class PunRNNClassifier(BaseEstimator, ClassifierMixin):
 
         return predictions
 
+    def get_predictions_with_probabilities(self, xs):
+        predictions = []
+        for x in xs:
+            x = x.reshape(1, len(x))
+            prediction = self.model.predict(x, batch_size=1, verbose=0)[0]
+
+            # magic, I don't know (why this needs to be done, that is)
+            prediction = [p[0] for p in prediction]
+
+            predictions.append(prediction)
+
+        return predictions
+
     def get_word_predictions(self, xs):
         predictions = []
         for x in xs:
@@ -114,6 +127,11 @@ class PunRNNClassifier(BaseEstimator, ClassifierMixin):
 
         return self.get_output(self.x_test)
 
+    def test_with_probabilities(self, x_test):
+        self.x_test = self.format_xs(x_test)
+
+        return self.get_predictions_with_probabilities(self.x_test)
+
     def format_xs(self, xs):
         return np.asarray([np.asarray([self.word_index.get(t.lower(), 0) for t in x]) for x in xs])
 
@@ -129,6 +147,9 @@ class PunRNNClassifier(BaseEstimator, ClassifierMixin):
 
     def predict(self, x):
         return self.test(x)
+
+    def predict_proba(self, x):
+        return self.test_with_probabilities(x)
 
     def score(self, x, y, sample_weight=None):
         from sklearn.metrics import accuracy_score
