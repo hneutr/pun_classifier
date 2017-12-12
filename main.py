@@ -92,9 +92,9 @@ if __name__ == "__main__":
 
         if args.ensemble:
             classifiers = [
-                ScikitWrapperClassifier(baselinePunClassifier),
-                ScikitWrapperClassifier(punRnnDetectionClassifier),
-                ScikitWrapperClassifier(punDetectionWithFeaturesClassifier)
+                baselinePunClassifier,
+                punRnnDetectionClassifier,
+                punDetectionWithFeaturesClassifier
             ]
             runClassifier(PunVotingClassifier(type="Detection", classifiers=classifiers), detectionData, Eval.evaluateDetection, args.use_cached)
 
@@ -127,12 +127,11 @@ if __name__ == "__main__":
 
         if args.ensemble:
             classifiers = [
-                ScikitWrapperClassifier(baselinePunLocationClassifier),
-                ScikitWrapperClassifier(punRnnLocationClassifier),
-                ScikitWrapperClassifier(punDecisionTreeClassifier),
-                ScikitWrapperClassifier(punSlidingWindowClassifier),
+                baselinePunLocationClassifier,
+                punRnnLocationClassifier,
+                punDecisionTreeClassifier,
+                punSlidingWindowClassifier,
                 # ScikitWrapperClassifier(adaboostSlidingWindowClassifier)  - adaboost not yet working
-
             ]
             runClassifier(PunVotingClassifier(type="Location", classifiers=classifiers), locationData, Eval.evaluateLocation, args.use_cached)
 

@@ -1,5 +1,6 @@
 import nltk
 import numpy as np
+from sklearn.base import BaseEstimator, ClassifierMixin
 
 from word_embeddings import WordEmbeddings
 from features.homophones import *
@@ -9,7 +10,7 @@ from features.homonym import *
 
 Antonyms = make_raw_antonym_list()
 
-class PunLocationWithFeaturesClassifier:
+class PunLocationWithFeaturesClassifier(BaseEstimator, ClassifierMixin):
 
     def __init__(self, output = "word"):
 
@@ -62,3 +63,16 @@ class PunLocationWithFeaturesClassifier:
 
     def test(self, x_test):
         return self.train(x_test, None)
+
+    def fit(self, x_train, y_train=None):
+
+        self.train(x_train, y_train)
+
+        return self
+
+    def predict(self, x):
+        return self.test(x)
+
+    def score(self, x, y, sample_weight=None):
+        from sklearn.metrics import accuracy_score
+        return accuracy_score(y, self.predict(x), sample_weight=sample_weight)

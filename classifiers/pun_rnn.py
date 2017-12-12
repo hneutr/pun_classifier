@@ -4,11 +4,12 @@ from keras.layers import LSTM, Input, TimeDistributed
 from keras.preprocessing.sequence import pad_sequences
 from keras.preprocessing.text import Tokenizer
 from word_embeddings import WordEmbeddings
+from sklearn.base import BaseEstimator, ClassifierMixin
 import numpy as np
 
 MAX_NB_WORDS = 20000
 
-class PunRNNClassifier:
+class PunRNNClassifier(BaseEstimator, ClassifierMixin):
     def __init__(self, output="word"):
         """
         output can be one of:
@@ -77,7 +78,7 @@ class PunRNNClassifier:
             prediction = [p[0] for p in prediction]
 
             is_pun = 1 if len([ 1 for x in prediction if x > .5 ]) else 0
-            predictions.append(word_is_pun)
+            predictions.append(is_pun)
 
         return predictions
 
@@ -120,3 +121,15 @@ class PunRNNClassifier:
         tokenizer = Tokenizer(num_words=MAX_NB_WORDS)
         tokenizer.fit_on_texts([' '.join(x) for x in xs])
         self.word_index = tokenizer.word_index
+
+    def fit(self, x_train, y_train=None):
+        self.train(x_train, y_train)
+
+        return self
+
+    def predict(self, x):
+        return self.test(x)
+
+    def score(self, x, y, sample_weight=None):
+        from sklearn.metrics import accuracy_score
+        return accuracy_score(y, self.predict(x), sample_weight=sample_weight)
