@@ -4,6 +4,10 @@ $(document).ready(function () {
     var baseUrl = "http://ec2-54-159-184-109.compute-1.amazonaws.com:8081/";
     var baseUrl = "http://localhost:8082/";
 
+    Array.max = function( array ){
+        return Math.max.apply( Math, array );
+    };
+
     function transitionPage() {
         var width = $(window).width();
 
@@ -100,10 +104,19 @@ $(document).ready(function () {
                 types.forEach(function (t) {
 
                     var elementName = "." + t + "-location";
+                    var mostProbableElementName = elementName + "-most-probable";
 
                     var i = 0;
                     var total = 0;
                     var punArray = pun.replace(/[^\w\s]|_/g, "").replace(/\s+/g, " ").split(" ");
+
+                    data[t] = data[t].map(function(ele) {
+                        return parseFloat(ele);
+                    });
+
+                    var maxX = Array.max(data[t]);
+                    var index = data[t].indexOf(maxX);
+                    $(mostProbableElementName).append("<p> Most Probable Pun Word: " + punArray[index] + "</p>");
 
                     data[t].forEach(function (prediction) {
                        total  += parseFloat(prediction)
@@ -148,6 +161,8 @@ $(document).ready(function () {
         $(".pun-location-text").addClass("hidden");
         $(".rnn-location").empty();
         $(".sliding-location").empty();
+        $(".rnn-location-most-probable").empty();
+        $(".sliding-location-most-probable").empty();
         $(".pun-location-spinner").removeClass("hidden");
     });
 

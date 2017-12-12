@@ -48,19 +48,19 @@ class ServerMain:
         graphic = 'combined'
         detectionData = DetectionData(graphic, False)
         for classifier in self.detectionClassifiers:
-            classifier.train(detectionData.x_train[:10], detectionData.y_train[:10])
+            classifier.train(detectionData.x_train, detectionData.y_train)
 
         #initialize classifiers for TYPE DETECTION
         graphic = 'both'
         detectionData = DetectionData(graphic, False)
         for classifier in self.detectionTypeClassifiers:
-            classifier.train(detectionData.x_train[:10], detectionData.y_train[:10])
+            classifier.train(detectionData.x_train, detectionData.y_train)
 
         #initialize classifiers for LOCATION PROBABILITIES
         graphic = 'combined'
         locationData = LocationData(graphic)
         for classifier in self.locationClassifiers:
-            classifier.train(locationData.x_train[:10], locationData.y_train[:10])
+            classifier.train(locationData.x_train, locationData.y_train)
 
     # Detect the probabilities of each class (pun or non pun) for the sentence passed in
     def do_detection (self, request):
