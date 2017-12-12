@@ -43,7 +43,7 @@ if __name__ == "__main__":
 
     parser = argparse.ArgumentParser(description='type of pun')
     parser.add_argument('--graphic', type=str, default='homographic',
-                        help="which type of pun ['homographic', 'heterographic']. Default: homographic")
+                        help="which type of pun ['homographic', 'heterographic', 'combined', 'both']. Default: homographic")
     parser.add_argument('--baselines', action="store_true", default=False,
                         help="run baselines or not. defaults to false.")
     parser.add_argument('--detection', action="store_true", default=False,
@@ -75,6 +75,7 @@ if __name__ == "__main__":
     if args.detection:
 
         detectionData = DetectionData(args.graphic, args.even)
+
         baselinePunClassifier = BaselinePunClassifier(type="Detection")
         punRnnDetectionClassifier = PunRNNDetectionClassifier()
         punDetectionWithFeaturesClassifier = PunDetectionWithFeaturesClassifier()
