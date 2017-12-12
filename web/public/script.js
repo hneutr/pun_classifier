@@ -2,7 +2,6 @@ $(document).ready(function () {
 
     var timeouts = [];
     var baseUrl = "http://ec2-54-159-184-109.compute-1.amazonaws.com:8081/";
-    var baseUrl = "http://localhost:8082/";
 
     Array.max = function( array ){
         return Math.max.apply( Math, array );
