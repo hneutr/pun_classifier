@@ -46,19 +46,19 @@ class ServerMain:
     def do_init (self):
         # initialize classifiers for DETECTION
         graphic = 'combined'
-        detectionData = DetectionData(graphic, False)
+        detectionData = DetectionData(graphic, False, 1) # use all training data
         for classifier in self.detectionClassifiers:
             classifier.train(detectionData.x_train, detectionData.y_train)
 
         #initialize classifiers for TYPE DETECTION
         graphic = 'both'
-        detectionData = DetectionData(graphic, False)
+        detectionData = DetectionData(graphic, False, 1)
         for classifier in self.detectionTypeClassifiers:
             classifier.train(detectionData.x_train, detectionData.y_train)
 
         #initialize classifiers for LOCATION PROBABILITIES
         graphic = 'combined'
-        locationData = LocationData(graphic)
+        locationData = LocationData(graphic, 1)
         for classifier in self.locationClassifiers:
             classifier.train(locationData.x_train, locationData.y_train)
 

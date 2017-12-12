@@ -6,15 +6,15 @@ from sklearn.model_selection import train_test_split
 SEED = 20171110
 
 class DetectionData:
-    def __init__(self, graphic, even=False):
-        self.x_train, self.x_test, self.y_train, self.y_test = get_data(graphic, even, 1)
+    def __init__(self, graphic, even=False, train_size=None):
+        self.x_train, self.x_test, self.y_train, self.y_test = get_data(graphic, even, 1, train_size)
 
 
 class LocationData:
-    def __init__(self, graphic):
-        self.x_train, self.x_test, self.y_train, self.y_test = get_data(graphic, False, 2)
+    def __init__(self, graphic, train_size=None):
+        self.x_train, self.x_test, self.y_train, self.y_test = get_data(graphic, False, 2, train_size)
 
-def get_data (graphic, even, type):
+def get_data (graphic, even, type, train_size):
     x_set = []
     y_set = []
 
@@ -47,6 +47,6 @@ def get_data (graphic, even, type):
             else:
                 y_set += y
 
-    return train_test_split(x_set, y_set, random_state=SEED)
+    return train_test_split(x_set, y_set, random_state=SEED, train_size=train_size)
 
 
