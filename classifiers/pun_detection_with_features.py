@@ -33,8 +33,8 @@ class PunDetectionWithFeaturesClassifier(BaseEstimator, ClassifierMixin):
     def embeddingsFunction(self, x):
         return self.raw_embeddings.embed(x)
 
-    def __init__(self, alpha=0.0001):
-        self.name = "Pun Detection With Features"
+    def __init__(self, alpha=0.0001, graphic="combined"):
+        self.name = "Pun Detection With Features %s" % graphic
         self.raw_embeddings = WordEmbeddings()
         self.alpha = alpha
 
