@@ -58,20 +58,59 @@
 
 \section{Overview}
 
+A pun is a form of wordplay within the class of textual phenomena involving
+ambiguity where multiple meanings of a word or set of words are played upon to
+create a rhetorical effect. They can found in nearly every domain: in
+advertising, puns are used to connect a product with a desirable quality; in
+literature, puns are used to add a level of meaning and implicaiton; in
+conversation, puns add humor to the topic at hand.
+
+Understanding a pun often requires the integration of information from a large
+number of contexts; syntax, semantics, and pragmatics all frequently come into
+play. 
+
+\subsection{Motivation}
+
+It would be desirable for machines to be able to identify, comprend, and
+generate puns for many reasons. A pun generator could facilitate slogan
+generation, which would be useful in advertising and dialogue agents; a pun
+identify could be used to improve machine translations, where literal
+translation of puns rarely conveys the original text's message; a pun
+comprehension system would be helpful for large-scale textual analyses of the
+kind increasingly being employed in the digital humanities.
+
+A heterographic pun involves a word which sounds similar to another word which
+is spelled slightly differently.
+
+We worked on two tasks related to puns: detection location.
+
 \subsection{Pun Structure}
 
-here we will talk about what puns are
+There are many types of puns.
+
+In our work, we focused on two types: homographic puns and heterographic puns. 
+\begin{itemize}
+	\item {\textbf{Homographic}: A pun involving two words whose spellings are
+		the same but have different meanings.\\ \textit{I used to be a banker
+		but I lost \textbf{interest}.}}
+	\item {\textbf{Heterographic}: A pun involves two or more words which sound
+		alike but are spelled differently.\\ \textit{Two construction workers
+		had a \textbf{stairing} contest.}}
+\end{itemize}
+
 \begin{itemize}
 
-\item homographic
+\item homographic: 
+A homographic pun involves two words which are spelled the same but have
+different meanings.
+
 \item heterographic
 \item other types
 
 \end{itemize}
 
-here we will talk about the problems we worked on.
-
 \begin{center}
+
 	homographic pun example
   % \url{https://cmt.research.microsoft.com/NIPS2017/}
 \end{center}
@@ -81,13 +120,34 @@ here we will talk about the problems we worked on.
   % \url{https://cmt.research.microsoft.com/NIPS2017/}
 \end{center}
 
-Please read carefully the instructions below and follow them
-faithfully.
 
-\subsection{Motivation}
+\subsection{Dataset}
 
+We trained and tested our algorithms on the test sets used to appraise the
+competing systems in SemEval2017 Task 7. The dataset for each of the tasks we
+worked on was split into two parts: homographic and heterographic. We modified
+the characteristics of these datasets to address some issues we found. Namely,
+the original datasets for the detection tasks for both heterographic and
+homographic puns had a pun/non-pun split of 70/30. The non-pun sentences for
+each type of pun were, however, non-overlapping, so we simply modified each pun
+type's dataset to include \emph{all} non-puns from either dataset, giving us a
+more even ratio of pun/non-pun.
 
 \subsection{Tasks}
+
+here we will talk about the problems we worked on.
+
+Pun detection is a binary classification problem: given a sequence of words (a
+sentence), determine whether or not that sentence contains a pun. Given the
+binary nature of the solution space and the highly non-linear input space,
+machine learning seems a natural choice.
+
+Pun location is less straightforward: given a set of words known to contain a
+pun, identify the pun word. Though this problem is less amenable to traditional
+machine learning algorithms, it can be rephrased to be more similar to one: for
+each word in the sentence, determine the likelihood that that word is a pun
+given the rest of the sentence. Then, output the word which is most likely to
+be a pun based on the output of the previous search.
 
 section references \ref{pun_detection}, \ref{pun_location}, and
 \ref{conclusion} below.
@@ -101,18 +161,21 @@ section references \ref{pun_detection}, \ref{pun_location}, and
 
 here we will talk about pun detection and our algorithms.
 
-\subsection{Baseline}
-
-\subsection{Algorithms}
-
-\subsection{Feature Comparison}
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% Pun Location
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{Pun Location}
-\label{pun_location}
-
+\begin{block}{Pun Detection Algorithms}
+	{\large 
+		\begin{itemize}
+			\item {\textbf{Multinomial Naive Bayes}\\
+				Our baseline---an easy to implement algorithm which we measured approaches against
+			}
+			\item {\textbf{Bidirectional LSTM}\\
+				An LSTM will form connections between the start and end of a sentence and can handle variable-length sentences.
+			}
+			\item {\textbf{Linear SVM}\\ 
+				Allows us to include an arbitrary set of features.
+			}
+		\end{itemize}
+	}
+\end{block}
 \subsection{Baseline}
 
 \subsection{Algorithms}
@@ -125,10 +188,10 @@ In order to find what combinations of feature makes the largest accuracy, we use
 
 
 \begin{center}
-\begin{tabular}{ |l|l| } 
-\hline
+\begin{tabular}{l l} 
+\toprule
 \textbf{Index} 	&	\textbf{Feaute Name}	\\
-\hline
+\midrule
 0	&	Lesk Algorithm	\\
 1	&	Pos	\\
 2	&	tfidf	\\
@@ -145,7 +208,7 @@ In order to find what combinations of feature makes the largest accuracy, we use
 13	&	Positives	\\
 14	&	Negatives	\\
 15	&	All or First Caps	\\
-\hline
+\bottomrule
 \end{tabular}
 \end{center}
 
@@ -158,6 +221,17 @@ In order to find what combinations of feature makes the largest accuracy, we use
 \end{figure}
 
 
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Pun Location
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Pun Location}
+\label{pun_location}
+
+\subsection{Baseline}
+
+\subsection{Algorithms}
 
 \section{Results}
 \label{results}
@@ -185,9 +259,78 @@ here are our results. here's the baseline. here's semeval's
 \section{Conclusion}
 \label{conclusion}
 
-\subsection{who did what}
-\subsection{what went well}
-\subsection{what we could have done better}
+\subsection{Who Did What}
+
+\begin{itemize}
+
+\item Shantanu Karnwal worked on:
+	\begin{itemize}
+		\item poster layout
+	\end{itemize}
+\item Amir Kashipazha
+	\begin{itemize}
+		\item features (antonyms, idioms, sentiment)
+		\item the feature comparison for the SVM used for SGD Pun Detection
+	\end{itemize}
+\item Brandon Boylan-Peck
+	\begin{itemize}
+		\item poster bar graphs
+	\end{itemize}
+\item Cathlyn Stone
+	\begin{itemize}
+		\item the interactive web app
+		\item the framework for running classifiers
+		\item features (lesk algorithm, POS)
+		\item the SVM used in the SGD Pun Detection algorithm
+		\item the sliding window MEMM used in Pun Location
+		\item the ensemble algorithm
+		\item algorithm cross validation
+		\item the Bidirectional LSTM used for Pun Location
+		\item evaluation of the Pun Detection algorithms
+		\item the model caching architecture
+	\end{itemize}
+\item Kenneth Hunter Wapman
+	\begin{itemize}
+		\item data loading and manipulation
+		\item the baseline algorithm for Pun Detection
+		\item features (word embeddings)
+		\item the framework for running classifiers
+		\item the sliding window MEMM used in Pun Location
+		\item the Bidirectional LSTM used for Pun Location
+		\item the Bidirectional LSTM used for Pun Detection
+		\item evaluation of the Pun Location algorithms
+		\item poster content
+		\item report content
+	\end{itemize}
+\end{itemize}
+
+\subsection{What Went Well}
+
+\subsection{What We Could Have Done Better}
+
+\subsection{Future Work}
+
+An obvious shortcoming of our system is that it will only predict \emph{one
+word} as the pun word, but, and the idea that there is \emph{one word} the makes
+a pun is somewhat dubious (not to mention that compound puns exist). Consider
+the following pun: 
+\begin{center}
+	\emph{The rabbi got hit on the temple.}
+\end{center}
+Our system would say that the punword is ``temple'', but that is really only half
+the story; if the word ``rabbi'' were replaced with, say, ``monk'', there would
+be no pun. The ability to identify the words \emph{involved} in a pun would be
+much more useful, and to the authors of this report, more interesting.
+
+Of obvious interest is the ability to detect further types of puns, perhaps
+using context provided by differt types of data; it would be extremely
+interesting to create a system which could identify visual puns. 
+
+It would be of interest to say \emph{what} about the words in a sentence make it
+a pun. In other words, the creation of a system which could interpret puns.
+
+A more out-there hope would be a system which could generate puns, perhaps being
+given a sentence and a pair of word senses.
 
 \subsubsection*{Acknowledgments}
 
