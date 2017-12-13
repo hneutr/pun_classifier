@@ -10,7 +10,6 @@
 \usepackage{amsfonts}       % blackboard math symbols
 \usepackage{nicefrac}       % compact symbols for 1/2, etc.
 \usepackage{microtype}      % microtypography
-\usepackage{graphicx}
 
 \title{Pun Classification and Location}
 
@@ -149,14 +148,9 @@ In order to find what combinations of feature makes the largest accuracy, we use
 \end{tabular}
 \end{center}
 
-
-
-\begin{figure}
-  \includegraphics{figures/Accuracy_on_Test_Set_for_Homographic_Pun.JPG}
-  \caption{Figure NUMBER ? - Accuracy on Test Set for Homographic Pun}
-  \label{fig:boat1}
+\begin{figure}[h]
+\graphicspath{ {figures/Accuracy_on_Test_Set_for_Homographic_Pun.JPG} }
 \end{figure}
-
 
 
 \section{Results}
