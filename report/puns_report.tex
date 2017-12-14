@@ -12,7 +12,7 @@
 \usepackage{microtype}      % microtypography
 \usepackage{graphicx}
 
-\title{Pun Classification and Location}
+\title{Pun Classification and Location\\Group C}
 
 % The \author macro works with any number of authors. There are two
 % commands used to separate the names and addresses of multiple
@@ -49,66 +49,63 @@
 \section{Overview}
 A pun is a form of wordplay within the class of textual phenomena involving
 ambiguity where multiple meanings of a word or set of words are played upon to
-create a rhetorical effect. They can found in nearly every domain: in
-advertising, puns are used to connect a product with a desirable quality; in
-literature, puns are used to add a level of meaning and implicaiton; in
-conversation, puns add humor to the topic at hand.
+create a rhetorical effect. They occur in many domains: in advertising, puns
+are used to connect a product with a desirable quality; in literature, puns are
+used to add a level of meaning and implicaiton; in conversation, puns add humor
+to the topic at hand.
 
 Understanding a pun often requires the integration of information from a large
-number of contexts; syntax, semantics, and pragmatics all frequently come into
-play. 
+number of contexts; syntax, morphology, semantics, and pragmatics, and context
+can all come into play. There are many types of puns:
+
+\begin{itemize}
+	\item{\textbf{Homographic}: A pun involving two words whose spellings are
+		the same but have different meanings.
+		\begin{center}
+		\emph{I used to be a banker but I lost \textbf{interest}.}
+		\end{center}
+	}
+	\item{\textbf{Heterographic}: A pun involving two or more words which sound
+		alike but are spelled differently. Sometimes termed `homophonic'.
+		\begin{center}
+		\emph{Two construction workers had a \textbf{stairing} contest.}
+		\end{center}
+	}
+	\item{\textbf{Compound}: A sentence containing two or more puns.
+		\begin{center}
+		\emph{Why can a man never starve in the Great Desert? Because he can
+		eat the sand which is there. But what brought the sandwiches there?
+		Why, Noah sent Ham, and his descendants mustered and bred.} - Richard Whately
+		\end{center}
+	}
+	\item{\textbf{Visual}: A pun realized by an image. See figure \ref{fig:visual_pun}.
+		\begin{figure}
+		\centering
+		\includegraphics[width=5cm]{figures/visual_pun.jpg}
+		\caption{A visual Pun. }
+		\small\caption{\url{https://digitalsynopsis.com/design/punny-pixels-illustrated-puns-visual-wordplay/}}\label{fig:visual_pun}
+		\end{figure}
+	}
+\end{itemize}
+
+We focused on two types: homographic puns and heterographic puns. 
 
 \subsection{Motivation}
 
 It would be desirable for machines to be able to identify, comprend, and
-generate puns for many reasons. A pun generator could facilitate slogan
-generation, which would be useful in advertising and dialogue agents; a pun
-identify could be used to improve machine translations, where literal
-translation of puns rarely conveys the original text's message; a pun
-comprehension system would be helpful for large-scale textual analyses of the
-kind increasingly being employed in the digital humanities.
-
-A heterographic pun involves a word which sounds similar to another word which
-is spelled slightly differently.
-
-We worked on two tasks related to puns: detection location.
-
-\subsection{Pun Structure}
-
-There are many types of puns.
-
-In our work, we focused on two types: homographic puns and heterographic puns. 
-\begin{itemize}
-	\item {\textbf{Homographic}: A pun involving two words whose spellings are
-		the same but have different meanings.\\ \textit{I used to be a banker
-		but I lost \textbf{interest}.}}
-	\item {\textbf{Heterographic}: A pun involves two or more words which sound
-		alike but are spelled differently.\\ \textit{Two construction workers
-		had a \textbf{stairing} contest.}}
-\end{itemize}
+generate puns for a number of reasons:
 
 \begin{itemize}
-
-\item homographic: 
-A homographic pun involves two words which are spelled the same but have
-different meanings.
-
-\item heterographic
-\item other types
-
+	\item A pun generator could facilitate slogan generation, which would be
+		useful in advertising and dialogue agents.
+	\item A pun identifier could be used to improve machine translations, where
+		literal translation of puns rarely conveys the original text's message.
+	\item A pun comprehension system would be helpful for large-scale textual
+		analyses of the kind increasingly being employed in the digital
+		humanities.
 \end{itemize}
 
-\begin{center}
-
-	homographic pun example
-  % \url{https://cmt.research.microsoft.com/NIPS2017/}
-\end{center}
-
-\begin{center}
-	heterographic pun example
-  % \url{https://cmt.research.microsoft.com/NIPS2017/}
-\end{center}
-
+We worked on two related tasks: pun detection and pun location.
 
 \subsection{Dataset}
 
@@ -120,78 +117,55 @@ the original datasets for the detection tasks for both heterographic and
 homographic puns had a pun/non-pun split of 70/30. The non-pun sentences for
 each type of pun were, however, non-overlapping, so we simply modified each pun
 type's dataset to include \emph{all} non-puns from either dataset, giving us a
-more even ratio of pun/non-pun.
+more even ratio of pun/non-pun.\ 
 
-\subsection{Tasks}
-
-here we will talk about the problems we worked on.
-
-Pun detection is a binary classification problem: given a sequence of words (a
-sentence), determine whether or not that sentence contains a pun. Given the
-binary nature of the solution space and the highly non-linear input space,
-machine learning seems a natural choice.
-
-Pun location is less straightforward: given a set of words known to contain a
-pun, identify the pun word. Though this problem is less amenable to traditional
-machine learning algorithms, it can be rephrased to be more similar to one: for
-each word in the sentence, determine the likelihood that that word is a pun
-given the rest of the sentence. Then, output the word which is most likely to
-be a pun based on the output of the previous search.\\
-
-section references~\ref{pun_detection},~\ref{pun_location},
-and~\ref{conclusion} below.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Pun Detection
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \section{Pun Detection}\label{pun_detection}
 
-here we will talk about pun detection and our algorithms.
+Pun detection is a binary classification problem: given a sequence of words (a
+sentence), determine whether or not that sentence contains a pun. 
 
-\begin{itemize}
-	\item {\textbf{Multinomial Naive Bayes}\\
-		Our baseline---an easy to implement algorithm which we measured approaches against
-	}
-	\item {\textbf{Bidirectional LSTM}\\
-		An LSTM will form connections between the start and end of a sentence and can handle variable-length sentences.
-	}
-	\item {\textbf{Linear SVM}\\ 
-		Allows us to include an arbitrary set of features.
-	}
-\end{itemize}
+We tried a number of different approaches to this problem, but found that the
+best approach was a Bidirectional LSTM.
 
-\subsection{Baseline}
+\subsection{Baseline: Multinomial Naive Bayes}
 
-\subsection{Algorithms}
+A random approach to this task will have a 50\% of being correct. However, we
+wanted to determine whether we could do better than random with a simple
+classifier. To that end, we implemented a simple Multinomial Naive Bayes
+classifier. 
 
-\subsection{Feature Comparison}
+\subsection{Linear SVM}
 
-We introduced various features to improve accuracy
-Table \ref{tab:List_of_features}. Indexes in this table represent the index of
-each feature in the code and figures we made for feature analysis. Features
-were added to the code one by one to find whether they improve accuracy. In
-general, we saw accuracy improved with adding features. Accuracy change behave
-differently against each feature.
+We implemented a linear SVM and trained it using Stochastic Gradient Descent.
+The intution behind this was that an SVM would be able to incorporate arbitrary
+features, and that the data would be linearly separable with the right features.
+This approach worked quite well, but was slightly less effective than our neural
+net approach.
 
-Next step was to find what feature combination led to the largest accuracy. We
-designed a code to find various combinations of features. The code generated
-list of indexes of all possible number of feature a code can have. Length of
-the list was between one to number of feature, 1 to 16. With 16 feature we
-could have 65535 possible combination.  The pun detection code took about 60s
-to be done. If we wanted to test all these combination it took about 1092
-hours. In this regards, we did trail and error run to see what feature improve
-accuracy. Finally, we used 11 features that indexed from 0 to 10 in the
-table \ref{tab:List_of_features} for feature comparison.
+\subsubsection{Feature Comparison}
 
-With using 11 feature we were able to create 2047 features combination. Then we
-calculated accuracy for detection of homographic and heterographic puns. This
-let to 4089 runs. We found 100 percent accuracy anytime unigaram appears in any
-combination which is sign on over fitting. So we eliminated this feature form
-analysis.
+We tried to improve the Linear SVM's performance by including a variety of
+features (Table \ref{tab:List_of_features}), as well as using different
+combinations of those features.  Features were added to the code one by one to
+find whether they improve accuracy. In general, accuracy improved with the
+addition of more features.
+
+We determined which combinations of features would improve the algorithm the
+most using a heuristic based approach to select the features to include in
+combinations. Testing all combinations of features was not feasible: with 16
+features and 65535 combinations of those features, testing each one at a runtime
+of 60 seconds per run would have taken 1092 hours. After identifying 11
+features (0-10 in table \ref{tab:List_of_features}), we ran a brute-force search
+of the 2047 combinations (over both the heterographic and homographic datasets)
+of those features to determine which was best.
 
 Figures \ref{fig:ACC_Test_Homo} and \ref{fig:ACC_Test_Hetero} show the 10 best
-combinations of features we cound for the homographic and heterographic
-datasets, respectively.
+combinations of features found for the homographic and heterographic datasets,
+respectively.
 
 \begin{table}
 \caption{Features by Index}\label{tab:List_of_features} 
@@ -207,7 +181,7 @@ datasets, respectively.
 4	&	Unigram							& 12	&	Trigram\\
 5	&	Number of Homophone in Pun		& 13	&	Positives\\
 6	&	Number of Each Homophone in Pun & 14	&	Negatives\\
-7	&	Homophone is in Pun or Not		& 15 &	All or First Caps\\
+7	&	Homophone is in Pun or Not		& 15	&	All or First Caps\\
 \bottomrule
 \end{tabular}
 \end{center}
@@ -225,10 +199,25 @@ datasets, respectively.
   \caption{Heterographic Pun Feature Comparison Accuracy}\label{fig:ACC_Test_Hetero}
 \end{figure}
 
+\subsection{Bidirectional LSTM}
+
+Despite having a fairly small dataset, we decided to try a neural net on the
+problem. We chose an LSTM because of its ability to deal with variable-sentence
+lengths, as (somewhat obviously) our dataset featured sentences of different
+lengths. This was our most effective approach. We used glove embeddings with a
+length of 300.
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Pun Location
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Pun Location}\label{pun_location}
+
+Pun location is a less straightforward task than pun detection: given a set of
+words known to contain a pun, identify the pun word. Though this problem is less
+amenable to traditional machine learning algorithms, it can be rephrased to be
+more similar to one: for each word in the sentence, determine the likelihood
+that that word is a pun given the rest of the sentence. Then, output the word
+which is most likely to be a pun based on the output of the previous search.
 
 \subsection{Baseline}
 
