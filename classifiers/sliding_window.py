@@ -29,9 +29,7 @@ class PunSlidingWindowClassifier(ClassifierBasedTagger, BaseEstimator, Classifie
         return self.get_output(x_train)
 
     def _classifier_builder(self, train):
-        return MaxentClassifier.train(train,  # algorithm='megam',
-                                      gaussian_prior_sigma=1,
-                                      trace=2, max_iter = 50)
+        return MaxentClassifier.train(train, gaussian_prior_sigma=1, trace=2, max_iter=100)
 
     def format_xs(self, xs):
         return [ pos_tag(x) for x in xs ]
@@ -64,20 +62,19 @@ class PunSlidingWindowClassifier(ClassifierBasedTagger, BaseEstimator, Classifie
         word = tokens[index][0]
 
         features = {
-            'position': index / len(tokens),
             'words_remaining': (len(tokens) - 2 * self.window) - (index - self.window),
             'lemma': self.stemmer.stem(word),
-            'shape': shape(word),
             'wordlen': len(word),
             'prefix3': word[:3].lower(),
             'suffix3': word[-3:].lower(),
-            'word': word,
             'pos': tokens[index][1],
-            'en-wordlist': (word in self._english_wordlist()),
             'stopwords': word.lower() in self._stopwords(),
+            # 'shape': shape(word),
+            # 'word': word,
+            # 'en-wordlist': (word in self._english_wordlist()),
             }
 
-        feature_update = {key: features[key] for key in self.feat}
+        feature_update = { key: features[ key ] for key in features.keys() if key in self.feat }
 
         for i in range(1, self.window+1):
             feature_update['prev{%d}word' % i] = tokens[index-i][0]

@@ -12,14 +12,15 @@ from classifiers.sliding_window import PunSlidingWindowClassifier
 from classifiers.voting_classifier import PunVotingClassifier
 from eval import Eval
 from pun_data import DetectionData, LocationData
+from error_analysis import ErrorAnalysis
 
 cache = Cache()
 
-def runClassifier(classifier, data, evalFn, useCache):
+def runClassifier(classifier, data, evalFn, runParams):
     print("\n\n---- Running  ", classifier.name, " Classifier --------\n")
 
     # Use cached version of model if possible, otherwise train it
-    if useCache and cache.has(classifier):
+    if runParams['cache'] and cache.has(classifier):
         classifier = cache.get(classifier)
         print("Using cached version of classifier")
     else:
@@ -35,6 +36,12 @@ def runClassifier(classifier, data, evalFn, useCache):
 
     # Evaluate classifier on predicted output
     evalFn(classifier.name, y_pred, data.y_test)
+
+    if runParams['error_analysis']:
+        ErrorAnalysis(data.x_test, data.y_test, y_pred, runParams['task'], runParams['graphic'], runParams['classifier'])
+
+        
+
 
 
 if __name__ == "__main__":
@@ -66,13 +73,21 @@ if __name__ == "__main__":
                         help="use voting classifier")
     parser.add_argument('--adaboost', action="store_true", default=False,
                         help="use adaboost for sliding window classifier")
-
+    parser.add_argument('--error_analysis', action="store_true", default=False,
+                        help="analyze the errors")
     args = parser.parse_args()
 
     print("Running %s puns" % args.graphic)
 
+    run_params = {
+        'graphic' : args.graphic,
+        'cache' : args.use_cached,
+        'error_analysis' : args.error_analysis,
+    }
+
     # PUN DETECTION
     if args.detection:
+        run_params['task'] = 'detection'
 
         detectionData = DetectionData(args.graphic, args.even)
 
@@ -82,25 +97,30 @@ if __name__ == "__main__":
 
         # Create baseline pun detection classifier
         if args.baselines:
-            runClassifier(baselinePunClassifier, detectionData, Eval.evaluateDetection, args.use_cached)
+            run_params['classifier'] = 'baseline'
+            runClassifier(baselinePunClassifier, detectionData, Eval.evaluateDetection, run_params)
 
         if args.rnn:
-            runClassifier(punRnnDetectionClassifier, detectionData, Eval.evaluateDetection, args.use_cached)
+            run_params['classifier'] = 'rnn'
+            runClassifier(punRnnDetectionClassifier, detectionData, Eval.evaluateDetection, run_params)
 
         if args.features:
-            runClassifier(punDetectionWithFeaturesClassifier, detectionData, Eval.evaluateDetection, args.use_cached)
+            run_params['classifier'] = 'features'
+            runClassifier(punDetectionWithFeaturesClassifier, detectionData, Eval.evaluateDetection, run_params)
 
         if args.ensemble:
+            run_params['classifier'] = 'ensemble'
             classifiers = [
                 baselinePunClassifier,
                 punRnnDetectionClassifier,
                 punDetectionWithFeaturesClassifier
             ]
-            runClassifier(PunVotingClassifier(type="Detection", classifiers=classifiers), detectionData, Eval.evaluateDetection, args.use_cached)
+            runClassifier(PunVotingClassifier(type="Detection", classifiers=classifiers), detectionData, Eval.evaluateDetection, run_params)
 
 
     # PUN LOCATION
     if args.location:
+        run_params['task'] = 'location'
 
         locationData = LocationData(args.graphic)
         baselinePunLocationClassifier = BaselinePunClassifier(type="Location")
@@ -111,21 +131,27 @@ if __name__ == "__main__":
 
         # Create baseline pun location classifier
         if args.baselines:
-            runClassifier(baselinePunLocationClassifier, locationData, Eval.evaluateLocation, args.use_cached)
+            run_params['classifier'] = 'baseline'
+            runClassifier(baselinePunLocationClassifier, locationData, Eval.evaluateLocation, run_params)
 
         if args.rnn:
-            runClassifier(punRnnLocationClassifier, locationData, Eval.evaluateLocation, args.use_cached)
+            run_params['classifier'] = 'rnn'
+            runClassifier(punRnnLocationClassifier, locationData, Eval.evaluateLocation, run_params)
 
         if args.decision_tree:
-            runClassifier(punDecisionTreeClassifier, locationData, Eval.evaluateLocation, args.use_cached)
+            run_params['classifier'] = 'decision_tree'
+            runClassifier(punDecisionTreeClassifier, locationData, Eval.evaluateLocation, run_params)
 
         if args.window:
-            runClassifier(punSlidingWindowClassifier, locationData, Eval.evaluateLocation, args.use_cached)
+            run_params['classifier'] = 'window'
+            runClassifier(punSlidingWindowClassifier, locationData, Eval.evaluateLocation, run_params)
 
         if args.adaboost:
-            runClassifier(adaboostSlidingWindowClassifier, locationData, Eval.evaluateLocation, args.use_cached)
+            run_params['classifier'] = 'adaboost'
+            runClassifier(adaboostSlidingWindowClassifier, locationData, Eval.evaluateLocation, run_params)
 
         if args.ensemble:
+            run_params['classifier'] = 'ensemble'
             classifiers = [
                 baselinePunLocationClassifier,
                 punRnnLocationClassifier,
@@ -133,7 +159,7 @@ if __name__ == "__main__":
                 punSlidingWindowClassifier,
                 # ScikitWrapperClassifier(adaboostSlidingWindowClassifier)  - adaboost not yet working
             ]
-            runClassifier(PunVotingClassifier(type="Location", classifiers=classifiers), locationData, Eval.evaluateLocation, args.use_cached)
+            runClassifier(PunVotingClassifier(type="Location", classifiers=classifiers), locationData, Eval.evaluateLocation, run_params)
 
 
     # Output final report
