@@ -169,7 +169,7 @@ best approach was a Bidirectional LSTM.
 
 \subsection{Baseline: Multinomial Naive Bayes}
 
-A random approach to this task will have a $\sim$$50\%$ of being correct.
+A random approach to this task will have a $50\%$ of being correct.
 However, we wanted to determine whether we could do better than random with a
 simple classifier. To that end, we implemented a simple Multinomial Naive Bayes
 classifier. 
@@ -353,27 +353,77 @@ Supercomputer [12] to identify the best set of features to use.
 \end{figure}
 
 
-\section{Results}
-\label{results}
+\section{Results}\label{results}
 
 We used the same evaluation metrics for each of these tasks were used in
-SemEval2017.
+SemEval2017:
 
-\subsection{Pun Detection}
-\subsubsection{Evaluation}
-This task used standard measures: accuracy, precision, recall, and F-1.
-\subsubsection{Results}
-here are our results. here's the baseline. here's semeval's
+\begin{itemize}
+	\item{
+		\textbf{Pun Detection}: accuracy, precision, recall, F-1
+	}
+	\item{
+		\textbf{Pun Location}: $\frac{correct}{total}$
+	}
+\end{itemize}
 
-\subsubsection{Error Analysis}
+We did quite well on the pun detection tasks, beating the SemEval systems,
+particularly for the Heterographic dataset. However, we were not able to best
+the SemEval systems for location, with our best accuracy at about $5\%$ below
+theirs for homographic and ????????????????? HOW MUCH below on heterographic.
 
-\subsection{Pun Location}
-Here's how we think we did.
-\subsubsection{Evaluation}
-f score etc etc
-\subsubsection{Results}
-here are our results. here's the baseline. here's semeval's
-\subsubsection{Error Analysis}
+\begin{table}
+\caption{Pun Detection Results}\label{tab:pun_detection_results}
+\begin{center}
+\begin{tabular}{l l l l l} 
+\toprule
+\multicolumn{5}{c}{\textbf{Homographic}}\\
+\textbf{Classifier}					& \textbf{Accuracy}	& \textbf{Precision}	& \textbf{Recall}	& \textbf{F-1}\\
+Multinomial Naive Bayes (Baseline)	& 100				& 100					& 100				& 100\\
+Bidirection LSTM					& 100				& 100 					& 100				& 100\\
+Feature-Engineered SGD SVM			& 100				& 100 					& 100				& 100\\
+SemEval2017 Best					& 0.9024			& 0.8970				& 0.8533			& 0.8997\\
+\midrule
+\multicolumn{5}{c}{\textbf{Heterographic}}\\
+\textbf{Classifier}					& \textbf{Accuracy}	& \textbf{Precision}	& \textbf{Recall}	& \textbf{F-1}\\
+Multinomial Naive Bayes (Baseline)	& 100				& 100					& 100				& 100\\
+Bidirection LSTM					& 100				& 100 					& 100				& 100\\
+Feature-Engineered SGD SVM			& 100				& 100 					& 100				& 100\\
+SemEval2017 Best					& 0.8704			& 0.8190				& 0.7837			& 0.8439\\
+\bottomrule
+\end{tabular}
+\end{center}
+\end{table}
+
+\begin{table}
+\caption{Pun Location Results}\label{tab:pun_location_results}
+\begin{center}
+\begin{tabular}{l l l l l} 
+\toprule
+\multicolumn{5}{c}{\textbf{Homographic}}\\
+\textbf{Classifier}					& \textbf{Accuracy}\\
+Multinomial Naive Bayes (Baseline)	& 100\\
+Heuristic Decision Tree (Baseline)	& 100\\
+Sequence-Labeling Bidirection LSTM	& 100\\
+Sliding Window MEMM					& 100\\
+SemEval2017 Best					& 0.6631\\
+\midrule
+\multicolumn{5}{c}{\textbf{Heterographic}}\\
+\textbf{Classifier}					& \textbf{Accuracy}\\
+Multinomial Naive Bayes (Baseline)	& 100\\
+Heuristic Decision Tree (Baseline)	& 100\\
+Sequence-Labeling Bidirection LSTM	& 100\\
+Sliding Window MEMM					& 100\\
+SemEval2017 Best					& 0.7964\\
+\bottomrule
+\end{tabular}
+\end{center}
+\end{table}
+
+\subsection{Error Analysis}
+
+\subsubsection{Pun Detection}
+\subsubsection{Pun Location}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Conclusion
