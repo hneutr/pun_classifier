@@ -8,11 +8,12 @@ import numpy as np
 from sklearn.base import BaseEstimator, ClassifierMixin
 
 class PunSlidingWindowClassifier(ClassifierBasedTagger, BaseEstimator, ClassifierMixin):
-    def __init__(self, output="word", window=5):
+    def __init__(self, output="word", window=5, features = ['position','words_remaining','lemma','shape','wordlen','prefix3','suffix3','word','pos','en-wordlist','stopwords']):
         self.name = "Sliding Window"
         self.output = output
         self.stemmer = SnowballStemmer('english')
         self.window = window
+        self.feat = features
 
     def train(self, x_train, y_train):
         y_train = np.asarray([np.eye(1, len(x), y)[0] for x, y in zip(x_train, y_train)])
@@ -30,7 +31,7 @@ class PunSlidingWindowClassifier(ClassifierBasedTagger, BaseEstimator, Classifie
     def _classifier_builder(self, train):
         return MaxentClassifier.train(train,  # algorithm='megam',
                                       gaussian_prior_sigma=1,
-                                      trace=2)
+                                      trace=2, max_iter = 50)
 
     def format_xs(self, xs):
         return [ pos_tag(x) for x in xs ]
@@ -76,13 +77,15 @@ class PunSlidingWindowClassifier(ClassifierBasedTagger, BaseEstimator, Classifie
             'stopwords': word.lower() in self._stopwords(),
             }
 
-        for i in range(1, self.window+1):
-            features['prev{%d}word' % i] = tokens[index-i][0]
-            features['prev{%d}pos' % i] = tokens[index-i][1]
-            features['next{%d}word' % i] = tokens[index+i][0]
-            features['next{%d}pos' % i] = tokens[index+i][1]
+        feature_update = {key: features[key] for key in self.feat}
 
-        return features
+        for i in range(1, self.window+1):
+            feature_update['prev{%d}word' % i] = tokens[index-i][0]
+            feature_update['prev{%d}pos' % i] = tokens[index-i][1]
+            feature_update['next{%d}word' % i] = tokens[index+i][0]
+            feature_update['next{%d}pos' % i] = tokens[index+i][1]
+
+        return feature_update
 
     def test(self, xs):
         xs = self.format_xs(xs)
@@ -147,4 +150,3 @@ class PunSlidingWindowClassifier(ClassifierBasedTagger, BaseEstimator, Classifie
     def score(self, x, y, sample_weight=None):
         from sklearn.metrics import accuracy_score
         return accuracy_score(y, self.predict(x), sample_weight=sample_weight)
-
