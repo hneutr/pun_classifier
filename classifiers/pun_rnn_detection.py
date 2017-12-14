@@ -47,7 +47,7 @@ class PunRNNDetectionClassifier(BaseEstimator, ClassifierMixin):
         self.model.add(Dense(1, activation='sigmoid'))
         self.model.compile(loss='binary_crossentropy', optimizer='adam', metrics=['accuracy'])
 
-        for i in range(1, 4):
+        for i in range(1, 3):
             print("epoch ", i)
             for x, y in zip(self.x_train, self.y_train):
                 x = x.reshape(1, len(x))

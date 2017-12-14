@@ -118,14 +118,19 @@ here we will talk about pun detection and our algorithms.
 \subsection{Algorithms}
 
 \subsection{Feature Comparison}
-We introduced various features to improve accuracy. Table (number ?) shows the them and their indexes. These indexes are represent their related feature in feature related figures. Features were added to the code one by one to find how they improved accuracy. Accuracy change behave differently against each feature. For example, accuracy did not increased or decreased with positive and negative. In the other hand, unigram hiked up accuracy to 100 percent which means over fitting. We eliminated features which did effect accuracy from our code. Finally, we ended up using 11 features, index 0 to 10, for feature comparison.\\
+We introduced various features to improve accuracy Table \ref{tab:List_of_features}. Indexes in this table represent the index of each feature in the code and figures we made for feature analysis. Features were added to the code one by one to find whether they improve accuracy. In general, we saw accuracy improved with adding features. Accuracy change behave differently against each feature.\\
+Next step was to find what feature combination led to the largest accuracy. We designed a code to find various combinations of features. The code generated list of indexes of all possible number of feature a code can have. Length of the list was between one to number of feature, 1 to 16. With 16 feature we could have 65535 possible combination. The pun detection code took about 60s to be done. If we wanted to test all these combination it took about 1092 hours. In this regards, we did trail and error run to see what feature improve accuracy. Finally, we used 11 features that indexed from 0 to 10 in the table \ref{tab:List_of_features} for feature comparison. \\
+With using 11 feature we were able to create 2047 features combination. Then we calculated accuracy for detection of homographic and heterographic puns. This let to 4089 runs. We found 100 percent accuracy anytime unigaram appears in any combination which is sign on over fitting. So we eliminated this feature form analysis. \\
+Figures \ref{fig:ACC_Train_Homo} and \ref{fig:ACC_Train_Hetero} shows the 10 largest accuracy of feature combination for training set of homographic and heterographic pun. These figure shows accuracy of training set of pun reached more than 96 percent for both pun. Figures \ref{fig:ACC_Test_Homo} and \ref{fig:ACC_Test_Hetero} shows the 10 largest accuracy of testing set for homographic and heterographic. These figures shows accuracy of testing sets of pun reached above 83 percent.\\
 
-In order to find what combinations of feature makes the largest accuracy, we used combination rule to find all possible combination of our 11 features. This made 2047 feature combination. We run code for each combination separately for homographic and heterographic pun, 4089 for both of them. Figures (add figure numbers here) shows the 10 largest accuracy of testing and training set for homographic and heterographic.\\
 
 
 
+\begin {table}
+\caption {List of Features and Their Indexes in Code} 
+\label{tab:List_of_features} 
 \begin{center}
-\begin{tabular}{ |l|l| } 
+\begin{tabular}{ l|l } 
 \hline
 \textbf{Index} 	&	\textbf{Feaute Name}	\\
 \hline
@@ -146,16 +151,43 @@ In order to find what combinations of feature makes the largest accuracy, we use
 14	&	Negatives	\\
 15	&	All or First Caps	\\
 \hline
+  
 \end{tabular}
 \end{center}
+\end{table}
+
+
+\begin{figure}
+  \centering
+  \includegraphics[width=15cm]{figures/Accuracy_on_Training_Set_for_Homographic_Pun.png}
+  \caption{Accuracy on Training Set for Homographic Pun}
+  \label{fig:ACC_Train_Homo} 
+\end{figure}
+
+\begin{figure}
+  \centering
+  \includegraphics[width=15cm]{figures/Accuracy_on_Training_Set_for_Heterographic_Pun.png}
+  \caption{Accuracy on Training Set for Heterographic Pun}
+  \label{fig:ACC_Train_Hetero}
+\end{figure}
 
 
 
 \begin{figure}
-  \includegraphics{figures/Accuracy_on_Test_Set_for_Homographic_Pun.JPG}
-  \caption{Figure NUMBER ? - Accuracy on Test Set for Homographic Pun}
-  \label{fig:boat1}
+  \centering
+  \includegraphics[width=15cm]{figures/Accuracy_on_Test_Set_for_Homographic_Pun.png}
+  \caption{Accuracy on Testing Set for Homographic Pun}
+  \label{fig:ACC_Test_Homo}
 \end{figure}
+
+
+\begin{figure}
+  \centering
+  \includegraphics[width=15cm]{figures/Accuracy_on_Test_Set_for_Heterographic_Pun.png}
+  \caption{Accuracy on Testing Set for Heterographic Pun}
+  \label{fig:ACC_Test_Hetero}
+\end{figure}
+
 
 
 
