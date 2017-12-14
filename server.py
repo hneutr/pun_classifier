@@ -9,21 +9,24 @@ from classifiers.pun_rnn_detection import PunRNNDetectionClassifier
 from classifiers.sliding_window import PunSlidingWindowClassifier
 from classifiers.voting_classifier import PunVotingClassifier
 from pun_data import DetectionData, LocationData
+from cache.cache import Cache
 
 
 class ServerMain:
     def __init__(self):
+        self.cache = Cache()
+
         # Get classifiers to use for DETECTION
-        baselinePunClassifier = BaselinePunClassifier(type="Detection")
-        punRnnDetectionClassifier = PunRNNDetectionClassifier()
-        punDetectionWithFeaturesClassifier = PunDetectionWithFeaturesClassifier()
+        baselinePunClassifier = BaselinePunClassifier(type="Detection", graphic="combined")
+        punRnnDetectionClassifier = PunRNNDetectionClassifier(graphic="combined")
+        punDetectionWithFeaturesClassifier = PunDetectionWithFeaturesClassifier(alpha=0.0001, graphic="combined")
         punVotingClassifier = PunVotingClassifier(type="Detection", classifiers=[baselinePunClassifier,punRnnDetectionClassifier,punDetectionWithFeaturesClassifier])
         self.detectionClassifiers = [baselinePunClassifier, punRnnDetectionClassifier, punDetectionWithFeaturesClassifier, punVotingClassifier]
 
         # Get classifiers to use for TYPE DETECTION
-        baselinePunTypeClassifier = BaselinePunClassifier(type="Detection")
+        baselinePunTypeClassifier = BaselinePunClassifier(type="Detection", graphic="both")
         #punRnnDetectionTypeClassifier = PunRNNDetectionClassifier()
-        punDetectionWithFeaturesTypeClassifier = PunDetectionWithFeaturesClassifier()
+        punDetectionWithFeaturesTypeClassifier = PunDetectionWithFeaturesClassifier(graphic="both")
         typeClassifiers = [
             baselinePunClassifier,
             punRnnDetectionClassifier,
@@ -41,6 +44,17 @@ class ServerMain:
        # punVotingLocationClassifier = PunVotingClassifier(type="Location", classifiers=[punRnnLocationClassifier, punSlidingWindowClassifier])
         self.locationClassifiers = [punRnnLocationClassifier, punSlidingWindowClassifier]
 
+    def train_classifier(self, classifier, data):
+        # Use cached version of model if possible, otherwise train it
+        if self.cache.has(classifier):
+            classifier = self.cache.get(classifier)
+            print("Using cached version of classifier")
+        else:
+            print("Training classifier...")
+            # Train the classifier and evaluate it's training accuracy
+            classifier.train(data.x_train, data.y_train)
+            self.cache.set(classifier)
+
     # Initialize server so that it will be able to make predictions
     # This will involve training the needed classifiers
     def do_init (self):
@@ -48,19 +62,19 @@ class ServerMain:
         graphic = 'combined'
         detectionData = DetectionData(graphic, False, .999999) # use all training data
         for classifier in self.detectionClassifiers:
-            classifier.train(detectionData.x_train, detectionData.y_train)
+            self.train_classifier(classifier, detectionData)
 
         #initialize classifiers for TYPE DETECTION
         graphic = 'both'
         detectionData = DetectionData(graphic, False, .999999)
         for classifier in self.detectionTypeClassifiers:
-            classifier.train(detectionData.x_train, detectionData.y_train)
+            self.train_classifier(classifier, detectionData)
 
         #initialize classifiers for LOCATION PROBABILITIES
         graphic = 'combined'
         locationData = LocationData(graphic, .999999)
         for classifier in self.locationClassifiers:
-            classifier.train(locationData.x_train, locationData.y_train)
+            self.train_classifier(classifier, locationData)
 
     # Detect the probabilities of each class (pun or non pun) for the sentence passed in
     def do_detection (self, request):

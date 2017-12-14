@@ -3,8 +3,8 @@ from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.base import BaseEstimator, ClassifierMixin
 
 class BaselinePunClassifier(BaseEstimator, ClassifierMixin):
-    def __init__(self, type):
-        self.name = "Baseline %s" % type
+    def __init__(self, type, graphic="combined"):
+        self.name = "Baseline %s %s" % (type, graphic)
         self.model = MultinomialNB()
         self.featurizer = CountVectorizer()
     

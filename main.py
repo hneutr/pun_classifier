@@ -77,7 +77,7 @@ if __name__ == "__main__":
         detectionData = DetectionData(args.graphic, args.even)
 
         baselinePunClassifier = BaselinePunClassifier(type="Detection")
-        punRnnDetectionClassifier = PunRNNDetectionClassifier()
+        punRnnDetectionClassifier = PunRNNDetectionClassifier(args.graphic)
         punDetectionWithFeaturesClassifier = PunDetectionWithFeaturesClassifier()
 
         # Create baseline pun detection classifier

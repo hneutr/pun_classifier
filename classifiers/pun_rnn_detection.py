@@ -11,7 +11,7 @@ import numpy as np
 MAX_NB_WORDS = 20000
 
 class PunRNNDetectionClassifier(BaseEstimator, ClassifierMixin):
-    def __init__(self):
+    def __init__(self, graphic="combined"):
         """
         output can be one of:
             - word
@@ -19,7 +19,7 @@ class PunRNNDetectionClassifier(BaseEstimator, ClassifierMixin):
             - binary
         """
 
-        self.name = "Pun RNN Detection"
+        self.name = "Pun RNN Detection %s" % graphic
         self.embedding = WordEmbeddings()
         self.use_keras_caching = True # how to cache other properties not on model?
 
@@ -47,7 +47,7 @@ class PunRNNDetectionClassifier(BaseEstimator, ClassifierMixin):
         self.model.add(Dense(1, activation='sigmoid'))
         self.model.compile(loss='binary_crossentropy', optimizer='adam', metrics=['accuracy'])
 
-        for i in range(1, 4):
+        for i in range(1, 3):
             print("epoch ", i)
             for x, y in zip(self.x_train, self.y_train):
                 x = x.reshape(1, len(x))
