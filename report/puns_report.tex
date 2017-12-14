@@ -12,7 +12,7 @@
 \usepackage{microtype}      % microtypography
 \usepackage{graphicx}
 
-\title{Pun Classification and Location\\Group C}
+\title{Pun Classification and Location}
 
 % The \author macro works with any number of authors. There are two
 % commands used to separate the names and addresses of multiple
@@ -24,11 +24,47 @@
 % on the second line, try using \AND instead of \And before the third
 % author name.
 
-\author{Shantanu Karnwal \texttt{shantanu.karnwal@colorado.edu}
-	\And Amir Kashipazha \texttt{amirhossein.kashipazha@colorado.edu}
-	\And Brandon Boylan-Peck \texttt{brbo9266@colorado.edu}
-	\And Cathlyn Stone \texttt{cathlyn.stone@colorado.edu}
-	\And Kenneth Hunter Wapman \texttt{kennethwapman@colorado.edu}
+\author{
+   Amir Kashipazha \\
+   Masters Student in Computer Science\\
+   University of Colorado Boulder\\
+   \texttt{amirhossein.kashipazha@colorado.edu} \\
+  %% examples of more authors
+   \And
+   Brandon Boylan-Peck \\
+   Masters Student in Computer Science\\
+   University of Colorado Boulder \\
+   \texttt{brbo9266@colorado.edu} \\
+   \And
+   Cathlyn Stone \\
+   Masters Student in Computer Science\\
+   University of Colorado Boulder \\
+   \texttt{cathlyn.stone@colorado.edu} \\
+   \And
+   Kenneth Hunter Wapman \\
+   Masters Student in Computer Science\\
+   University of Colorado Boulder \\
+   \texttt{kennethwapman@colorado.edu} \\
+   \And
+   Shantanu Karnwal \\
+   Masters Student in Computer Science\\
+   University of Colorado Boulder \\
+   \texttt{shantanu.karnwal@colorado.edu} \\
+  %% \AND
+  %% Coauthor \\
+  %% Affiliation \\
+  %% Address \\
+  %% \texttt{email} \\
+  %% \And
+  %% Coauthor \\
+  %% Affiliation \\
+  %% Address \\
+  %% \texttt{email} \\
+  %% \And
+  %% Coauthor \\
+  %% Affiliation \\
+  %% Address \\
+  %% \texttt{email} \\
 }
 
 \begin{document}
@@ -207,10 +243,12 @@ lengths, as (somewhat obviously) our dataset featured sentences of different
 lengths. This was our most effective approach. We used glove embeddings with a
 length of 300.
 
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Pun Location
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{Pun Location}\label{pun_location}
+\section{Pun Location}
+\label{pun_location}
 
 Pun location is a less straightforward task than pun detection: given a set of
 words known to contain a pun, identify the pun word. Though this problem is less
@@ -219,41 +257,69 @@ more similar to one: for each word in the sentence, determine the likelihood
 that that word is a pun given the rest of the sentence. Then, output the word
 which is most likely to be a pun based on the output of the previous search.
 
-\subsection{Baseline 1: Multinomial Naive Bayes}
+\subsection{Baseline}
 
-A random approach to this dataset does not work particularly well; it will have
-an accuracy of about 1 divided by the average length of the sentence. We again
-used our multinomial naive bayes algorithm as a baseline. It did not work very
-well.
+\begin{itemize}
+    \item \textbf{Multinomial Naive Bayes Classifier} - Used the exact same implementation as we did in the Pun Detection scenario.
+    
+    \item \textbf{Decision Tree Induction} - Developed a heuristic for identifying the pun location. The intuition behind this classifier comes from the fact that a lot of pun sentences have the pun word towards the end of the sentence, or at least the second half of the sentence. Most of these words can have some variational representation based on their syntax and semantics, like they can be antonyms, homophones, homonyms or maybe idioms. If there is no case matching, then the classifier calculates the similarity score of the neighbouring words in the sentence based the edit distance and gives out the pun word. If no conditions match whatsoever, then the classifier just returns the last word in the sentence as the pun word.
 
-\subsection{Baseline 2: Heuristic-Based Decision Tree}
+    \begin{figure}[h!]
+    \centering
+    \includegraphics[width=90mm]{decision_tree.png}
+    \caption{Decision Tree Induction based Classifier}
+    \label{fig:method}
+    \end{figure}
 
-This algorithm contains no machine learning, and simply uses heuristics based on
-the presence of homophones, homonyms, antonyms, and idioms. It performes quite
-well, particularly on the heterographic dataset.
+\end{itemize}
 
-\subsection{Bidirectional LSTM}
 
-We implemented a Bidirection LSTM but treated the problem as a sequence labeling
-task. We then took the maximum prediction of that sequence and used that as the
-index of the most likely word. This approach was competitive for the homographic
-dataset but did not work very well for the heterographic one.
+\subsection{Algorithms}
 
-\subsection{Sliding Window Based Maximum-Entropy Markov Model}
+\begin{itemize}
+    \item \textbf{Bidirectional Recurrent Neural Network} - We implemented a Bidirection LSTM but treated the problem as a sequence labeling task. Here also glove embeddings were used with a length of 300.We then took the maximum prediction of that sequence and used that as the index of the most likely word. This approach was competitive for the homographic dataset but did not work very well for the heterographic one.
+    
+    \begin{figure}[h!]
+    \centering
+    \includegraphics[width=110mm]{lstm.png}
+    \caption{How Sequence-Labeling Bidirectional LSTM would work ideally on an example sentence}
+    \label{fig:method}
+    \end{figure}
 
-We implemented a MEMM which took a word and a window of words preceding and
-following it, as well as a number of features based on that word formed using
-feature templates, which output the probability that that word was a pun or not.
-Our intuition behind this approach was twofold: 1) it could handle arbitrary
+    \item \textbf{Sliding Window based Maximum Entropy Markov Model} -The sliding window classifier starts from the first word of the sentence, selecting it, and two words on either side to make a window of size five. Then it runs a max entropy classifier on this window, before sliding the window one word forward, running this classifier over each “block” of words. It keeps into consideration, many features which are used to calculate the entropy of every block for the sliding window. These features are namely - position of the window, words\_remaining for the window to cover, the word lemma from wordnet, shape of the word, word length, first 3 characters of the word (prefix3), last 3 characters of the word (suffix3), word, part of speech tag, english wordlist and list of stopwords. Finally, the location of the pun is determined from the “block” with the highest entropy, or in other words the highest probability of a word in a sentence being a pun or not. Our intuition behind this approach was twofold: 1) it could handle arbitrary
 features; 2) it could handle arbitrary sentence lengths.
 
-\section{Results}\label{results}
+
+ 
+\end{itemize}
+
+\subsection{Feature Comparision for the Sliding Window MEMM}
+
+As discussed in the Sliding Window classifier section, the classifier uses quite a lot of different features, around 11 in this case. Also, to get the best results, we had set up the maximum iterations for the classifier to be at 40, which takes around 7 minutes to complete. Since that would take a lot of time to run, we selected the top 5 features which when individually applied to the sliding window classifier, gave the maximum accuracy. These features came out to be word length, pos tag, prefix3, suffix3 and stopwords. We ran these combinations with the summit supercomputer to provide the results faster. The top feature combinations for both homographic puns and heterographic puns are given in the below graphs.
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=120mm]{sliding_window_homographic.png}
+    \caption{Top Feature Combinations in Sliding Window Classifier for Homographic Puns}
+    \label{fig:method}
+    \end{figure}
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=120mm]{sliding_window_heterographic.png}
+    \caption{Top Feature Combinations in Sliding Window Classifier for Heterographic Puns}
+    \label{fig:method}
+    \end{figure}
+
+
+\section{Results}
+\label{results}
 
 \subsection{Pun Detection}
 Here's how we think we did.
 \subsubsection{Evaluation}
 \subsubsection{Results}
-here are our results. Here's the baseline. Here's semeval's
+here are our results. here's the baseline. here's semeval's
 
 \subsubsection{Error Analysis}
 
@@ -262,13 +328,15 @@ Here's how we think we did.
 \subsubsection{Evaluation}
 f score etc etc
 \subsubsection{Results}
-here are our results. Here's the baseline. Here's semeval's
+here are our results. here's the baseline. here's semeval's
 \subsubsection{Error Analysis}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Conclusion
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{Conclusion}\label{conclusion}
+
+\section{Conclusion}
+\label{conclusion}
 
 \subsection{What Went Well}
 
@@ -313,14 +381,10 @@ given a sentence and a pair of word senses.
 
 \begin{itemize}
 
-\item Shantanu Karnwal worked on:
-	\begin{itemize}
-		\item poster layout
-	\end{itemize}
 \item Amir Kashipazha
 	\begin{itemize}
 		\item features (antonyms, idioms, sentiment)
-		\item the feature comparison for the SVM used for Pun Detection
+		\item the feature comparison for the SVM used for SGD Pun Detection
 	\end{itemize}
 \item Brandon Boylan-Peck
 	\begin{itemize}
@@ -352,6 +416,14 @@ given a sentence and a pair of word senses.
 		\item poster content
 		\item report content
 	\end{itemize}
+\item Shantanu Karnwal worked on:
+	\begin{itemize}
+		\item decision tree classifier for pun location
+		\item feature comparision for the features used in sliding window MEMM by making use of the Summit super-computing cluster
+		\item poster layout and content
+		\item report content (pun location part and images)
+	\end{itemize}
+\item Project Github Repository - https://github.com/hunter-/pun\_classifier
 \end{itemize}
 
 \subsubsection*{Acknowledgments}
@@ -433,59 +505,7 @@ Semantic Evaluations (SemEval-2017), pages 449–452, Vancouver, Canada, August 
 436–439, Vancouver, Canada, August 3 - 4, 2017. 2017 © Association for
 Computational Linguistics.
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% Misc Style examples
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{Style Stuff}
-\verb+this is code-ish looking+ 
+[12] Jonathon Anderson, Patrick J. Burns, Daniel Milroy, Peter Ruprecht, Thomas Hauser, and Howard Jay Siegel. 2017. Deploying RMACC Summit: An HPC Resource for the Rocky Mountain Region. In Proceedings of PEARC17, New Orleans, LA, USA, July 09-13, 2017, 7 pages. DOI: 10.1145/3093338.3093379
 
-here's a percent: $\sim$$15\%$
-\textbf{boldboldbold}
-\emph{italics}
-
-here's a fraction: \nicefrac{1}{4}
-
-\paragraph{}This is paragraphed
-\begin{verbatim}
-   \citet{hasselmo} investigated\dots
-\end{verbatim}
-produces
-\begin{quote}
-  Hasselmo, et al.\ (1995) investigated\dots
-\end{quote}
-
-ref number:\ [4]
-
-footnotes.\footnote{they go after the period}
-
-\begin{figure}[h]
-  \centering
-  \fbox{\rule[-.5cm]{0cm}{4cm} \rule[-.5cm]{4cm}{0cm}}
-  \caption{Sample figure caption.}
-\end{figure}
-
-Table~\ref{sample-table}.
-
-use \verb+booktabs+ package for tables
-\begin{center}
-  \url{https://www.ctan.org/pkg/booktabs}
-\end{center}
-
-\begin{table}[t]
-  \caption{Sample table title}
-  \label{sample-table}
-  \centering
-  \begin{tabular}{lll}
-    \toprule
-    \multicolumn{2}{c}{Part}                   \\
-    \cmidrule{1-2}
-    Name     & Description     & Size ($\mu$m) \\
-    \midrule
-    Dendrite & Input terminal  & $\sim$100     \\
-    Axon     & Output terminal & $\sim$10      \\
-    Soma     & Cell body       & up to $10^6$  \\
-    \bottomrule
-  \end{tabular}
-\end{table}
 
 \end{document}
