@@ -12,17 +12,7 @@
 \usepackage{microtype}      % microtypography
 \usepackage{graphicx}
 
-\title{Pun Classification and Location}
-
-% The \author macro works with any number of authors. There are two
-% commands used to separate the names and addresses of multiple
-% authors: \And and \AND.
-%
-% Using \And between authors leaves it to LaTeX to determine where to
-% break the lines. Using \AND forces a line break at that point. So,
-% if LaTeX puts 3 of 4 authors names on the first line, and the last
-% on the second line, try using \AND instead of \And before the third
-% author name.
+\title{Pun Classification and Location\\Group C}
 
 \author{
    Shantanu Karnwal \texttt{shantanu.karnwal@colorado.edu} \\
@@ -214,7 +204,10 @@ Despite having a fairly small dataset, we decided to try a neural net on the
 problem. We chose an LSTM because of its ability to deal with variable-sentence
 lengths, as (somewhat obviously) our dataset featured sentences of different
 lengths. This was our most effective approach. We used glove embeddings with a
-length of 300.
+length of 300. The intuition behind using a bidirectional LSTM as opposed to a
+monodirectional one was that, because pun words are often at the end of the
+sentence, processing the back of the sentence first might prime the network to
+detect the pun more effectively.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Pun Location
@@ -236,7 +229,6 @@ accuracy of about 1 divided by the average length of the sentence.
 We tried the \textbf{Multinomial Naive Bayes} classifier used as a baseline in
 the detection task. It did not perform well.
 
-
 We also implemented a \textbf{Heuristic Decision Tree} model to locate a pun
 word. The intuition behind this model was that much of the time, the pun word
 is located in the second half of the sentence, and are often involved in an
@@ -246,7 +238,7 @@ of these relationships obtain, the last word in the sentence is output.
 
 \begin{figure}[h!]
 \centering
-\includegraphics[width=90mm]{decision_tree.png}
+\includegraphics[width=90mm]{figures/decision_tree.png}
 \caption{Heuristic Decision Tree Classifier}
 \label{fig:method}
 \end{figure}
@@ -284,15 +276,15 @@ handle arbitrary, 2) it could handle arbitrary sentence lengths.
 \toprule
 \textbf{Feature Name} & \textbf{Explanation} \\
 \midrule
-words\_remaining      & number of words after this one \\
-lemma                 & the lemma, from WordNet \\
-shape                 & the wordshape \\
-prefix3               & first three letters \\
-suffix3               & last three letters \\
-word                  & the word being examined \\
-pos                   & part of speech \\
-stopword              & if the word is a stopword \\
-en-wordlist           & if the word is in the english language \\
+words\_remaining & number of words after this one \\
+lemma            & the lemma, from WordNet \\
+shape            & the wordshape \\
+prefix3          & first three letters \\
+suffix3          & last three letters \\
+word             & the word being examined \\
+pos              & part of speech \\
+stopword         & if the word is a stopword \\
+en-wordlist      & if the word is in the english language \\
 \bottomrule
 \end{tabular}
 \end{center}
@@ -363,9 +355,9 @@ SemEval2017 Best					& 0.8704			& 0.8190				& 0.7837			& 0.8439\\
 \begin{table}
 \caption{Pun Location Results}\label{tab:pun_location_results}
 \begin{center}
-\begin{tabular}{l l l l l} 
+\begin{tabular}{l l} 
 \toprule
-\multicolumn{5}{c}{\textbf{Homographic}}\\
+\multicolumn{2}{c}{\textbf{Homographic}}\\
 \textbf{Classifier}					& \textbf{Accuracy}\\
 Multinomial Naive Bayes (Baseline)	& 100\\
 Heuristic Decision Tree (Baseline)	& 100\\
@@ -373,7 +365,7 @@ Sequence-Labeling Bidirection LSTM	& 100\\
 Sliding Window MEMM					& 100\\
 SemEval2017 Best					& 0.6631\\
 \midrule
-\multicolumn{5}{c}{\textbf{Heterographic}}\\
+\multicolumn{2}{c}{\textbf{Heterographic}}\\
 \textbf{Classifier}					& \textbf{Accuracy}\\
 Multinomial Naive Bayes (Baseline)	& 100\\
 Heuristic Decision Tree (Baseline)	& 100\\
@@ -387,8 +379,26 @@ SemEval2017 Best					& 0.7964\\
 
 \subsection{Error Analysis}
 
-\subsubsection{Pun Detection}
-\subsubsection{Pun Location}
+We analyzed the accuracy of our location pun-classifiers as a function of
+sentence length. In general, the smaller the sentence length, the more accurate
+the classifier. In particular, it can be seen that the MEMM retains more of its
+accuracy on longer sentences, while the Bidirectional LSTM drops significantly. 
+A possible way to address this would be to give the LSTM an attention model, but
+we unfortunately were unable to implement this.
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=8cm]{figures/location-rnn.png}
+	\caption{Bidirectional LSTM accuracy as a function of sentence length}
+    \label{fig:method}
+\end{figure}
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=8cm]{figures/location-window.png}
+	\caption{Sliding Window MEMM accuracy as a function of sentence length}
+    \label{fig:method}
+\end{figure}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Conclusion
@@ -446,12 +456,14 @@ Project Github Repository: \url{https://github.com/hunter-/pun_classifier}
 		\item decision tree classifier for pun location
 		\item feature comparision for the sliding window MEMM
 		\item poster layout and content
-		\item report content (pun location part and images)
+		\item report content (pun location images)
 	\end{itemize}
 \item Amir Kashipazha
 	\begin{itemize}
 		\item features (antonyms, idioms, sentiment)
-		\item the feature comparison for the SVM used for SGD Pun Detection
+		\item feature comparison for the SVM used for SGD Pun Detection
+		\item report content (feature comparison for the SVM used for SGD Pun Detection)
+		\item final benchmarks of classifiers
 	\end{itemize}
 \item Brandon Boylan-Peck
 	\begin{itemize}
@@ -459,29 +471,30 @@ Project Github Repository: \url{https://github.com/hunter-/pun_classifier}
 	\end{itemize}
 \item Cathlyn Stone
 	\begin{itemize}
-		\item the interactive web app
-		\item the framework for running classifiers
+		\item interactive web app
+		\item framework for running classifiers
 		\item features (lesk algorithm, POS)
-		\item the SVM used in the SGD Pun Detection algorithm
-		\item the sliding window MEMM used in Pun Location
-		\item the ensemble algorithm
+		\item SVM used in the SGD Pun Detection algorithm
+		\item sliding window MEMM used in Pun Location
+		\item ensemble algorithm
 		\item algorithm cross validation
-		\item the Bidirectional LSTM used for Pun Location
+		\item Bidirectional LSTM used for Pun Location
 		\item evaluation of the Pun Detection algorithms
-		\item the model caching architecture
+		\item model caching architecture
 	\end{itemize}
 \item Kenneth Hunter Wapman
 	\begin{itemize}
 		\item data loading and manipulation
-		\item the baseline algorithm for Pun Detection
+		\item baseline algorithm for Pun Detection
 		\item features (word embeddings)
-		\item the framework for running classifiers
-		\item the sliding window MEMM used in Pun Location
-		\item the Bidirectional LSTM used for Pun Location
-		\item the Bidirectional LSTM used for Pun Detection
+		\item framework for running classifiers
+		\item sliding window MEMM used in Pun Location
+		\item Bidirectional LSTM used for Pun Location
+		\item Bidirectional LSTM used for Pun Detection
 		\item evaluation of the Pun Location algorithms
 		\item poster content
 		\item report content
+		\item error analysis
 	\end{itemize}
 \end{itemize}
 
