@@ -18,7 +18,7 @@ def runClassifier(classifier, data, evalFn, useCache):
         # Train the classifier and evaluate it's training accuracy
         trainingPredicted = classifier.train(data.x_train, data.y_train)
         #Eval.evaluateAccuracy(trainingPredicted, data.y_train, 'training')
-        cache.set(classifier)
+        # cache.set(classifier)
 
     print("Testing classifier...")
     # Test the classifier to get predictions
