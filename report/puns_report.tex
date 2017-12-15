@@ -224,14 +224,11 @@ which is most likely to be a pun based on the output of the previous search.  A
 random approach to this dataset does not work particularly well; it will have an
 accuracy of about 1 divided by the average length of the sentence.
  
-\subsection{Baselines}
+\subsection{Baseline}
 
-We tried the \textbf{Multinomial Naive Bayes} classifier used as a baseline in
-the detection task. It did not perform well.
-
-We also implemented a \textbf{Heuristic Decision Tree} model to locate a pun
-word. The intuition behind this model was that much of the time, the pun word
-is located in the second half of the sentence, and are often involved in an
+We implemented a \textbf{Heuristic Decision Tree} model to locate a pun word.
+The intuition behind this model was that much of the time, the pun word is
+located in the second half of the sentence, and are often involved in an
 `interesting' semantic, syntactic, or morphological relationship with another
 word: many are antonyms, homophones, homonyms or involved in an idiom. If none
 of these relationships obtain, the last word in the sentence is output.
@@ -327,7 +324,7 @@ SemEval2017:
 We did quite well on the pun detection tasks, beating the SemEval systems,
 particularly for the Heterographic dataset. However, we were not able to best
 the SemEval systems for location, with our best accuracy at about $5\%$ below
-theirs for homographic and ????????????????? HOW MUCH below on heterographic.
+theirs for homographic and $15\%$ below theirs for heterographic.
 
 \begin{table}
 \caption{Pun Detection Results}\label{tab:pun_detection_results}
@@ -336,16 +333,16 @@ theirs for homographic and ????????????????? HOW MUCH below on heterographic.
 \toprule
 \multicolumn{5}{c}{\textbf{Homographic}}\\
 \textbf{Classifier}					& \textbf{Accuracy}	& \textbf{Precision}	& \textbf{Recall}	& \textbf{F-1}\\
-Multinomial Naive Bayes (Baseline)	& 100				& 100					& 100				& 100\\
-Bidirection LSTM					& 100				& 100 					& 100				& 100\\
-Feature-Engineered SGD SVM			& 100				& 100 					& 100				& 100\\
+Multinomial Naive Bayes (Baseline)	& 0.8043			& 0.8059				& 0.8043			& 0.8051\\
+Bidirection LSTM					& 0.8365			& 0.8479				& 0.8365			& 0.8421\\
+Feature-Engineered SGD SVM			& 0.8386			& 0.8387				& 0.8386			& 0.8387\\
 SemEval2017 Best					& 0.9024			& 0.8970				& 0.8533			& 0.8997\\
 \midrule
 \multicolumn{5}{c}{\textbf{Heterographic}}\\
 \textbf{Classifier}					& \textbf{Accuracy}	& \textbf{Precision}	& \textbf{Recall}	& \textbf{F-1}\\
-Multinomial Naive Bayes (Baseline)	& 100				& 100					& 100				& 100\\
-Bidirection LSTM					& 100				& 100 					& 100				& 100\\
-Feature-Engineered SGD SVM			& 100				& 100 					& 100				& 100\\
+Multinomial Naive Bayes (Baseline)	& 0.8118			&  0.8119				& 0.8118			& 0.8118\\
+Bidirection LSTM					& 0.8160			& 0.8236				& 0.8160			& 0.8198\\
+Feature-Engineered SGD SVM			& 0.8179			& 0.8189				& 0.8179			& 0.8184\\
 SemEval2017 Best					& 0.8704			& 0.8190				& 0.7837			& 0.8439\\
 \bottomrule
 \end{tabular}
@@ -359,18 +356,16 @@ SemEval2017 Best					& 0.8704			& 0.8190				& 0.7837			& 0.8439\\
 \toprule
 \multicolumn{2}{c}{\textbf{Homographic}}\\
 \textbf{Classifier}					& \textbf{Accuracy}\\
-Multinomial Naive Bayes (Baseline)	& 100\\
-Heuristic Decision Tree (Baseline)	& 100\\
-Sequence-Labeling Bidirection LSTM	& 100\\
-Sliding Window MEMM					& 100\\
+Heuristic Decision Tree (Baseline)	& 0.4353\\
+Sequence-Labeling Bidirection LSTM	& 0.4517\\
+Sliding Window MEMM					& 0.6069\\
 SemEval2017 Best					& 0.6631\\
 \midrule
 \multicolumn{2}{c}{\textbf{Heterographic}}\\
 \textbf{Classifier}					& \textbf{Accuracy}\\
-Multinomial Naive Bayes (Baseline)	& 100\\
-Heuristic Decision Tree (Baseline)	& 100\\
-Sequence-Labeling Bidirection LSTM	& 100\\
-Sliding Window MEMM					& 100\\
+Heuristic Decision Tree (Baseline)	& 0.5188\\
+Sequence-Labeling Bidirection LSTM	& 0.3745\\
+Sliding Window MEMM					& 0.5345\\
 SemEval2017 Best					& 0.7964\\
 \bottomrule
 \end{tabular}
@@ -409,9 +404,9 @@ we unfortunately were unable to implement this.
 
 \subsection{What Went Well}
 
-We did particularly well at pun detection, largely leveraging the size of our
-dataset over what the systems at SemEval had access to. We also were fairly
-successful in trying different algorithms. 
+We did well at pun detection, largely leveraging the size of our dataset over
+what the systems at SemEval had access to. We also were fairly successful in
+trying different algorithms. 
 
 \subsection{What We Could Have Done Better}
 
