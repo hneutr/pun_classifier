@@ -25,20 +25,46 @@
 % author name.
 
 \author{
-	Shantanu Karnwal
-	\texttt{shantanu.karnwal@colorado.edu} \\
-	\And
-	Amir Kashipazha
-	\texttt{amirhossein.kashipazha@colorado.edu} \\
-	\And
-	Brandon Boylan-Peck
-	\texttt{brbo9266@colorado.edu} \\
-	\And
-	Cathlyn Stone\\
-	\texttt{cathlyn.stone@colorado.edu} \\
-	\And
-	Kenneth Hunter Wapman\\
-	\texttt{kennethwapman@colorado.edu} \\
+   Amir Kashipazha \\
+   Masters Student in Computer Science\\
+   University of Colorado Boulder\\
+   \texttt{amirhossein.kashipazha@colorado.edu} \\
+  %% examples of more authors
+   \And
+   Brandon Boylan-Peck \\
+   Masters Student in Computer Science\\
+   University of Colorado Boulder \\
+   \texttt{brbo9266@colorado.edu} \\
+   \And
+   Cathlyn Stone \\
+   Masters Student in Computer Science\\
+   University of Colorado Boulder \\
+   \texttt{cathlyn.stone@colorado.edu} \\
+   \And
+   Kenneth Hunter Wapman \\
+   Masters Student in Computer Science\\
+   University of Colorado Boulder \\
+   \texttt{kennethwapman@colorado.edu} \\
+   \And
+   Shantanu Karnwal \\
+   Masters Student in Computer Science\\
+   University of Colorado Boulder \\
+   \texttt{shantanu.karnwal@colorado.edu} \\
+  %% \AND
+  %% Coauthor \\
+  %% Affiliation \\
+  %% Address \\
+  %% \texttt{email} \\
+  %% \And
+  %% Coauthor \\
+  %% Affiliation \\
+  %% Address \\
+  %% \texttt{email} \\
+  %% \And
+  %% Coauthor \\
+  %% Affiliation \\
+  %% Address \\
+  %% \texttt{email} \\
 }
 
 \begin{document}
@@ -48,8 +74,8 @@
 \begin{abstract}
 	Pun identification and location are challenging natural language processing 
 	tasks. We implemented several algorithms for both, with results which 
-	were comparable to those outlined in the SemEval conference which originally
-	defined the tasks.
+	were competitive with the systems presented in the SemEval conference, where
+	those tasks were originally defined.
 \end{abstract}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -57,55 +83,166 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \section{Overview}
+A pun is a form of wordplay within the class of textual phenomena involving
+ambiguity where multiple meanings of a word or set of words are played upon to
+create a rhetorical effect. They occur in many domains: in advertising, puns
+are used to connect a product with a desirable quality; in literature, puns are
+used to add a level of meaning and implicaiton; in conversation, puns add humor
+to the topic at hand.
 
-\subsection{Pun Structure}
+Understanding a pun often requires the integration of information from a large
+number of contexts; syntax, morphology, semantics, and pragmatics, and context
+can all come into play. There are many types of puns:
 
-here we will talk about what puns are
 \begin{itemize}
-
-\item homographic
-\item heterographic
-\item other types
-
+	\item{\textbf{Homographic}: A pun involving two words whose spellings are
+		the same but have different meanings.
+		\begin{center}
+		\emph{I used to be a banker but I lost \textbf{interest}.}
+		\end{center}
+	}
+	\item{\textbf{Heterographic}: A pun involving two or more words which sound
+		alike but are spelled differently. Sometimes termed `homophonic'.
+		\begin{center}
+		\emph{Two construction workers had a \textbf{stairing} contest.}
+		\end{center}
+	}
+	\item{\textbf{Compound}: A sentence containing two or more puns.
+		\begin{center}
+		\emph{Why can a man never starve in the Great Desert? Because he can
+		eat the sand which is there. But what brought the sandwiches there?
+		Why, Noah sent Ham, and his descendants mustered and bred.} - Richard Whately
+		\end{center}
+	}
+	\item{\textbf{Visual}: A pun realized by an image. See figure \ref{fig:visual_pun}\footnote{\url{https://digitalsynopsis.com/design/punny-pixels-illustrated-puns-visual-wordplay/}}.
+	}
 \end{itemize}
 
-here we will talk about the problems we worked on.
+\begin{figure}
+\centering
+\includegraphics[width=5cm]{figures/visual_pun.jpg}
+\caption{A visual Pun.}\label{fig:visual_pun}
+\end{figure}
 
-\begin{center}
-	homographic pun example
-  % \url{https://cmt.research.microsoft.com/NIPS2017/}
-\end{center}
-
-\begin{center}
-	heterographic pun example
-  % \url{https://cmt.research.microsoft.com/NIPS2017/}
-\end{center}
-
-Please read carefully the instructions below and follow them
-faithfully.
+We focused on two types: homographic puns and heterographic puns. 
 
 \subsection{Motivation}
 
+It would be desirable for machines to be able to identify, comprend, and
+generate puns for a number of reasons:
 
-\subsection{Tasks}
+\begin{itemize}
+	\item A pun generator could facilitate slogan generation, which would be
+		useful in advertising and dialogue agents.
+	\item A pun identifier could be used to improve machine translations, where
+		literal translation of puns rarely conveys the original text's message.
+	\item A pun comprehension system would be helpful for large-scale textual
+		analyses of the kind increasingly being employed in the digital
+		humanities.
+\end{itemize}
 
-section references \ref{pun_detection}, \ref{pun_location}, and
-\ref{conclusion} below.
+We worked on two related tasks: pun detection and pun location.
+
+\subsection{Dataset}
+
+We trained and tested our algorithms on the test sets used to appraise the
+competing systems in SemEval2017 Task 7. The dataset for each of the tasks we
+worked on was split into two parts: homographic and heterographic. We modified
+the characteristics of these datasets to address some issues we found. Namely,
+the original datasets for the detection tasks for both heterographic and
+homographic puns had a pun/non-pun split of 70/30. The non-pun sentences for
+each type of pun were, however, non-overlapping, so we simply modified each pun
+type's dataset to include \emph{all} non-puns from either dataset, giving us a
+more even ratio of pun/non-pun.\ 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Pun Detection
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\section{Pun Detection}
-\label{pun_detection}
+\section{Pun Detection}\label{pun_detection}
 
-here we will talk about pun detection and our algorithms.
+Pun detection is a binary classification problem: given a sequence of words (a
+sentence), determine whether or not that sentence contains a pun. 
 
-\subsection{Baseline}
+We tried a number of different approaches to this problem, but found that the
+best approach was a Bidirectional LSTM.
 
-\subsection{Algorithms}
+\subsection{Baseline: Multinomial Naive Bayes}
 
-\subsection{Feature Comparison}
+A random approach to this task will have a 50\% of being correct. However, we
+wanted to determine whether we could do better than random with a simple
+classifier. To that end, we implemented a simple Multinomial Naive Bayes
+classifier. 
+
+\subsection{Linear SVM}
+
+We implemented a linear SVM and trained it using Stochastic Gradient Descent.
+The intution behind this was that an SVM would be able to incorporate arbitrary
+features, and that the data would be linearly separable with the right features.
+This approach worked quite well, but was slightly less effective than our neural
+net approach.
+
+\subsubsection{Feature Comparison}
+
+We tried to improve the Linear SVM's performance by including a variety of
+features (Table \ref{tab:List_of_features}), as well as using different
+combinations of those features.  Features were added to the code one by one to
+find whether they improve accuracy. In general, accuracy improved with the
+addition of more features.
+
+We determined which combinations of features would improve the algorithm the
+most using a heuristic based approach to select the features to include in
+combinations. Testing all combinations of features was not feasible: with 16
+features and 65535 combinations of those features, testing each one at a runtime
+of 60 seconds per run would have taken 1092 hours. After identifying 11
+features (0-10 in table \ref{tab:List_of_features}), we ran a brute-force search
+of the 2047 combinations (over both the heterographic and homographic datasets)
+of those features to determine which was best.
+
+Figures \ref{fig:ACC_Test_Homo} and \ref{fig:ACC_Test_Hetero} show the 10 best
+combinations of features found for the homographic and heterographic datasets,
+respectively.
+
+\begin{table}
+\caption{Features by Index}\label{tab:List_of_features} 
+\begin{center}
+\begin{tabular}{l l l l} 
+\toprule
+\textbf{\#} &\textbf{Feature Name}		& \textbf{\#} &	\textbf{Feature Name}\\
+\midrule
+0	&	Lesk Algorithm					& 8		&	Idiom is in Pun or Not\\
+1	&	Pos								& 9		&	Antonyms is in Pun or Not\\
+2	&	tfidf							& 10	&	Homonym is in Pun or Not\\
+3	&	Embeddings						& 11	&	Bigram\\
+4	&	Unigram							& 12	&	Trigram\\
+5	&	Number of Homophone in Pun		& 13	&	Positives\\
+6	&	Number of Each Homophone in Pun & 14	&	Negatives\\
+7	&	Homophone is in Pun or Not		& 15	&	All or First Caps\\
+\bottomrule
+\end{tabular}
+\end{center}
+\end{table}
+
+\begin{figure}
+  \centering
+  \includegraphics[width=10cm]{figures/Accuracy_on_Test_Set_for_Homographic_Pun.png}
+  \caption{Homographic Pun Feature Comparison Accuracy}\label{fig:ACC_Test_Homo}
+\end{figure}
+
+\begin{figure}
+  \centering
+  \includegraphics[width=10cm]{figures/Accuracy_on_Test_Set_for_Heterographic_Pun.png}
+  \caption{Heterographic Pun Feature Comparison Accuracy}\label{fig:ACC_Test_Hetero}
+\end{figure}
+
+\subsection{Bidirectional LSTM}
+
+Despite having a fairly small dataset, we decided to try a neural net on the
+problem. We chose an LSTM because of its ability to deal with variable-sentence
+lengths, as (somewhat obviously) our dataset featured sentences of different
+lengths. This was our most effective approach. We used glove embeddings with a
+length of 300.
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Pun Location
@@ -113,82 +250,66 @@ here we will talk about pun detection and our algorithms.
 \section{Pun Location}
 \label{pun_location}
 
+Pun location is a less straightforward task than pun detection: given a set of
+words known to contain a pun, identify the pun word. Though this problem is less
+amenable to traditional machine learning algorithms, it can be rephrased to be
+more similar to one: for each word in the sentence, determine the likelihood
+that that word is a pun given the rest of the sentence. Then, output the word
+which is most likely to be a pun based on the output of the previous search.
+
 \subsection{Baseline}
+
+\begin{itemize}
+    \item \textbf{Multinomial Naive Bayes Classifier} - Used the exact same implementation as we did in the Pun Detection scenario.
+    
+    \item \textbf{Decision Tree Induction} - Developed a heuristic for identifying the pun location. The intuition behind this classifier comes from the fact that a lot of pun sentences have the pun word towards the end of the sentence, or at least the second half of the sentence. Most of these words can have some variational representation based on their syntax and semantics, like they can be antonyms, homophones, homonyms or maybe idioms. If there is no case matching, then the classifier calculates the similarity score of the neighbouring words in the sentence based the edit distance and gives out the pun word. If no conditions match whatsoever, then the classifier just returns the last word in the sentence as the pun word.
+
+    \begin{figure}[h!]
+    \centering
+    \includegraphics[width=90mm]{decision_tree.png}
+    \caption{Decision Tree Induction based Classifier}
+    \label{fig:method}
+    \end{figure}
+
+\end{itemize}
+
 
 \subsection{Algorithms}
 
-\subsection{Feature Comparison}
-We introduced various features to improve accuracy Table \ref{tab:List_of_features}. Indexes in this table represent the index of each feature in the code and figures we made for feature analysis. Features were added to the code one by one to find whether they improve accuracy. In general, we saw accuracy improved with adding features. Accuracy change behave differently against each feature.\\
-Next step was to find what feature combination led to the largest accuracy. We designed a code to find various combinations of features. The code generated list of indexes of all possible number of feature a code can have. Length of the list was between one to number of feature, 1 to 16. With 16 feature we could have 65535 possible combination. The pun detection code took about 60s to be done. If we wanted to test all these combination it took about 1092 hours. In this regards, we did trail and error run to see what feature improve accuracy. Finally, we used 11 features that indexed from 0 to 10 in the table \ref{tab:List_of_features} for feature comparison. \\
-With using 11 feature we were able to create 2047 features combination. Then we calculated accuracy for detection of homographic and heterographic puns. This let to 4089 runs. We found 100 percent accuracy anytime unigaram appears in any combination which is sign on over fitting. So we eliminated this feature form analysis. \\
-Figures \ref{fig:ACC_Train_Homo} and \ref{fig:ACC_Train_Hetero} shows the 10 largest accuracy of feature combination for training set of homographic and heterographic pun. These figure shows accuracy of training set of pun reached more than 96 percent for both pun. Figures \ref{fig:ACC_Test_Homo} and \ref{fig:ACC_Test_Hetero} shows the 10 largest accuracy of testing set for homographic and heterographic. These figures shows accuracy of testing sets of pun reached above 83 percent.\\
+\begin{itemize}
+    \item \textbf{Bidirectional Recurrent Neural Network} - We implemented a Bidirection LSTM but treated the problem as a sequence labeling task. Here also glove embeddings were used with a length of 300.We then took the maximum prediction of that sequence and used that as the index of the most likely word. This approach was competitive for the homographic dataset but did not work very well for the heterographic one.
+    
+    \begin{figure}[h!]
+    \centering
+    \includegraphics[width=110mm]{lstm.png}
+    \caption{How Sequence-Labeling Bidirectional LSTM would work ideally on an example sentence}
+    \label{fig:method}
+    \end{figure}
+
+    \item \textbf{Sliding Window based Maximum Entropy Markov Model} -The sliding window classifier starts from the first word of the sentence, selecting it, and two words on either side to make a window of size five. Then it runs a max entropy classifier on this window, before sliding the window one word forward, running this classifier over each “block” of words. It keeps into consideration, many features which are used to calculate the entropy of every block for the sliding window. These features are namely - position of the window, words\_remaining for the window to cover, the word lemma from wordnet, shape of the word, word length, first 3 characters of the word (prefix3), last 3 characters of the word (suffix3), word, part of speech tag, english wordlist and list of stopwords. Finally, the location of the pun is determined from the “block” with the highest entropy, or in other words the highest probability of a word in a sentence being a pun or not. Our intuition behind this approach was twofold: 1) it could handle arbitrary
+features; 2) it could handle arbitrary sentence lengths.
 
 
+ 
+\end{itemize}
 
+\subsection{Feature Comparision for the Sliding Window MEMM}
 
-\begin {table}
-\caption {List of Features and Their Indexes in Code} 
-\label{tab:List_of_features} 
-\begin{center}
-\begin{tabular}{ l|l } 
-\hline
-\textbf{Index} 	&	\textbf{Feaute Name}	\\
-\hline
-0	&	Lesk Algorithm	\\
-1	&	Pos	\\
-2	&	tfidf	\\
-3	&	Embeddings	\\
-4	&	Unigram	\\
-5	&	Number of Homophone in Pun	\\
-6	&	Number of Each Homophone in Pun	\\
-7	&	Homophone is in Pun or Not	\\
-8	&	Idiom is in Pun or Not	\\
-9	&	Antonyms is in Pun or Not	\\
-10	&	Homonym is in Pun or Not	\\
-11	&	Bigram	\\
-12	&	Trigram	\\
-13	&	Positives	\\
-14	&	Negatives	\\
-15	&	All or First Caps	\\
-\hline
-  
-\end{tabular}
-\end{center}
-\end{table}
+As discussed in the Sliding Window classifier section, the classifier uses quite a lot of different features, around 11 in this case. Also, to get the best results, we had set up the maximum iterations for the classifier to be at 40, which takes around 7 minutes to complete. Since that would take a lot of time to run, we selected the top 5 features which when individually applied to the sliding window classifier, gave the maximum accuracy. These features came out to be word length, pos tag, prefix3, suffix3 and stopwords. We ran these combinations with the summit supercomputer to provide the results faster. The top feature combinations for both homographic puns and heterographic puns are given in the below graphs.
 
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=120mm]{sliding_window_homographic.png}
+    \caption{Top Feature Combinations in Sliding Window Classifier for Homographic Puns}
+    \label{fig:method}
+    \end{figure}
 
-\begin{figure}
-  \centering
-  \includegraphics[width=15cm]{figures/Accuracy_on_Training_Set_for_Homographic_Pun.png}
-  \caption{Accuracy on Training Set for Homographic Pun}
-  \label{fig:ACC_Train_Homo} 
-\end{figure}
-
-\begin{figure}
-  \centering
-  \includegraphics[width=15cm]{figures/Accuracy_on_Training_Set_for_Heterographic_Pun.png}
-  \caption{Accuracy on Training Set for Heterographic Pun}
-  \label{fig:ACC_Train_Hetero}
-\end{figure}
-
-
-
-\begin{figure}
-  \centering
-  \includegraphics[width=15cm]{figures/Accuracy_on_Test_Set_for_Homographic_Pun.png}
-  \caption{Accuracy on Testing Set for Homographic Pun}
-  \label{fig:ACC_Test_Homo}
-\end{figure}
-
-
-\begin{figure}
-  \centering
-  \includegraphics[width=15cm]{figures/Accuracy_on_Test_Set_for_Heterographic_Pun.png}
-  \caption{Accuracy on Testing Set for Heterographic Pun}
-  \label{fig:ACC_Test_Hetero}
-\end{figure}
-
-
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=120mm]{sliding_window_heterographic.png}
+    \caption{Top Feature Combinations in Sliding Window Classifier for Heterographic Puns}
+    \label{fig:method}
+    \end{figure}
 
 
 \section{Results}
@@ -217,13 +338,98 @@ here are our results. here's the baseline. here's semeval's
 \section{Conclusion}
 \label{conclusion}
 
-\subsection{who did what}
-\subsection{what went well}
-\subsection{what we could have done better}
+\subsection{What Went Well}
+
+We did particularly well at pun detection, largely leveraging the size of our
+dataset over what the systems at SemEval had access to. We also were fairly
+successful in trying different algorithms. 
+
+\subsection{What We Could Have Done Better}
+
+The best systems at SemEval applied different approaches to the problem for the
+two types of data, heterographic and homographic. This makes sense, as the
+characteristics of those two datasets differ significantly. Generally, our
+approach would have benefitted from adding more information to our attempts at
+the heterographic dataset, perhaps converting the words in a sentence into their
+phonemes and identifing possible words which were close in sound.
+
+\subsection{Future Work}
+
+An obvious shortcoming of our system is that it will only predict \emph{one
+word} as the pun word, but, and the idea that there is \emph{one word} the makes
+a pun is somewhat dubious (not to mention that compound puns exist). Consider
+the following pun: 
+\begin{center}
+	\emph{The rabbi got hit on the temple.}
+\end{center}
+Our system would say that the punword is ``temple'', but that is really only half
+the story; if the word ``rabbi'' were replaced with, say, ``monk'', there would
+be no pun. The ability to identify the words \emph{involved} in a pun would be
+much more useful, and to the authors of this report, more interesting.
+
+Of obvious interest is the ability to detect further types of puns, perhaps
+using context provided by differt types of data; it would be extremely
+interesting to create a system which could identify visual puns. 
+
+It would be of interest to say \emph{what} about the words in a sentence make it
+a pun. In other words, the creation of a system which could interpret puns.
+
+A more out-there hope would be a system which could generate puns, perhaps being
+given a sentence and a pair of word senses.
+
+\subsection{Who Did What}
+
+\begin{itemize}
+
+\item Amir Kashipazha
+	\begin{itemize}
+		\item features (antonyms, idioms, sentiment)
+		\item the feature comparison for the SVM used for SGD Pun Detection
+	\end{itemize}
+\item Brandon Boylan-Peck
+	\begin{itemize}
+		\item poster bar graphs
+	\end{itemize}
+\item Cathlyn Stone
+	\begin{itemize}
+		\item the interactive web app
+		\item the framework for running classifiers
+		\item features (lesk algorithm, POS)
+		\item the SVM used in the SGD Pun Detection algorithm
+		\item the sliding window MEMM used in Pun Location
+		\item the ensemble algorithm
+		\item algorithm cross validation
+		\item the Bidirectional LSTM used for Pun Location
+		\item evaluation of the Pun Detection algorithms
+		\item the model caching architecture
+	\end{itemize}
+\item Kenneth Hunter Wapman
+	\begin{itemize}
+		\item data loading and manipulation
+		\item the baseline algorithm for Pun Detection
+		\item features (word embeddings)
+		\item the framework for running classifiers
+		\item the sliding window MEMM used in Pun Location
+		\item the Bidirectional LSTM used for Pun Location
+		\item the Bidirectional LSTM used for Pun Detection
+		\item evaluation of the Pun Location algorithms
+		\item poster content
+		\item report content
+	\end{itemize}
+\item Shantanu Karnwal worked on:
+	\begin{itemize}
+		\item decision tree classifier for pun location
+		\item feature comparision for the features used in sliding window MEMM by making use of the Summit super-computing cluster
+		\item poster layout and content
+		\item report content (pun location part and images)
+	\end{itemize}
+\item Project Github Repository - https://github.com/hunter-/pun\_classifier
+\end{itemize}
 
 \subsubsection*{Acknowledgments}
 
-here's where we acknowledge stuff
+We were helped immeasurably by the systems described in SemEval2017. Tyler
+Scott's advice on LSTMs was also extremely helpful.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % References
@@ -234,73 +440,72 @@ here's where we acknowledge stuff
 
 \small
 
-[1] Alexander, J.A.\ \& Mozer, M.C.\ (1995) Template-based algorithms
-for connectionist rule extraction. In G.\ Tesauro, D.S.\ Touretzky and
-T.K.\ Leen (eds.), {\it Advances in Neural Information Processing
-  Systems 7}, pp.\ 609--616. Cambridge, MA: MIT Press.
+[1] Oele, D., \& Evang, K.\ (2017) BuzzSaw at SemEval-2017 Task 7:
+Global vs. Local Context for Interpreting and Locating Homographic English Puns
+with Sense Embeddings. Proceedings of the 11th International Workshop on
+Semantic Evaluations (SemEval-2017), pages 444–448, Vancouver, Canada, August 3
+- 4, 2017. 2017 © Association for Computational Linguistics.
 
-[2] Bower, J.M.\ \& Beeman, D.\ (1995) {\it The Book of GENESIS:
-  Exploring Realistic Neural Models with the GEneral NEural SImulation
-  System.}  New York: TELOS/Springer--Verlag.
+[2] Pedersen, T.\ (2017) Duluth at SemEval-2017 Task 7: Puns Upon a Midnight
+Dreary, Lexical Semantics for the Weak and Weary. Proceedings of the 11th
+International Workshop on Semantic Evaluations (SemEval-2017), pages 416–420,
+Vancouver, Canada, August 3 - 4, 2017. 2017 © Association for Computational
+Linguistics.
 
-[3] Hasselmo, M.E., Schnell, E.\ \& Barkai, E.\ (1995) Dynamics of
-learning and recall at excitatory recurrent synapses and cholinergic
-modulation in rat hippocampal region CA3. {\it Journal of
-  Neuroscience} {\bf 15}(7):5249-5262.
+[3] Xiu, Y., Lan, M., \& Wu, Y.\ (2017). ECNU at SemEval-2017 Task 7: Using
+Supervised and Unsupervised Methods to Detect and Locate English Puns.
+Proceedings of the 11th International Workshop on Semantic Evaluations
+(SemEval-2017), pages 453–456, Vancouver, Canada, August 3 - 4, 2017. 2017 ©
+Association for Computational Linguistics.
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% Misc Style examples
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{Style Stuff}
-\verb+this is code-ish looking+ 
+[4] Hurtado, L., Segarra, E., Pla, F., Carrasco, P., \& Gonzalez, J.A..
+(2017). ELiRF-UPV at SemEval-2017 Task 7: Pun Detection and Interpretation.
+Proceedings of the 11th International Workshop on Semantic Evaluations
+(SemEval-2017), pages 440–443, Vancouver, Canada, August 3 - 4,
+2017. 2017 © Association for Computational Linguistics.
 
-here's a percent: $\sim$$15\%$
-\textbf{boldboldbold}
-\emph{italics}
+[5] Indurthi, V., \&  Reddy, O.S.\ (2017). Fermi at SemEval-2017 Task
+7: Detection and Interpretation of Homographic puns in English Language.
+Proceedings of the 11th International Workshop on Semantic Evaluations
+(SemEval-2017), pages 457–460, Vancouver, Canada, August 3 - 4, 2017. 2017 ©
+Association for Computational Linguistics.
 
-here's a fraction: \nicefrac{1}{4}
+[6] Samuel Doogan, Aniruddha Ghosh, Hanyang Chen, and Tony Veale. 2017. Idiom
+Savant at Semeval-2017 Task 7: Detection and Interpretation of English Puns.
+Proceedings of the 11th International Workshop on Semantic Evaluations
+(SemEval-2017), pages 103–108, Vancouver, Canada, August 3 - 4, 2017. 2017 ©
+Association for Computational Linguistics.
 
-\paragraph{}This is paragraphed
-\begin{verbatim}
-   \citet{hasselmo} investigated\dots
-\end{verbatim}
-produces
-\begin{quote}
-  Hasselmo, et al.\ (1995) investigated\dots
-\end{quote}
+[7] Das, D. \& Pramanick, A. (2017). JU\_CSE\_NLP at SemEval 2017 Task 7:
+Employing Rules to Detect and Interpret English Puns. Proceedings of the 11th
+International Workshop on Semantic Evaluations (SemEval-2017), pages 432–435,
+Vancouver, Canada, August 3 - 4, 2017. 2017 © Association for Computational
+Linguistics.
 
-ref number:\ [4]
+[8] Mikhalkova, E. \& Karyakin, Y. (2017). PunFields at SemEval-2017 Task 7:
+Employing Roget’s Thesaurus in Automatic Pun Recognition and Interpretation.
+Proceedings of the 11th International Workshop on Semantic Evaluations
+(SemEval-2017), pages 426–431, Vancouver, Canada, August 3 - 4, 2017. 2017 ©
+Association for Computational Linguistics.
 
-footnotes.\footnote{they go after the period}
+[9] Bahuleyan, H. \& Vechtomova, O. (2017). UWaterloo at SemEval-2017 Task 8:
+Detecting Stance towards Rumours with Topic Independent Features. Proceedings
+of the 11th International Workshop on Semantic Evaluations (SemEval-2017),
+pages 461–464, Vancouver, Canada, August 3 - 4, 2017. 2017 © Association for
+Computational Linguistics.
 
-\begin{figure}[h]
-  \centering
-  \fbox{\rule[-.5cm]{0cm}{4cm} \rule[-.5cm]{4cm}{0cm}}
-  \caption{Sample figure caption.}
-\end{figure}
+[10] Vadehra, A. (2017). UWAV at SemEval-2017 Task 7: Automated feature-based
+system for locating puns. Proceedings of the 11th International Workshop on
+Semantic Evaluations (SemEval-2017), pages 449–452, Vancouver, Canada, August 3
+- 4, 2017. 2017 © Association for Computational Linguistics.
 
-Table~\ref{sample-table}.
+[11] Sevgili, O., Ghotbi, N., \& Tekir, S. (2017). N-Hance at SemEval-2017 Task
+7: A Computational Approach using Word Association for Puns. Proceedings of the
+11th International Workshop on Semantic Evaluations (SemEval-2017), pages
+436–439, Vancouver, Canada, August 3 - 4, 2017. 2017 © Association for
+Computational Linguistics.
 
-use \verb+booktabs+ package for tables
-\begin{center}
-  \url{https://www.ctan.org/pkg/booktabs}
-\end{center}
+[12] Jonathon Anderson, Patrick J. Burns, Daniel Milroy, Peter Ruprecht, Thomas Hauser, and Howard Jay Siegel. 2017. Deploying RMACC Summit: An HPC Resource for the Rocky Mountain Region. In Proceedings of PEARC17, New Orleans, LA, USA, July 09-13, 2017, 7 pages. DOI: 10.1145/3093338.3093379
 
-\begin{table}[t]
-  \caption{Sample table title}
-  \label{sample-table}
-  \centering
-  \begin{tabular}{lll}
-    \toprule
-    \multicolumn{2}{c}{Part}                   \\
-    \cmidrule{1-2}
-    Name     & Description     & Size ($\mu$m) \\
-    \midrule
-    Dendrite & Input terminal  & $\sim$100     \\
-    Axon     & Output terminal & $\sim$10      \\
-    Soma     & Cell body       & up to $10^6$  \\
-    \bottomrule
-  \end{tabular}
-\end{table}
 
 \end{document}
