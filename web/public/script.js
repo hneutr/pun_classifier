@@ -48,7 +48,7 @@ $(document).ready(function () {
             }).done(function (data) {
                 $(".pun-detection-text").removeClass("hidden");
 
-                var types = ["baseline", "rnn", "features", "voting"];
+                var types = ["baseline", "rnn", "features"];
                 types.forEach(function (t) {
                     var isPun = data[t].pun * 100;
                     var elementName = "." + t + "-detection";

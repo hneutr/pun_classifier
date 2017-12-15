@@ -20,12 +20,12 @@ class ServerMain:
         baselinePunClassifier = BaselinePunClassifier(type="Detection", graphic="combined")
         punRnnDetectionClassifier = PunRNNDetectionClassifier(graphic="combined")
         punDetectionWithFeaturesClassifier = PunDetectionWithFeaturesClassifier(alpha=0.0001, graphic="combined")
-        punVotingClassifier = PunVotingClassifier(type="Detection", classifiers=[baselinePunClassifier,punRnnDetectionClassifier,punDetectionWithFeaturesClassifier])
-        self.detectionClassifiers = [baselinePunClassifier, punRnnDetectionClassifier, punDetectionWithFeaturesClassifier, punVotingClassifier]
+       # punVotingClassifier = PunVotingClassifier(type="Detection", classifiers=[baselinePunClassifier,punRnnDetectionClassifier,punDetectionWithFeaturesClassifier])
+        self.detectionClassifiers = [baselinePunClassifier, punRnnDetectionClassifier, punDetectionWithFeaturesClassifier]
 
         # Get classifiers to use for TYPE DETECTION
         baselinePunTypeClassifier = BaselinePunClassifier(type="Detection", graphic="both")
-        #punRnnDetectionTypeClassifier = PunRNNDetectionClassifier()
+        punRnnDetectionTypeClassifier = PunRNNDetectionClassifier()
         punDetectionWithFeaturesTypeClassifier = PunDetectionWithFeaturesClassifier(graphic="both")
         typeClassifiers = [
             baselinePunClassifier,
@@ -39,21 +39,21 @@ class ServerMain:
         # Get classifiers to use for LOCATION PROBABILITIES
         #baselinePunLocationClassifier = BaselinePunClassifier(type="Location")
         punRnnLocationClassifier = PunRNNClassifier(output="word")
-        #punDecisionTreeClassifier = PunLocationWithFeaturesClassifier(output="word") doesn't support probabilities
+       #punDecisionTreeClassifier = PunLocationWithFeaturesClassifier(output="word") doesn't support probabilities
         punSlidingWindowClassifier = PunSlidingWindowClassifier(output="word")
        # punVotingLocationClassifier = PunVotingClassifier(type="Location", classifiers=[punRnnLocationClassifier, punSlidingWindowClassifier])
         self.locationClassifiers = [punRnnLocationClassifier, punSlidingWindowClassifier]
 
     def train_classifier(self, classifier, data):
         # Use cached version of model if possible, otherwise train it
-        if self.cache.has(classifier):
-            classifier = self.cache.get(classifier)
-            print("Using cached version of classifier")
-        else:
-            print("Training classifier...")
+        # if self.cache.has(classifier):
+        #     classifier = self.cache.get(classifier)
+        #     print("Using cached version of classifier")
+        # else:
+        #     print("Training classifier...")
             # Train the classifier and evaluate it's training accuracy
-            classifier.train(data.x_train, data.y_train)
-            self.cache.set(classifier)
+        classifier.train(data.x_train, data.y_train)
+        self.cache.set(classifier)
 
     # Initialize server so that it will be able to make predictions
     # This will involve training the needed classifiers
