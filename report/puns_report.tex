@@ -83,7 +83,7 @@ We focused on two types: homographic puns and heterographic puns.
 
 \subsection{Motivation}
 
-It would be desirable for machines to be able to identify, comprend, and
+It would be desirable for machines to be able to identify, comprehend, and
 generate puns for a number of reasons:
 
 \begin{itemize}
@@ -110,6 +110,8 @@ each type of pun were, however, non-overlapping, so we simply modified each pun
 type's dataset to include \emph{all} non-puns from either dataset, giving us a
 more even ratio of pun/non-pun.\ 
 
+In addition, the dataset was split into 2 parts for homographic and heterographic puns. So, there were separate files, one with labels for non-puns and homographic puns, and the other with  labels for non-puns and heterographic puns. In addition to looking at each dataset individually, we also combined these datasets to look at it either as a binary classification task with both types of puns given the same label, or as a multi-class classification task with the different types of puns given different labels, but running with all the data for both types.
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Pun Detection
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -132,7 +134,7 @@ classifier.
 \subsection{Linear SVM}
 
 We implemented a linear SVM and trained it using Stochastic Gradient Descent.
-The intution behind this was that an SVM would be able to incorporate arbitrary
+The intuition behind this was that an SVM would be able to incorporate arbitrary
 features, and that the data would be linearly separable with the right features.
 This approach worked quite well, but was slightly less effective than our neural
 net approach.
@@ -246,7 +248,9 @@ We implemented a Bidirection LSTM but treated the problem as a sequence labeling
 task, again using 300-length glove embeddings as our word representation. We
 then took the maximum prediction of that sequence and used that as the index of
 the most likely word. This approach was competitive for the homographic dataset
-but did not work very well for the heterographic one.
+but did not work very well for the heterographic one. 
+
+One motivation for the use of an RNN here was the ability for RNNs to perform the same task for each word in the sentence, which we thought would be helpful for looking at each word individually to predict the probability of each work being the pun. In addition, motivation for the bidirectionality of this LSTM was to be able to look at the entire context of the sentence in both directions, especially as puns are more likely to occur at the end of sentences. 
 
 \begin{figure}[h!]
 	\centering
@@ -307,7 +311,10 @@ Supercomputer [12] to identify the best set of features to use.
 \end{figure}
 
 
+
 \section{Results}\label{results}
+
+\subsection{Evaluation}
 
 We used the same evaluation metrics for each of these tasks were used in
 SemEval2017:
@@ -372,9 +379,13 @@ SemEval2017 Best					& 0.7964\\
 \end{center}
 \end{table}
 
+
+
 \subsection{Error Analysis}
 
-We analyzed the accuracy of our location pun-classifiers as a function of
+In order to help better detect puns correctly, we looked at when sentences were falsely being detected as containing puns, as well as when sentences with puns were classified as non-puns. Looking at it in this way, we could better understand where we needed to improve and which types of features might be useful to help better distinguish puns. This required looking at the output for sentences, sometimes individually, to see if they were correctly being identified, or if our classifiers were giving errors. The web app we created was actually pretty useful for this purpose as it allowed us to easily enter sentences one by one and look at output for different classifiers. For example, one thing we noticed was that many cases, sentences with idioms were incorrectly being identified as sentences with puns. To alleviate this problem, an idiom feature was added. Another metric that helped in error analysis of our pun detection was looking at a confusion matrix for when we had false positives or negatives and seeing in which direction we were most likely to be incorrect. 
+
+In addition to analyzing errors in pun detection, we analyzed the accuracy of our location pun-classifiers as a function of
 sentence length. In general, the smaller the sentence length, the more accurate
 the classifier. In particular, it can be seen that the MEMM retains more of its
 accuracy on longer sentences, while the Bidirectional LSTM drops significantly. 
@@ -395,6 +406,24 @@ we unfortunately were unable to implement this.
     \label{fig:method}
 \end{figure}
 
+
+\subsection{Motivation for Approaches}
+Much of our inspiration for this project came from SemEval 2017. However, many of the systems in SemEval did not leverage machine learning approaches, which is why we felt using machine learning for the task would be an interesting approach. As we began this project, we tried adding in several classifiers as we wanted to see how they varied in performance. Then, by looking at the errors in these classifiers, cross-validation, feature comparison, and through further research, we were able to test out different ideas to  improve upon our first attempts at these classifiers. 
+
+Much of our ideas for features to add came through various intuitions about the nature of sentences containing puns. For example, our most useful feature, which relied on nltk's lesk algorithm and looked at word distances, came from the idea that the pun word might be pretty different, or seemingly out-of-place, from the other words in the sentence.  
+
+When looking at pun location, we needed to find algorithms that would be able to handle various sentence lengths and also look at each word individually. We also felt that this task could be seen as a sequence labeling task, and looked at algorithms that would enable us to do that. 
+
+Most of the ideas for choice of classifiers came from looking at their architecture and seeing how it would be helpful for our problem. More specifics about the approaches for each classifier individually can be found in their respective sections.
+
+
+
+\subsection{Cross Validation}
+In addition to creating these classifiers, we also needed to tune various hyperparameters used in order to get the best results possible. We found Scikit-learn's GridSearchCV function useful for k-fold cross validation to compare different values. We also ran each combination of parameters multiple times to get average values for accuracy for each run. From these results, we were able to incorporate better default values of different parameters in our classifiers. 
+
+\subsection{Applications}
+We were able to use our classifiers to put together a web application to allow users to enter sentences and see different classifiers' results about them. The application can give information as to whether or not a sentence contains a pun, which type of pun the sentence is most likely to contain, and the word in the sentence most likely to be a pun, with more likely words shown in a darker color. This application is publicly available at ec2-52-91-115-177.compute-1.amazonaws.com.
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Conclusion
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -406,16 +435,19 @@ we unfortunately were unable to implement this.
 
 We did well at pun detection, largely leveraging the size of our dataset over
 what the systems at SemEval had access to. We also were fairly successful in
-trying different algorithms. 
+trying different algorithms and evaluating combinations of different features. 
 
 \subsection{What We Could Have Done Better}
 
 The best systems at SemEval applied different approaches to the problem for the
 two types of data, heterographic and homographic. This makes sense, as the
 characteristics of those two datasets differ significantly. Generally, our
-approach would have benefitted from adding more information to our attempts at
+approach would have benefited from adding more information to our attempts at
 the heterographic dataset, perhaps converting the words in a sentence into their
-phonemes and identifing possible words which were close in sound.
+phonemes and identifying possible words which were close in sound.
+
+We also worked on a few other classifiers that we did not have time to fully complete and evaluate, and hence are not included in the report. We added a voting classifier to ensemble the results of other classifiers, and do a majority vote on the predictions from each classifier used. Preliminary results showed this classifier was actually in some cases performing poorly as it was incorporating results from all classifiers, even baseline. Either weighting the results for each of the classifiers based on their accuracy or writing and adding in more classifiers to the voting classifier may have been helpful. It also would have been interesting to try boosting techniques like Adaboost, and we attempted to add this to our sliding window classifier, but we did not have enough time to get final results and do analysis on this method.
+
 
 \subsection{Future Work}
 
@@ -432,7 +464,7 @@ be no pun. The ability to identify the words \emph{involved} in a pun would be
 much more useful, and to the authors of this report, more interesting.
 
 Of obvious interest is the ability to detect further types of puns, perhaps
-using context provided by differt types of data; it would be extremely
+using context provided by different types of data; it would be extremely
 interesting to create a system which could identify visual puns. 
 
 It would be of interest to say \emph{what} about the words in a sentence make it
@@ -449,7 +481,7 @@ Project Github Repository: \url{https://github.com/hunter-/pun_classifier}
 \item Shantanu Karnwal worked on:
 	\begin{itemize}
 		\item decision tree classifier for pun location
-		\item feature comparision for the sliding window MEMM
+		\item feature comparison for the sliding window MEMM
 		\item poster layout and content
 		\item report content (pun location images)
 	\end{itemize}
@@ -468,7 +500,7 @@ Project Github Repository: \url{https://github.com/hunter-/pun_classifier}
 	\begin{itemize}
 		\item interactive web app
 		\item framework for running classifiers
-		\item features (lesk algorithm, POS)
+		\item features (lesk algorithm, POS, Tfidf)
 		\item SVM used in the SGD Pun Detection algorithm
 		\item sliding window MEMM used in Pun Location
 		\item ensemble algorithm
@@ -476,6 +508,8 @@ Project Github Repository: \url{https://github.com/hunter-/pun_classifier}
 		\item Bidirectional LSTM used for Pun Location
 		\item evaluation of the Pun Detection algorithms
 		\item model caching architecture
+		\item report content 
+		\item error analysis
 	\end{itemize}
 \item Kenneth Hunter Wapman
 	\begin{itemize}
@@ -496,7 +530,7 @@ Project Github Repository: \url{https://github.com/hunter-/pun_classifier}
 \subsubsection*{Acknowledgments}
 
 We were helped immeasurably by the systems described in SemEval2017. Tyler
-Scott's advice on LSTMs was also extremely helpful.
+Scott's advice on LSTMs was also extremely helpful. We also thank this semester's course in machine learning in giving us valuable insight into these algorithms and allowing us to understand this vast area of computer science more deeply.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % References
