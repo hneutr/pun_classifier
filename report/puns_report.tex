@@ -108,9 +108,11 @@ the original datasets for the detection tasks for both heterographic and
 homographic puns had a pun/non-pun split of 70/30. The non-pun sentences for
 each type of pun were, however, non-overlapping, so we simply modified each pun
 type's dataset to include \emph{all} non-puns from either dataset, giving us a
-more even ratio of pun/non-pun.\ 
-
-In addition, the dataset was split into 2 parts for homographic and heterographic puns. So, there were separate files, one with labels for non-puns and homographic puns, and the other with  labels for non-puns and heterographic puns. In addition to looking at each dataset individually, we also combined these datasets to look at it either as a binary classification task with both types of puns given the same label, or as a multi-class classification task with the different types of puns given different labels, but running with all the data for both types.
+more even ratio of pun/non-pun. In addition to looking at each dataset
+individually, we also combined these datasets to look at it either as a binary
+classification task with both types of puns given the same label, or as a
+multi-class classification task with the different types of puns given
+different labels, but running with all the data for both types.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Pun Detection
